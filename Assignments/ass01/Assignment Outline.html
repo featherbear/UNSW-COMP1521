@@ -1,0 +1,313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0070)https://cgi.cse.unsw.edu.au/~cs1521/18s2/assignments/assign1/index.php -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>COMP1521 18s2 - Assignment 1</title>
+<link rel="stylesheet" type="text/css" href="./Assignment Outline/course.css"></head>
+<body>
+<div align="center">
+<table width="100%" border="0">
+<tbody><tr valign="top">
+<td align="left" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs1521/18s2/index.php">COMP1521 18s2</a></span>
+</td>
+<td align="center" width="50%">
+  <span class="heading">Assignment 1</span><br>
+  <span class="subheading">Scrolling Text</span>
+</td>
+<td align="right" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs1521/18s2/index.php">Computer System Fundamentals</a></span>
+</td>
+</tr></tbody></table>
+</div><div style="text-align:center;font-size:80%;color:#555555;margin-top:5px;">
+Last updated: <b>Sunday 19th August 2:38pm</b> <br>
+Most recent changes are shown in <span class="red">red</span> ...
+older changes are shown in <span class="brown">brown</span>. <br>
+</div>
+<h2>Objectives</h2>
+<ul>
+<li> to give you experience writing MIPS assembly code
+</li><li> to give you experience with functions in MIPS
+</li><li> to give you experience with data and control structures in MIPS
+</li></ul>
+
+<h2>Admin</h2>
+<table border="0" cellpadding="4">
+<tbody><tr valign="top"><td><b>Marks</b></td><td>9 <small>(towards total course mark)</small></td></tr>
+<tr valign="top"><td><b>Group?</b></td><td>This assignment is completed <b>individually</b></td></tr>
+<tr valign="top"><td><b>Due</b></td><td>by 11:59:59pm on Sunday 2nd September</td></tr>
+<tr valign="top"><td><b>Submit</b></td><td><tt>give cs1521 assign1 scroll.s</tt> &nbsp; or via Webcms<br>
+</td></tr><tr valign="top"><td><b>Late<br>Penalty</b></td><td>0.08 marks per hour late (approx 1.9 marks per day) off the ceiling<br><small>(e.g. if you are 36 hours late, your maximum possible mark is 6.1)</small></td></tr>
+<tr valign="top"><td><b>Assessment</b></td><td>
+For a guide to style, use the code in the lectures and tute solutions, and the supplied code.
+<table cellpadding="6">
+<tbody><tr valign="top">
+ <td>5&nbsp;marks</td>
+ <td>for auto-testing on a range of input strings</td>
+</tr>
+<tr valign="top">
+ <td>2&nbsp;marks</td>
+ <td>for commenting the code; you don't need a comment on every line,
+   but roughly one comment on each block of MIPS instructions
+   that corresponds to a C statement</td>
+</tr>
+<tr valign="top">
+ <td>2&nbsp;marks</td>
+ <td>for readable code; sensible names, lining up the opcodes and the args
+   consistently</td>
+</tr>
+</tbody></table>
+If your assembly code has syntax errors (according to <tt>spim</tt>)
+or run-time errors on all test cases, your auto-testing mark is
+capped at 3/7, depending on an assessment by your tutor.
+</td></tr>
+</tbody></table>
+
+<h2>Background</h2>
+<p>
+A common sight in shops is a grid of LEDs where text scrolls
+across the grid, something like ...
+</p>
+<center><img src="./Assignment Outline/scroll.gif"></center>
+<p>
+The aim of this assignment is to complete a MIPS program that
+can scroll alphabetic text strings like the above video.
+</p>
+
+<h2>Setting Up</h2>
+<p>
+Create a private directory for doing the assignment, and put the
+assignment files in it by running the following command:
+</p>
+<pre>$ <b>unzip <a href="https://www.cse.unsw.edu.au/~cs1521/18s2/assignments/assign1/assign1.zip">/home/cs1521/web/18s2/assignments/assign1/assign1.zip</a></b>
+</pre>
+<p>
+If you're working on this at home, download the ZIP file and
+create the files on your home machine.
+It's fine to work on your own machine but remember to
+<em>always</em> test your code on the CSE machines before
+submitting.
+</p>
+<p>
+The above command will create the following files:
+</p>
+<dl>
+<dt><tt>Makefile</tt></dt>
+<dd><p>
+A file to control compilation of <tt>scroll.c</tt>.
+It is not critical for the MIPS assembler part:
+it creates the executable C program to give you an exemplar,
+and can produce the <tt>exe.s</tt> file.
+</p></dd>
+<dt><tt>scroll.c</tt></dt>
+<dd><p>
+A complete solution, written in C. Your goal is to write a MIPS
+assembler program to copy the behaviour of this program.
+</p></dd>
+<dt><tt>chars.h</tt></dt>
+<dd><p>
+The array of big characters used in producing the scrolling text.
+This is <tt>#include</tt>'d in <tt>scroll.c</tt>.
+</p></dd>
+<dt><tt>scroll.s</tt></dt>
+<dd><p>
+A partly complete solution to the assignment, written in MIPS assembler.
+</p></dd>
+<dt><tt>chars.s</tt></dt>
+<dd><p>
+A MIPS version of the array of big characters used in producing
+the scrolling text. This file requires no modification.
+</p></dd>
+</dl>
+<p>
+Initially, it would be worth compiling the C program and running
+it on some examples to get a feel for its behaviour.
+The compiled C program, called <tt>scroll</tt>, expects a single
+command-line argument: the text string to be scrolled.
+</p><p>
+You can compile and run the C program (<tt>scroll</tt>) as follows:
+</p>
+<pre>$ <b>make</b>
+gcc -g -Wall -Werror -std=c99    scroll.c   -o scroll
+$ <b>./scroll</b>
+Usage: ./scroll String
+$ <b>./scroll "It's fun"</b>
+Only letters and spaces are allowed in the string!
+$ <b>./scroll abc def</b>
+<span class="comment">... scrolls "abc"; it only uses the first commond-line argument</span>
+$ <b>./scroll "Hello there"</b>
+<span class="comment">... scrolls "Hello there", like the above video</span>
+</pre>
+
+<h2>The Program</h2>
+<p>
+What the scrolling program should do, whether implemented in MIPS or C:
+</p>
+<ul>
+<li> check the command-line argument (&lt; 100 chars, only letters and spaces) </li>
+<li> create a buffer containing big versions of the characters in <tt>argv[1]</tt> </li>
+<li> add part of the content of the big-char buffer into the display buffer, starting at <tt>starting_pos</tt> </li>
+<li> write the contents of the display buffer to standard output </li>
+<li> repeat, moving one column to the left each time, until the message scrolls of the left of the display </li>
+</ul>
+<p>
+Both the C and the MIPS programs are structured the same,
+with a <tt>main</tt> function to handle the command-line
+arguments and then run the scrolling.
+The programs also have the same set of lower-level functions.
+In <tt>scroll.c</tt>, there are comments describing the purpose of
+each function and the code is hopefully clear enough that you can
+understand how each function works.
+</p>
+<p>
+The diagram below shows the major data structures used by the programs:
+</p>
+<ul>
+<li> <tt>theString[100]</tt> holds a copy of the string from <tt>argv[1]</tt> </li>
+<li> <tt>bigString[9][1000]</tt> holds a copy of <tt>theString</tt> in big characters and with one column of space between adjacent big characters </li>
+<li> <tt>display[9][80]</tt> is where characters are placed before being written out to the screen</li>
+<li> <tt>all_chars[52*9*9]</tt> array containing representation of 'A'-'Z' and 'a'-'z' as big chars &nbsp;
+	<small>(not shown in the diagram; defined in the <code>chars.s</code> file)</small>
+</li></ul>
+<center><img src="./Assignment Outline/data-structs.png"></center>
+
+<h2>Exercise</h2>
+<p>
+The aim of this exercise is to complete the supplied MIPS program skeleton
+(in the file <tt>scroll.s</tt>) to behave exactly like the C program
+(in <tt>scroll.c</tt>).
+You should not change the <tt>chars.s</tt> file; treat its contents as a
+read-only data structure.
+</p>
+<p>
+In <tt>scroll.s</tt> each function has comments to:
+</p>
+<ul>
+<li> indicate which registers the function uses </li>
+<li> indicate which registers the function overwrites (clobbers) </li>
+<li> give a mapping between local variables in the C code and registers in MIPS </li>
+</ul>
+<p>
+Note that these are suggestions only; you can use whatever registers
+you like, provided that you save and restore any <tt>$s?</tt>
+registers that you overwrite in the function code.
+And, of course, provided that the code behaves the same as the C code.
+</p>
+<p>
+To save you some time, we have included function prologues and epilogues
+in some functions.
+These save and restore registers <tt>$fp</tt>, <tt>$ra</tt>, and any <tt>$s?</tt>
+registers that the function happens to use, and also maintain the stack.
+You can use these as templates for how to implement the prologue and
+epilogue in the functions that do not provide them.
+</p><p>
+Some of the functions from <tt>scroll.s</tt> are already implemented,
+but others require you to write MIPS assembler for them.
+Here's a rundown of the functions in <tt>scroll.s</tt> and their status:
+</p>
+<center>
+<table border="1" cellpadding="8" cellspacing="0">
+<tbody><tr><td><tt>main</tt></td>
+<td>
+Partly complete, including the epilogue and prologue, and the
+command-line argument checking.
+</td></tr>
+<tr><td><tt>setUpDisplay</tt></td>
+<td>
+Function prologue and epilogue ok. ToDo: function body.
+</td></tr>
+<tr><td><tt>showDisplay</tt></td>
+<td>
+Function prologue and epilogue ok. ToDo: function body.
+</td></tr>
+<tr><td><tt>delay</tt></td>
+<td>
+Already complete, but you can tweak the numbers if you want,
+to speed up or slow down the animation.
+</td></tr>
+<tr><td><tt>isUpper</tt></td>
+<td>
+ToDo: function prologue and epilogue, and function body.
+</td></tr>
+<tr><td><tt>isLower</tt></td>
+<td>
+Already complete (and makes isUpper very easy).
+</td></tr>
+</tbody></table>
+</center>
+
+<h3>Running the program</h3>
+<p>
+Note that <tt>scroll.s</tt> is not stand-alone MIPS program;
+it requires access to the <tt>all_chars[]</tt> array in the
+file <tt>chars.s</tt>.
+In order to run the program (either via <tt>spim</tt> or
+<tt>qtspim</tt>), you'll need to combine the two files.
+Here's an example of you might run the program using <tt>spim</tt>:
+</p>
+<pre>$ <b>cat chars.s scroll.s &gt; exe.s</b>
+$ <b>spim -file exe.s</b>
+<span class="comment">... program executes ...</span>
+</pre>
+<p>
+The file <tt>exe.s</tt> <em>is</em> a complete program that
+can be loaded into <tt>qtspim</tt> as well.
+You will need to do the <tt>cat</tt> step each time you change
+the <tt>scroll.s</tt> file and want to test it.
+The <tt>Makefile</tt> knows how to create this file too.
+</p>
+
+<h3>Errata</h3>
+<ul>
+  <li><strong class="red">2018-08-19 14:30</strong> (revision 1.5)<ul>
+      <li>in revision 1.3, one instance of <var>ch</var> was not moved.</li>
+      <li>in all epilogues except <code>delay</code>,
+        <code>$sp</code> was reloaded with LW, not LA.</li>
+  </ul></li>
+  <li><strong class="brown">2018-08-18 18:50</strong> (revision 1.4)<ul>
+      <li>in <code>main</code>,
+        translation of <code>break</code> directive was incorrect
+        at <code>main_ch_ok</code>+3;
+        <code>blt</code> used instead of <code>bge</code>.</li>
+  </ul></li>
+  <li><strong class="brown">2018-08-18 17:20</strong> (revision 1.3)<ul>
+      <li>in <code>main</code>,
+        variable <var>ch</var> moved
+        from register <code>$t0</code> to <code>$s2</code>,
+        with corresponding changes to stack frame.</li>
+      <li>in <code>main</code>,
+        logic of calls to <code>isUpper</code>, <code>isLower</code>,
+        and comparison with space was corrected.</li>
+  </ul></li>
+  <li><strong class="brown">2018-08-18 08:50</strong> (revision 1.2)<ul>
+      <li>in <code>main</code>,
+        argument load was done with LA not LW.</li>
+  </ul></li>
+</ul>
+
+<h3>Challenges</h3>
+<p>(Worth kudos, but no marks)</p>
+<ul>
+<li><p>
+Make the scroll repeat. If you wait until the whole message scrolls off
+the left hand end, this is easy. Make it do a "continuous scroll", where
+the message starts repeating from the right before when the end of the
+right-hand end of the message has moved 10 columns from the right-hand
+end of the display.
+</p></li>
+<li><p>
+Change the colours of the '#' characters as they scroll. Make the colour
+change as aesthetically pleasing as possible.
+</p></li>
+</ul>
+
+<h3>Submission</h3>
+<p>
+You just need to submit the <tt>scroll.s</tt> file. You can do this either
+through Webcms3 or using <tt>give</tt>.
+You must submit your work before midnight on Sunday 2nd September.
+</p>
+
+<p>
+Have fun, &nbsp; <i>jas</i>
+</p>
+</body></html>
