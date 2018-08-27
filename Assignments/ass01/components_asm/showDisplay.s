@@ -1,38 +1,40 @@
 
 
-########################################################################
-# .TEXT <showDisplay>
 	.text
 showDisplay:
+    # Method: Perform modulo operation to check for new lines
+    li $t0, 0 # counter
+    li $t1, 720
+    lw $t2, NDCOLS
+    # $t3 -> mfhi
+    la $t4, display
 
-# Frame:	$fp, $ra, ...
-# Uses:		...
-# Clobbers:	...
+    # TODO, too many syscalls
+    #       syscall with v0 = 4 (string), terminate a null char
+    showDisplay_loop:
+        bgt $t0, 720, showDisplay_loopEnd
 
-# Locals:
-#	- `i' in $...
-#	- `j' in $...
-#	- ...
+        li $v0, 11
+        div $t0, $t2
 
-# Structure:
-#	showDisplay
-#	-> [prologue]
-#	-> ...
-#	-> [epilogue]
+        mfhi $t3
+        bgtz $t3, showDisplay_loop_notEndLine
 
-# Code:
-	# set up stack frame
-	sw	$fp, -4($sp)
-	la	$fp, -4($sp)
-	sw	$ra, -4($fp)
-	la	$sp, -8($fp)
+        li $a0, 10 # \n
+        syscall
 
-	# ... TODO ...
+        showDisplay_loop_notEndLine:
+            li $v0, 11
+            lw $a0, ($t4)
+            syscall
 
-	# tear down stack frame
-	lw	$ra, -4($fp)
-	la	$sp, 4($fp)
-	lw	$fp, ($fp)
-	jr	$ra
-	nop	# in delay slot
+        addi $t0, $t0, 1
+        addi $t4, $t4, 4
+        j showDisplay_loop
+
+
+
+    showDisplay_loopEnd:
+        jr	$ra
+        nop
 

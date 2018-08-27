@@ -67,6 +67,7 @@ main_argc_gt_two:
 main_PTRs_init:
 	# s = argv[1]
 	lw	$t2, 4($a1)
+
 main_PTRs_cond:
 	# optimisation: `ch = *s' now
 	# (ch = )*s
@@ -82,8 +83,13 @@ main_ch_upper:
 	nop	# in delay slot
 	beqz	$v0, main_ch_lower
 	nop	# in delay slot
+
+	li $v0, 11
+	syscall
+
 	j	main_ch_ok
 	nop	# in delay slot
+
 	# if (!isLower(ch))
 main_ch_lower:
 	move	$a0, $s2
@@ -91,13 +97,22 @@ main_ch_lower:
 	nop	# in delay slot
 	beqz	$v0, main_ch_space
 	nop	# in delay slot
+
+	li $v0, 11
+	syscall
+
 	j	main_ch_ok
 	nop	# in delay slot
 	# if (ch != ' ')
+
 main_ch_space:
 	li	$t0, ' '
 	bne	$s2, $t0, main_ch_fail
 	nop	# in delay slot
+
+	li $v0, 11
+	syscall
+
 	j	main_ch_ok
 	nop	# in delay slot
 
@@ -132,6 +147,7 @@ main_PTRs_step:
 	addiu	$t2, $t2, 1	# ADDIU because address
 	j	main_PTRs_cond
 	nop
+
 main_PTRs_f:
 
 	# theString[theLength] = ...
@@ -152,27 +168,32 @@ main_PTRs_f:
 	lw	$t0, ($t0)
 	blt	$s0, $t0, main_theLength_lt_MAXCHARS
 	nop	# in delay slot
+
 main_theLength_ge_MAXCHARS:
 	# printf(..., ..., ...)
 	la	$a0, main__2
 	li	$v0, 4 # PRINT_STRING_SYSCALL
 	syscall
+
 	move	$a0, $t0
 	li	$v0, 1 # PRINT_INT_SYSCALL
 	syscall
+
 	la	$a0, main__3
 	li	$v0, 4 # PRINT_STRING_SYSCALL
 	syscall
+
 	# return 1  =>  load $v0, jump to epilogue
 	li	$v0, 1
 	j	main__post
 	nop	# in delay slot
-main_theLength_lt_MAXCHARS:
 
+main_theLength_lt_MAXCHARS:
 	# if (theLength < 1)
 	li	$t0, 1
 	bge	$s0, $t0, main_theLength_ge_1
 	nop	# in delay slot
+
 main_theLength_lt_1:
 	# printf(...)
 	la	$a0, main__4
@@ -182,12 +203,34 @@ main_theLength_lt_1:
 	li	$v0, 1
 	j	main__post
 	nop	# in delay slot
+
 main_theLength_ge_1:
-
 	# ... TODO ...
+	# do WHAT?
 
+    # this is a very badly written starter code :(
+
+
+.data
+vxx1:	.asciiz	"Init complete. Ready to display\n\n"
+
+.text
+
+        jal clearDisplay
+
+    	la	$a0, vxx1
+    	li	$v0, 4 # PRINT_STRING_SYSCALL
+    	syscall
+
+    	la	$a0, theString
+        li	$v0, 4 # PRINT_STRING_SYSCALL
+        syscall
+
+        jal display_clear
+        jal showDisplay
 	# return 0
 	move	$v0, $zero
+
 main__post:
 	# tear down stack frame
 	lw	$s2, -16($fp)

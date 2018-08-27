@@ -11,12 +11,16 @@
 
 	# # of rows and columns in each big char
 CHRSIZE:	.word	9
+
 	# number of rows in all matrices
 NROWS:		.word	9
+
 	# number of columns in display matrix
 NDCOLS:		.word	80
+
 	# max length of input string
 MAXCHARS:	.word	100
+
 	# number of columns in bigString matrix
 	# max length of buffer to hold big version
 	# the +1 allows for one blank column between letters
