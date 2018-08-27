@@ -13,8 +13,8 @@
 
 # Provides:
 	.globl	main # :: int, [char *], [char *] -> int
-	.globl	setUpDisplay # :: int, int -> void
-	.globl	showDisplay # :: void -> void
+#	.globl	setUpDisplay # :: int, int -> void
+#	.globl	showDisplay # :: void -> void
 	.globl	delay # :: int -> vovid
 	.globl	isUpper # :: char -> int
 	.globl	isLower # :: char -> int

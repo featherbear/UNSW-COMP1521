@@ -216,18 +216,55 @@ vxx1:	.asciiz	"Init complete. Ready to display\n\n"
 
 .text
 
-        jal clearDisplay
 
+
+
+        # debug
     	la	$a0, vxx1
     	li	$v0, 4 # PRINT_STRING_SYSCALL
     	syscall
 
+	# input
     	la	$a0, theString
         li	$v0, 4 # PRINT_STRING_SYSCALL
         syscall
 
-        jal display_clear
-        jal showDisplay
+        # populate bigString
+        la $a0, theString
+        jal bigString_populate
+
+        # looop
+        li $s0, 0
+        display_loooooper:
+            beq $s0, 1000, prog_eeeend # or on \0
+
+           jal clearScreen
+           nop
+
+            move $a0, $s0
+            jal display_populate
+            nop
+
+            jal display_show
+            nop
+
+            li $a0, 10
+
+            jal delay
+            nop
+
+            j display_loooooper
+            nop
+            # load frame
+                   #  jal clearScreen
+
+
+
+
+        #jal display_clear
+        #jal display_show
+
+	prog_eeeend:
 	# return 0
 	move	$v0, $zero
 

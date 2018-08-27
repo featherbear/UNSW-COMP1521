@@ -3,6 +3,7 @@
 ########################################################################
 	.text
 isUpper:
+
 # inputs
 # - $a0 | Character to check
 # outputs

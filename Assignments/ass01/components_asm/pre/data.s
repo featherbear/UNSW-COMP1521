@@ -35,11 +35,13 @@ main__2:	.asciiz "String mush be < "
 main__3:	.asciiz " chars\n"
 main__4:	.asciiz "Please enter a string with at least one character!\n"
 
-	.align	4
+        	.align	4
 theString:	.space	101	# MAXCHARS + 1
-	.align	4
+
+	        .align	4
 display:	.space	720	# NROWS * NDCOLS
-	.align	4
+
+        	.align	4
 bigString:	.space	81000	# NROWS * NSCOLS
 ########################################################################
 

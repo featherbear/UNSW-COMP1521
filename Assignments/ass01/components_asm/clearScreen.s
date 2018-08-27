@@ -2,7 +2,7 @@
 
 ########################################################################
 	.text
-clearDisplay:
+clearScreen:
 
     # store the current value of $v0, as we're forced to modify $v0 for our syscall
 	sw	$v0, -4($sp)
