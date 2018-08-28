@@ -1,32 +1,23 @@
 
-
-########################################################################
+#
+# <isUpper>
+# info: Check if a character is an uppercase letter
+# args: a0 - character to check
+#  ret: v0 - 1 if true, 0 if false
+#
 	.text
 isUpper:
-
-# inputs
-# - $a0 | Character to check
-# outputs
-# - $v0 | 1 if the character is an uppercase letter, 0 if not
-
-	# Not setting up a stack frame as we are not storing any values
-
-    # Set the result to false (0)
-	li $v0, 0       # result = 0
+	li $v0, 0                   # result = 0
 
     # If `ch` < 'A' or `ch` > 'Z', then return from the function (as result was already set to false (1)
-	blt $a0, 'A', end   # if (ch < 'A') end_function();
+	blt $a0, 'A', isUpper_end   # if (ch < 'A') --> false
 	nop
-
-	bgt $a0, 'Z', end   # if (ch > 'Z') end_function();
+	bgt $a0, 'Z', isUpper_end   # if (ch > 'Z') --> false
 	nop
 
     # 'A' <= `ch` <= 'Z', so set the result to true (1)
-	li $v0, 1           # result = 1
+	li $v0, 1                   # result = true
 
-    end:
-        # return to parent subroutine
+    isUpper_end:
         jr	$ra
         nop
-#################################################################### EOF
-

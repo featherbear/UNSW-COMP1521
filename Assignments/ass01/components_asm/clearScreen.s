@@ -1,21 +1,16 @@
 
-
-########################################################################
+#
+# <clearScreen>
+# info: Clear the display of the output window
+#       As a utility function, the previous values of a0 and v0 should probably be preserved... oh well!
+#
 	.text
 clearScreen:
-
-    # store the current value of $v0, as we're forced to modify $v0 for our syscall
-	sw	$v0, -4($sp)
-
-    la $a0, CLEAR
-    li $v0, 4
+    la $a0, CLEAR # load the escape sequences that clear the screen
+    li $v0, 4     # syscall 4 -> print string
     syscall
+    nop
 
-    # restore the old value of $v0
-	lw	$v0, -4($sp)
-
-	# return function
+    # return from function
 	jr	$ra
 	nop
-	
-	

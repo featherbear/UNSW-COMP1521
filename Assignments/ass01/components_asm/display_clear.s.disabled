@@ -1,0 +1,25 @@
+
+#
+# <display_clear>
+# info: Sets all bytes of `display` to the space character
+#       // Don't need this function in our code, was just for debug purpose
+#
+# vars: t0 - base address of `display`
+#       t1 - counter
+#       t2 - space character
+#
+.text
+display_clear:
+    la $t0, display
+    li $t1, 0
+    li $t2, ' '
+    display_clear_loop:
+        beq $t1, 720, display_clear_loopEnd
+        sb $t2, ($t0)
+        addi $t1, $t1, 1
+        addi $t0, $t0, 1
+        j display_clear_loop
+    display_clear_loopEnd:
+         jr $ra
+         nop
+
