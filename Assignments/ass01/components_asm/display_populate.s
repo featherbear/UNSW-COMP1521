@@ -25,16 +25,10 @@ display_populate:
             nop
 
             mul $t4, $t2, 1000
-            add $t4, $t4, $t3
-            add $t4, $t1, $t4
-            add $t4, $t4, $a0
+            nop
+            add $t4, $t4, $t5
+            add $t4, $t4, $t1
             lb $t4, ($t4)
-
-            #move $t6, $t4
-            #move $a0, $t4
-            #li $v0, 1
-            #syscall
-            #move $a0, $t6
 
             display_populate_loopCol_write:
             sb $t4, ($t0)

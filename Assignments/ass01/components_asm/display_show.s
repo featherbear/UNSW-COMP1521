@@ -32,8 +32,6 @@ display_show:
         addi $t4, $t4, 1
         j display_show_loop
 
-
-
     display_show_loopEnd:
         jr	$ra
         nop

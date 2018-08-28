@@ -208,20 +208,22 @@ main_theLength_ge_1:
     # this is a very badly written starter code :(
 
 	# input
-    	la	$a0, theString
-        li	$v0, 4 # PRINT_STRING_SYSCALL
-        syscall
+        jal bigString_clear
+        nop
 
         # populate bigString
         la $a0, theString
         jal bigString_populate
         nop
 
+        move $s1, $v0
+        mul $s1, $s1, 10
 
         # looop
         li $s0, -80
+        #li $s0, 0
         display_loooooper:
-           beq $s0, 100, prog_eeeend # or on \0
+           beq $s0, $s1, prog_eeeend
 
            jal display_clear
            nop
@@ -230,7 +232,6 @@ main_theLength_ge_1:
            nop
 
             move $a0, $s0
-
             jal display_populate
             nop
 
