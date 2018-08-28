@@ -205,24 +205,7 @@ main_theLength_lt_1:
 	nop	# in delay slot
 
 main_theLength_ge_1:
-	# ... TODO ...
-	# do WHAT?
-
     # this is a very badly written starter code :(
-
-
-.data
-vxx1:	.asciiz	"Init complete. Ready to display\n\n"
-
-.text
-
-
-
-
-        # debug
-    	la	$a0, vxx1
-    	li	$v0, 4 # PRINT_STRING_SYSCALL
-    	syscall
 
 	# input
     	la	$a0, theString
@@ -232,38 +215,35 @@ vxx1:	.asciiz	"Init complete. Ready to display\n\n"
         # populate bigString
         la $a0, theString
         jal bigString_populate
+        nop
+
 
         # looop
-        li $s0, 0
+        li $s0, -80
         display_loooooper:
-            beq $s0, 1000, prog_eeeend # or on \0
+           beq $s0, 100, prog_eeeend # or on \0
+
+           jal display_clear
+           nop
 
            jal clearScreen
            nop
 
             move $a0, $s0
+
             jal display_populate
             nop
 
             jal display_show
             nop
 
-            li $a0, 10
-
+            li $a0, 1
             jal delay
             nop
 
+            addi $s0, $s0, 1
             j display_loooooper
             nop
-            # load frame
-                   #  jal clearScreen
-
-
-
-
-        #jal display_clear
-        #jal display_show
-
 	prog_eeeend:
 	# return 0
 	move	$v0, $zero

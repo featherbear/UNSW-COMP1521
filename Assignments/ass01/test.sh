@@ -1,6 +1,7 @@
 #!/bin/bash
 export app="/usr/bin/spim -f scroll.s"
 
+make clean > /dev/null
 make
 
 echo

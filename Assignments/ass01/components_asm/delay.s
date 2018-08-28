@@ -42,7 +42,7 @@ delay:
 	# x <- 0
 	move	$t0, $zero
 	# These values control the busy-wait.
-	li	$t4, 1000
+	li	$t4, 500
 	li	$t5, 100
 
 delay_i_init:

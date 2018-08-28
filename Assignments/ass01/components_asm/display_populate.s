@@ -2,7 +2,6 @@
 .text
 display_populate:
 # takes in $a0 (start col)
-    # modulus would be inefficient here
     la $t0, display
     la $t1, bigString
     li $t2, 0 # row 0-8
@@ -17,23 +16,29 @@ display_populate:
             beq $t3, 80, display_populate_loopColEnd
             nop
 
+            li $t4, 'S'
+
             add $t5, $t3, $a0
-            bge $t5, 1000, display_populate_loopCol_next
+            blt $t5, 0, display_populate_loopCol_write
+            nop
+            bge $t5, 1000, display_populate_loopCol_write
             nop
 
             mul $t4, $t2, 1000
             add $t4, $t4, $t3
-            add $t4, $t4, $a0
-                # add offsets to base
             add $t4, $t1, $t4
+            add $t4, $t4, $a0
             lb $t4, ($t4)
 
-            mul $t5, $t2, 80
-            add $t5, $t5, $t3
-            add $t5, $t0, $t5
-            sb $t4, ($t5)
+            #move $t6, $t4
+            #move $a0, $t4
+            #li $v0, 1
+            #syscall
+            #move $a0, $t6
 
-            display_populate_loopCol_next:
+            display_populate_loopCol_write:
+            sb $t4, ($t0)
+            addi $t0, $t0, 1
             addi $t3, $t3, 1
             j display_populate_loopCol
             nop
@@ -45,5 +50,8 @@ display_populate:
         j display_populate_loopRow
         nop
     display_populate_loopRowEnd:
+
         jr $ra
         nop
+        
+        
