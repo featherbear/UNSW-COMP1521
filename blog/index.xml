@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Musings of a COMP1521 Kid</title>
+    <link>/</link>
+    <description>Recent content on Musings of a COMP1521 Kid</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>Andrew Wong (z5206677)</copyright>
+    <lastBuildDate>Wed, 29 Aug 2018 01:57:14 +1000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Assignment 1 - Scrolling Text (MIPS)</title>
+      <link>/post/ass01/</link>
+      <pubDate>Wed, 29 Aug 2018 01:57:14 +1000</pubDate>
+      
+      <guid>/post/ass01/</guid>
+      <description>First assignment for COMP1521 2018s2! [View Files Here]
+Task This assignment was to write a scrolling display program in MIPS. We were meant to &amp;lsquo;translate&amp;rsquo; the supplied working C code into its MIPS assembly equivalent, but I missed that piece of information and dived right into the assignment.
+The starting MIPS code, was&amp;hellip; convoluted&amp;hellip;
+Comparing the provided isLower function, the isUpper function I wrote is about 66% shorter.
+So in a sense, it comforts me that I wasn&amp;rsquo;t translating the provided C code.</description>
+    </item>
+    
+  </channel>
+</rss>
