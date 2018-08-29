@@ -1,8 +1,10 @@
 #!/bin/bash
-export app="/usr/bin/spim -f scroll.s"
+export app="spim -f exe.s"
 
 make clean > /dev/null
 make
+
+cat chars.s scroll.s > exe.s
 
 echo
 
