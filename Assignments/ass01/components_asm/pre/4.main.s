@@ -225,13 +225,13 @@ main_theLength_ge_1:
         # while (s0 < s1) { ... }
         beq $s0, $s1, display_loopEnd
 
-        # Clear the screen
-        jal clearScreen
-        nop
-
         # Populate the contents of `display` from `bigString` starting at the column offset
         move $a0, $s0       # a0 = s0       # a0 is the starting column offset
         jal display_populate
+        nop
+
+        # Clear the screen
+        jal clearScreen
         nop
 
         # Show the display
