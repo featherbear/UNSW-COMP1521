@@ -19,10 +19,7 @@
       
       <guid>/post/ass01/</guid>
       <description>First assignment for COMP1521 2018s2! [View Files Here]
-Task This assignment was to write a scrolling display program in MIPS. We were meant to &amp;lsquo;translate&amp;rsquo; the supplied working C code into its MIPS assembly equivalent, but I missed that piece of information and dived right into the assignment.
-The starting MIPS code, was&amp;hellip; convoluted&amp;hellip;
-Comparing the provided isLower function, the isUpper function I wrote is about 66% shorter.
-So in a sense, it comforts me that I wasn&amp;rsquo;t translating the provided C code.</description>
+Task This assignment was to write a scrolling display program in MIPS.</description>
     </item>
     
   </channel>

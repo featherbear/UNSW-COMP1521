@@ -1,7 +1,7 @@
 publishDir = ".."
 baseURL = ""
 relativeurls = true
-
+summaryLength = 0
 languageCode = "en"
 defaultContentLanguage = "en"                             # en / zh-cn / ... (This field determines which i18n file to use)
 title = "Musings of a COMP1521 Kid"
