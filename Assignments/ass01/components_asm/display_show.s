@@ -9,54 +9,54 @@
 #       t1 - temp
 #       t7 - loop counter
 #
-	.text
+    .text
 display_show:
-    la $a0, display         # a0 = &display     # address position in `display`
-    li $t7, 0               # t7 = 0            # loop counter
+    la $a0, display       # a0 = &display     # address position in `display`
+    li $t7, 0             # t7 = 0            # loop counter
 
     # Loop
     display_show_loop:
         # while (t7 < 9 ) { ... }
-        beq $t7, 9, display_show_loopEnd
+        beq  $t7, 9, display_show_loopEnd
         nop
 
         # Go to the start of the next row
         addi $t0, $a0, 80
 
         # Store the byte at the first column, and change it to a null terminator (\0)
-        lb $t1, ($t0)       # t1 = *(t0)
-        sb $0, ($t0)        # *(t0) = '\0'      # Strings end with \0. eg. { 'H', 'i', '\0' }
+        lb   $t1, ($t0)       # t1 = *(t0)
+        sb   $0, ($t0)        # *(t0) = '\0'      # Strings end with \0. eg. { 'H', 'i', '\0' }
 
         # Print the row
-        li $v0, 4           # syscall 4 -> print string
+        li   $v0, 4           # syscall 4 -> print string
         syscall
         nop
 
         # Restore the value of the byte that we changed into a null terminator
-        sb $t1, ($t0)       # *(t0) = t1
+        sb   $t1, ($t0)       # *(t0) = t1
 
         # Print out a new-line character
         ## Note: Couldn't have replaced the first columns with a new line instead of a null terminator
         ##       because then the first column would have been lost (Need a 9x81 matrix instead of a 9x80)
-        li $a0, 10          # 0x10 is the new line character
-        li $v0, 11          # syscall 4 -> print character
+        li   $a0, 10          # 0x10 is the new line character
+        li   $v0, 11          # syscall 4 -> print character
         syscall
         nop
 
-        move $a0, $t0       # Restore a0 as the address position in the display matrix
+        move $a0, $t0         # Restore a0 as the address position in the display matrix
 
         # Go to the next row
-        addi $t7, $t7, 1    # t7++      # Increment the row counter
-        j display_show_loop
+        addi $t7, $t7, 1      # t7++      # Increment the row counter
+        j    display_show_loop
         nop
 
     # End loop
     display_show_loopEnd:
-        jr	$ra
+        jr  $ra
         nop
 
 ### OLD VERSION - Uses syscall 11 (much slower!) ##
-#	.text
+#  .text
 #display_show:
 #    # Method: Perform modulo operation to check for new lines
 #    li $t0, 0 # counter
@@ -85,5 +85,5 @@ display_show:
 #        j display_show_loop
 #
 #    display_show_loopEnd:
-#        jr	$ra
+#        jr  $ra
 #        nop
