@@ -14,6 +14,8 @@
 # - The code indented to the right is the starting code of the assignment which I didn't touch
 # - The code on the left is the code that I have written
 
-
+# Last Change: 9:29PM 31/08/2018
+# - Replaced hard-coded values with calculated values that are stored into registers
+# - Formatted code to align opcodes
 
 # FAR INDENTED CODE IS PROVIDED ------->

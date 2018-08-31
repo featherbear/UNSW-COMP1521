@@ -22,7 +22,7 @@
                                         # number of columns in bigString matrix
                                         # max length of buffer to hold big version
                                         # the +1 allows for one blank column between letters
-                                        NSCOLS:    .word   1000  # (MAXCHARS * (CHRSIZE + 1))
+                                        NSCOLS:    .word   9000  # (NROWS * MAXCHARS * (CHRSIZE + 1))
 
                                         # ANSI escape sequence for 'clear-screen'
                                         CLEAR:     .asciiz "\033[H\033[2J"

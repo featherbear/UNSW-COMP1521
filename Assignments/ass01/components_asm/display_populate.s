@@ -11,26 +11,37 @@
 #       t3 - column counter
 #       t4 - space character
 #       t5 - starting offset + column counter offset
+#       t7 - 9    (CHRSIZE)
+#       t8 - 80   (NDCOLS)
+#       t9 - 1000 ( (CHRSIZE+1)*MAXCHARS )
 #
     .text
 display_populate:
     # Setup
-    la $t0, display         # t0 = &display
-    la $t1, bigString       # t1 = &bigString
-    li $t2, 0               # t2 = 0             # row counter
+    la   $t0, display        # t0 = &display
+    la   $t1, bigString      # t1 = &bigString
+    li   $t2, 0              # t2 = 0             # row counter
+
+    lw   $t7, CHRSIZE        # t7 = CHRSIZE     = 9
+
+    addi $t9, $t7, 1         # t9 = CHRSIZE + 1 = 10
+    lw   $t8, MAXCHARS       # t8 = MAXCHARS    = 100
+    mul  $t9, $t9, $t8       # t9 = 10*100      = 1000 = number of columns per row in `bigString`
+
+    lw   $t8, NDCOLS         # t8 = NDCOLS      = 80
 
     # Row loop
     display_populate_loopRow:
         # while (t2 < 9) { ... }
-        beq  $t2, 9, display_populate_loopRowEnd
+        beq  $t2, $t7, display_populate_loopRowEnd
         nop
 
-        li   $t3, 0           # t3 = 0             # column counter
+        li   $t3, 0          # t3 = 0             # column counter
 
         # Column loop
         display_populate_loopCol:
             # while (t3 < 80) { ... }
-            beq  $t3, 80, display_populate_loopColEnd
+            beq  $t3, $t8, display_populate_loopColEnd
             nop
 
             li   $t4, ' '        # t4 = ' '       # t4 stores the space character
@@ -42,11 +53,11 @@ display_populate:
             # so just display blank in that position (a space character)
             blt  $t5, 0, display_populate_loopCol_write
             nop
-            bge  $t5, 1000, display_populate_loopCol_write
+            bge  $t5, $t9, display_populate_loopCol_write
             nop
 
-            # 0 <= t5 < 1000 has passed, meaning that the current position is inside `bigString`
-            mul  $t4, $t2, 1000  # t4 = t2*1000   # Calculate the `bigString` offset, given a row position
+            # 0 <= t5 < 1000 is true meaning that the current position is inside `bigString`
+            mul  $t4, $t2, $t9   # t4 = t2*1000   # Calculate the `bigString` offset, given a row position
             nop
 
             add  $t4, $t4, $t5   # t4 += t5       # Add on the start offset and column counter offset

@@ -12,11 +12,13 @@
 #       t0 - character at s2, then (&all_chars + letter offset)
 #       t1 - counter
 #       t2 - character at (&all_chars + letter offset + t1)
-#       t3 - temp
-#       t4 - temp
+#       t3 - address to store in `bigString`
+#       t4 - letter index of the input string
 #       t5 - temp
-#       t6 - address to store in `bigString`
-#       t7 - letter index of the input string
+#       t6 - temp
+#       t7 - 81 (CHRSIZE * NROWS)
+#       t8 - 10 (NROWS + 1)
+#       t9 - 1000 ( (NROWS+1) * MAXCHARS )
 #
     .text
 bigString_populate:
@@ -34,7 +36,7 @@ bigString_populate:
     la   $s1, all_chars # s1 = &all_chars
     move $s2, $a0       # s2 = a0
 
-    li   $t7, 0         # t7 = 0          # index of input string
+    li   $t4, 0         # t4 = 0          # index of input string
 
     # Loop
     bigString_populate_loop:
@@ -68,6 +70,7 @@ bigString_populate:
            ##                                                    90      97
             #                       91-96 -> 6 chars extra offset
         sub  $t0, $t0, 6 # t0 -= 6
+        # We could have subtracted 'a' instead of 'A', but this method saves one line :)
 
         bigString_populate_loop_character_loopPrepare:
 
@@ -79,15 +82,22 @@ bigString_populate:
         # 'z'-6 - 'A' == 51
         sub  $t0, $t0, 'A'   # t0 -= 'A'
 
-        mul  $t0, $t0, 81    # t0 *= 81      # Multiply the offset by 81 to get the 9x9 letter matrix offset
+        lw   $t7, CHRSIZE    # t7  = CHRSIZE         = 9
+        lw   $t8, NROWS      # t8  = NROWS           = 9
+        mul  $t7, $t7, $t8   # t7  = CHRSIZE * NROWS = 81
+        mul  $t0, $t0, $t7   # t0 *= 81      # Multiply the offset by 81 to get the 9x9 letter matrix offset
         add  $t0, $s1, $t0   # t0 += s1      # Set t0 to the address of all_chars offset by the previous result
+
+        addi $t8, $t8, 1     # t8 = NROWS + 1 = 10 (9 columns + 1 space)
+        lw   $t9, MAXCHARS   # t9 = MAXCHARS = 100
+        mul  $t9, $t8, $t9   # t9 = (NROWS + 1) * MAXCHARS  = 1000
 
         li   $t1, 0  # loop counter
 
         # Matrix loop
         bigString_populate_loop_character_loop:
             # while (t1 < 81) { ... }
-            beq  $t1, 81, bigString_populate_loop_continue
+            beq  $t1, $t7, bigString_populate_loop_continue
             nop
 
             # Get the character in the 9x9 letter matrix
@@ -100,24 +110,24 @@ bigString_populate:
              ####           |              |          | row position in the matrix * columns per row in `bigString`
               ###           |              | current letter count * (number of columns in a 9x9 matrix + 1 space column)
                ##           | base address of `bigString`
-                # Address = $s0 + $t7*10 + $t1/9*1000 + $t1%9
+                # Address = $s0 + $t4*10 + $t1/9*1000 + $t1%9
 
-            move $t6, $s0                 # address = base
+            move $t3, $s0                 # address = base
 
-            mul  $t3, $t7, 10             # temp1 = t7 * 10    # offset to get correct position (with space separators)
-            add  $t6, $t6, $t3            # address = base + temp1
+            mul  $t5, $t4, $t8            # temp1 = t4 * 10    # offset to get correct position (with space separators)
+            add  $t3, $t3, $t5            # address = base + temp1
 
-            li   $t3, 9                   # set our divisor to 9
-            div  $t1, $t3                 # divide by 9        # LO = $t1 / 9, HI = $t1 % 9
-            mflo $t3                      # temp2 = LO
-            mfhi $t4                      # temp3 = HI
+            lw   $t5, CHRSIZE             # set our divisor to 9 (CHRSIZE)
+            div  $t1, $t5                 # divide by 9        # LO = $t1 / 9, HI = $t1 % 9
+            mflo $t5                      # temp2 = LO
+            mfhi $t6                      # temp3 = HI
 
-            mul  $t3, $t3, 1000           # temp2 *= 1000      # Multiply temp2 by 1000
-            add  $t6, $t6, $t3            # address = base + temp1 + temp2
+            mul  $t5, $t5, $t9            # temp2 *= 1000      # Multiply temp2 by 1000
+            add  $t3, $t3, $t5            # address = base + temp1 + temp2
 
-            add  $t6, $t6, $t4            # address = base + temp1 + temp2 + temp3
+            add  $t3, $t3, $t6            # address = base + temp1 + temp2 + temp3
 
-            sb   $t2, ($t6)               # *(address) = t2    # store the character into the address in `bigString`
+            sb   $t2, ($t3)               # *(address) = t2    # store the character into the address in `bigString`
 
             # Go to next character in the matrix
             addi $t1, $t1, 1              # t1++
@@ -127,14 +137,14 @@ bigString_populate:
         bigString_populate_loop_continue:
             # Go to next letter in the input
             addi $s2, $s2, 1              # s2++               # Increment the address position in input string
-            addi $t7, $t7, 1              # t7++               # Increment the string length count
+            addi $t4, $t4, 1              # t4++               # Increment the string length count
             j    bigString_populate_loop
             nop
 
         # End of loop
         bigString_populate_loopEnd:
             # Set the return value to the number of characters read
-            move $v0, $t7                 # v0 = t7
+            move $v0, $t4                 # v0 = t4
 
             # Clean up
             lw   $s2, -16($fp)

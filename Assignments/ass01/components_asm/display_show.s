@@ -8,20 +8,24 @@
 #       t0 - address position in `display`
 #       t1 - temp
 #       t7 - loop counter
+#       t8 - 9  (CHRSIZE)
+#       t9 - 80 (NDCOLS)
 #
     .text
 display_show:
     la $a0, display       # a0 = &display     # address position in `display`
     li $t7, 0             # t7 = 0            # loop counter
+    lw $t8, CHRSIZE       # t8 = CHRSIZE = 9
+    lw $t9, NDCOLS        # t9 = NDCOLS = 80
 
     # Loop
     display_show_loop:
         # while (t7 < 9 ) { ... }
-        beq  $t7, 9, display_show_loopEnd
+        beq  $t7, $t8, display_show_loopEnd
         nop
 
         # Go to the start of the next row
-        addi $t0, $a0, 80
+        add  $t0, $a0, $t9
 
         # Store the byte at the first column, and change it to a null terminator (\0)
         lb   $t1, ($t0)       # t1 = *(t0)

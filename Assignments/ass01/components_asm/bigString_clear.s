@@ -6,6 +6,7 @@
 # vars: t0 - base address of `bigString`
 #       t1 - counter
 #       t2 - space character
+#       t3 - 9000 (NSCOLS)
 #
   .text
 bigString_clear:
@@ -13,11 +14,11 @@ bigString_clear:
     la $t0, bigString    # t0 = &bigString # t0 is the address of `bigString`
     li $t1, 0            # t1 = 0          # t1 is a counter
     li $t2, ' '          # t2 = ' '        # t2 is the space character (dec 32, hex 20)
-
+    lw $t3, NSCOLS       # t3 = 9000 (NSCOLS)
     # Loop
     bigString_clear_loop:
         # while (t1 < 9000) { ... }
-        beq  $t1, 9000, bigString_clear_loopEnd
+        beq  $t1, $t3, bigString_clear_loopEnd
         nop
 
         # set the value at address t0 to t2 (space)

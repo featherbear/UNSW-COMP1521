@@ -211,14 +211,21 @@ main_theLength_ge_1:
 
     # Populate the contents of `bigString` with `theString`
     la   $a0, theString       # a0 = &theString
-    jal  bigString_populate  # v0 = bigString_populate(&theString)
+    jal  bigString_populate   # v0 = bigString_populate(&theString)
     nop
 
     # Calculate the last starting column to display from
-    move $s1, $v0           # s1 = v0       # Set s1 to the length of `theString`
-    mul  $s1, $s1, 10        # s1 *= 10      # number of characters * (9 columns + 1 space) is the last start column
+    move $s1, $v0             # s1 = v0            # Set s1 to the length of `theString`
 
-    li   $s0, -80             # s0 = -80      # Start off-screen
+    # Calculate the number of columns that each charcater will use
+    # (9 columns + 1 space = 10 characters)
+    lw   $t0, CHRSIZE         # t0 = 9 (CHRSIZE)
+    addi $t0, $t0, 1          # t0 = CHRSIZE + 1 = 10
+
+    mul  $s1, $s1, $t0        # s1 *= 10           # number of characters *  is the last start column
+
+    lw   $s0, NDCOLS          # s0 = 80 (NDCOLS)
+    sub  $s0, $0, $s0         # s0 = -80 (-NDCOLS) # Start off-screen
 
     # Display loop
     display_loop:
@@ -251,6 +258,10 @@ main_theLength_ge_1:
     # End display loop
     display_loopEnd:
         move $v0, $zero     # return 0
+
+        # Clear the screen
+        jal  clearScreen
+        nop
 
                                         main__post:
                                             # tear down stack frame
