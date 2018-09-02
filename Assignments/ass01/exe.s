@@ -552,7 +552,9 @@
 # - The code indented to the right is the starting code of the assignment which I didn't touch
 # - The code on the left is the code that I have written
 
-
+# Last Change: 9:29PM 31/08/2018
+# - Replaced hard-coded values with calculated values that are stored into registers
+# - Formatted code to align opcodes
 
 # FAR INDENTED CODE IS PROVIDED ------->
 
@@ -562,71 +564,72 @@
                                         #
                                         # Base code by Jashank Jeremy
                                         # Tweaked by John Shepherd
-                                        # $Revision: 1.5 $
-                                        #
-                                        # Edit me with 8-column tabs!
+                                        # $Revision: 1.5$
 
                                         # Requires:
                                         #  - `all_chars', defined in chars.s
 
                                         # Provides:
-                                            .globl	main # :: int, [char *], [char *] -> int
-                                        #	.globl	setUpDisplay # :: int, int -> void
-                                        #	.globl	showDisplay # :: void -> void
-                                            .globl	delay # :: int -> vovid
-                                            .globl	isUpper # :: char -> int
-                                            .globl	isLower # :: char -> int
+                                        .globl  main               # :: int, [char *], [char *] -> int
+                                        .globl  bigString_populate # :: str -> int
+                                        .globl  bigString_clear    # :: void -> void
+                                        .globl  clearScreen        # :: void -> void
+                                        .globl  delay              # :: int -> vovid
+                                        .globl  display_populate   # :: int -> void
+                                        .globl  display_show       # :: void -> void
+                                        .globl  isUpper            # :: char -> int
+                                        .globl  isLower            # :: char -> int
 
-                                            .globl	CHRSIZE
-                                            .globl	NROWS
-                                            .globl	NDCOLS
-                                            .globl	MAXCHARS
-                                            .globl	NSCOLS
-                                            .globl	CLEAR
+                                        .globl  CHRSIZE
+                                        .globl  NROWS
+                                        .globl  NDCOLS
+                                        .globl  MAXCHARS
+                                        .globl  NSCOLS
+                                        .globl  CLEAR
 
                                         ########################################################################
                                             .data
+                                        # /!\ NOTE /!\
+                                        # In C, the values of the symbols `CHRSIZE', `NROWS', `NDCOLS',
+                                        # `NSCOLS', `MAXCHARS', and `CLEAR' would be substituted during
+                                        # preprocessing.  SPIM does not have preprocessing facilities,
+                                        # so instead we provide these values in the `.data' segment.
 
-                                            # /!\ NOTE /!\
-                                            # In C, the values of the symbols `CHRSIZE', `NROWS', `NDCOLS',
-                                            # `NSCOLS', `MAXCHARS', and `CLEAR' would be substituted during
-                                            # preprocessing.  SPIM does not have preprocessing facilities,
-                                            # so instead we provide these values in the `.data' segment.
+                                        # number of rows and columns in each big char
+                                        CHRSIZE:   .word  9
 
-                                            # # of rows and columns in each big char
-                                        CHRSIZE:	.word	9
+                                        # number of rows in all matrices
+                                        NROWS:     .word  9
 
-                                            # number of rows in all matrices
-                                        NROWS:		.word	9
+                                        # number of columns in display matrix
+                                        NDCOLS:    .word   800
 
-                                            # number of columns in display matrix
-                                        NDCOLS:		.word	80
+                                        # max length of input string
+                                        MAXCHARS:  .word   100
 
-                                            # max length of input string
-                                        MAXCHARS:	.word	100
+                                        # number of columns in bigString matrix
+                                        # max length of buffer to hold big version
+                                        # the +1 allows for one blank column between letters
+                                        NSCOLS:    .word   9000  # (NROWS * MAXCHARS * (CHRSIZE + 1))
 
-                                            # number of columns in bigString matrix
-                                            # max length of buffer to hold big version
-                                            # the +1 allows for one blank column between letters
-                                        NSCOLS:		.word	9000	# (NROWS * MAXCHARS * (CHRSIZE + 1))
-                                                # ANSI escape sequence for 'clear-screen'
-                                        CLEAR:	.asciiz "\033[H\033[2J"
-                                        # CLEAR:	.asciiz "__showpage__\n" # for debugging
+                                        # ANSI escape sequence for 'clear-screen'
+                                        CLEAR:     .asciiz "\033[H\033[2J"
+                                        # CLEAR:  .asciiz "__showpage__\n" # for debugging
 
-                                        main__0:	.asciiz	"Usage: ./scroll String\n"
-                                        main__1:	.asciiz	"Only letters and spaces are allowed in the string!\n"
-                                        main__2:	.asciiz "String mush be < "
-                                        main__3:	.asciiz " chars\n"
-                                        main__4:	.asciiz "Please enter a string with at least one character!\n"
+                                        main__0:   .asciiz "Usage: ./scroll String\n"
+                                        main__1:   .asciiz "Only letters and spaces are allowed in the string!\n"
+                                        main__2:   .asciiz "String mush be < "
+                                        main__3:   .asciiz " chars\n"
+                                        main__4:   .asciiz "Please enter a string with at least one character!\n"
 
-                                                    .align	4
-                                        theString:	.space	101	# MAXCHARS + 1
+                                                   .align  4
+                                        theString: .space  101  # MAXCHARS + 1
 
-                                                    .align	4
-                                        display:	.space	720	# NROWS * NDCOLS
+                                                   .align  4
+                                        display:   .space  720  # NROWS * NDCOLS
 
-                                                    .align	4
-                                        bigString:	.space	81000	# NROWS * NSCOLS
+                                                   .align  4
+                                        bigString: .space  81000  # NROWS * NSCOLS
                                         ########################################################################
 
                                         ########################################################################
@@ -634,264 +637,275 @@
                                             .text
                                         main:
 
-                                        # Frame:	$fp, $ra, ...
-                                        # Uses:		$a0, $a1, $t0, $t1, $t2, $s0, $s1
-                                        # Clobbers:	...
+                                        # Frame:  $fp, $ra, ...
+                                        # Uses:    $a0, $a1, $t0, $t1, $t2, $s0, $s1
+                                        # Clobbers:  ...
 
                                         # Locals:
-                                        #	- `theLength' in $s0
-                                        #	- `bigLength' in $s1
-                                        #	- `ch' in $s2
-                                        #	- `str' in $t2
-                                        #	- `i' in $...
-                                        #	- `j' in $...
-                                        #	- `row' in $...
-                                        #	- `col' in $...
-                                        #	- `iterations' in $...
-                                        #	- `startingCol' in $...
+                                        #  - `theLength' in $s0
+                                        #  - `bigLength' in $s1
+                                        #  - `ch' in $s2
+                                        #  - `str' in $t2
+                                        #  - `i' in $...
+                                        #  - `j' in $...
+                                        #  - `row' in $...
+                                        #  - `col' in $...
+                                        #  - `iterations' in $...
+                                        #  - `startingCol' in $...
 
                                         # Structure:
-                                        #	main
-                                        #	-> [prologue]
-                                        #	-> main_argc_gt_two
-                                        #	-> main_PTRs_init
-                                        #	  -> main_PTRs_cond
-                                        #	    -> main_ch_notspace
-                                        #	    -> main_ch_isLower
-                                        #	    -> main_ch_isSpace
-                                        #	  -> main_PTRs_step
-                                        #	-> main_PTRs_f
-                                        #	[theLength cond]
-                                        #	  | main_theLength_ge_MAXCHARS
-                                        #	  | main_theLength_lt_MAXCHARS
-                                        #	  | main_theLength_lt_1
-                                        #	  | main_theLength_ge_1
-                                        #	...
-                                        #	-> [epilogue]
+                                        #  main
+                                        #  -> [prologue]
+                                        #  -> main_argc_gt_two
+                                        #  -> main_PTRs_init
+                                        #    -> main_PTRs_cond
+                                        #      -> main_ch_notspace
+                                        #      -> main_ch_isLower
+                                        #      -> main_ch_isSpace
+                                        #    -> main_PTRs_step
+                                        #  -> main_PTRs_f
+                                        #  [theLength cond]
+                                        #    | main_theLength_ge_MAXCHARS
+                                        #    | main_theLength_lt_MAXCHARS
+                                        #    | main_theLength_lt_1
+                                        #    | main_theLength_ge_1
+                                        #  ...
+                                        #  -> [epilogue]
 
                                         # Code:
                                             # set up stack frame
-                                            sw	$fp, -4($sp)
-                                            la	$fp, -4($sp)
-                                            sw	$ra, -4($fp)  # note: switch to $fp-relative
-                                            sw	$s0, -8($fp)
-                                            sw	$s1, -12($fp)
-                                            sw	$s2, -16($fp)
-                                            addi	$sp, $sp, -20
+                                            sw  $fp, -4($sp)
+                                            la  $fp, -4($sp)
+                                            sw  $ra, -4($fp)  # note: switch to $fp-relative
+                                            sw  $s0, -8($fp)
+                                            sw  $s1, -12($fp)
+                                            sw  $s2, -16($fp)
+                                            addi  $sp, $sp, -20
 
                                             # if (argc < 2)
-                                            li	$t0, 2
-                                            bge	$a0, $t0, main_argc_gt_two
-                                            nop	# in delay slot
+                                            li  $t0, 2
+                                            bge  $a0, $t0, main_argc_gt_two
+                                            nop  # in delay slot
                                             # printf(...)
-                                            la	$a0, main__0
-                                            li	$v0, 4 # PRINT_STRING_SYSCALL
+                                            la  $a0, main__0
+                                            li  $v0, 4 # PRINT_STRING_SYSCALL
                                             syscall
                                             # return 1  =>  load $v0, jump to epilogue
-                                            li	$v0, 1
-                                            j	main__post
-                                            nop	# in delay slot
+                                            li  $v0, 1
+                                            j  main__post
+                                            nop  # in delay slot
                                         main_argc_gt_two:
 
-                                            move	$s0, $zero
+                                            move  $s0, $zero
                                         main_PTRs_init:
                                             # s = argv[1]
-                                            lw	$t2, 4($a1)
+                                            lw  $t2, 4($a1)
 
                                         main_PTRs_cond:
                                             # optimisation: `ch = *s' now
                                             # (ch = )*s
-                                            lb	$s2, ($t2)
+                                            lb  $s2, ($t2)
                                             # *s != '\0'  =>  ch != 0
-                                            beqz	$s2, main_PTRs_f
-                                            nop	# in delay slot
+                                            beqz  $s2, main_PTRs_f
+                                            nop  # in delay slot
 
                                             # if (!isUpper(ch))
                                         main_ch_upper:
-                                            move	$a0, $s2
-                                            jal	isUpper
-                                            nop	# in delay slot
-                                            beqz	$v0, main_ch_lower
-                                            nop	# in delay slot
+                                            move  $a0, $s2
+                                            jal  isUpper
+                                            nop  # in delay slot
+                                            beqz  $v0, main_ch_lower
+                                            nop  # in delay slot
 
                                             li $v0, 11
                                             syscall
 
-                                            j	main_ch_ok
-                                            nop	# in delay slot
+                                            j  main_ch_ok
+                                            nop  # in delay slot
 
                                             # if (!isLower(ch))
                                         main_ch_lower:
-                                            move	$a0, $s2
-                                            jal	isLower
-                                            nop	# in delay slot
-                                            beqz	$v0, main_ch_space
-                                            nop	# in delay slot
+                                            move  $a0, $s2
+                                            jal  isLower
+                                            nop  # in delay slot
+                                            beqz  $v0, main_ch_space
+                                            nop  # in delay slot
 
                                             li $v0, 11
                                             syscall
 
-                                            j	main_ch_ok
-                                            nop	# in delay slot
+                                            j  main_ch_ok
+                                            nop  # in delay slot
                                             # if (ch != ' ')
 
                                         main_ch_space:
-                                            li	$t0, ' '
-                                            bne	$s2, $t0, main_ch_fail
-                                            nop	# in delay slot
+                                            li  $t0, ' '
+                                            bne  $s2, $t0, main_ch_fail
+                                            nop  # in delay slot
 
                                             li $v0, 11
                                             syscall
 
-                                            j	main_ch_ok
-                                            nop	# in delay slot
+                                            j  main_ch_ok
+                                            nop  # in delay slot
 
                                         main_ch_fail:
                                             # printf(...)
-                                            la	$a0, main__1
-                                            li	$v0, 4 # PRINT_STRING_SYSCALL
+                                            la  $a0, main__1
+                                            li  $v0, 4 # PRINT_STRING_SYSCALL
                                             syscall
                                             # exit(1)  =>  return 1  =>  load $v0, jump to epilogue
-                                            li	$v0, 1
-                                            j	main__post
-                                            nop	# in delay slot
+                                            li  $v0, 1
+                                            j  main__post
+                                            nop  # in delay slot
 
                                         main_ch_ok:
                                             # if (theLength >= MAXCHARS)
-                                            la	$t0, MAXCHARS
-                                            lw	$t0, ($t0)
+                                            la  $t0, MAXCHARS
+                                            lw  $t0, ($t0)
                                             # break  =>  jump out of for(*s...)
-                                            bge	$s0, $t0, main_PTRs_f
+                                            bge  $s0, $t0, main_PTRs_f
 
                                             # theString[theLength]
-                                            la	$t0, theString
-                                            addu	$t0, $t0, $s0	# ADDU because address
+                                            la  $t0, theString
+                                            addu  $t0, $t0, $s0  # ADDU because address
                                             # theString[theLength] = ch
-                                            sb	$s2, ($t0)
+                                            sb  $s2, ($t0)
 
                                             # theLength++
-                                            addi	$s0, $s0, 1
+                                            addi  $s0, $s0, 1
 
                                         main_PTRs_step:
                                             # s++  =>  s = s + 1
-                                            addiu	$t2, $t2, 1	# ADDIU because address
-                                            j	main_PTRs_cond
+                                            addiu  $t2, $t2, 1  # ADDIU because address
+                                            j  main_PTRs_cond
                                             nop
 
                                         main_PTRs_f:
 
                                             # theString[theLength] = ...
-                                            la	$t0, theString
-                                            addu	$t0, $t0, $s0	# ADDU because address
+                                            la  $t0, theString
+                                            addu  $t0, $t0, $s0  # ADDU because address
                                             # theString[theLength] = '\0'
-                                            sb	$zero, ($t0)
+                                            sb  $zero, ($t0)
 
                                             # CHRSIZE + 1
-                                            la	$t0, CHRSIZE
-                                            lw	$t0, ($t0)
-                                            addi	$t0, $t0, 1
+                                            la  $t0, CHRSIZE
+                                            lw  $t0, ($t0)
+                                            addi  $t0, $t0, 1
                                             # bigLength = theLength * (CHRSIZE + 1)
-                                            mul	$s1, $t0, $s0
+                                            mul  $s1, $t0, $s0
 
                                             # if (theLength >= MAXCHARS)
-                                            la	$t0, MAXCHARS
-                                            lw	$t0, ($t0)
-                                            blt	$s0, $t0, main_theLength_lt_MAXCHARS
-                                            nop	# in delay slot
+                                            la  $t0, MAXCHARS
+                                            lw  $t0, ($t0)
+                                            blt  $s0, $t0, main_theLength_lt_MAXCHARS
+                                            nop  # in delay slot
 
                                         main_theLength_ge_MAXCHARS:
                                             # printf(..., ..., ...)
-                                            la	$a0, main__2
-                                            li	$v0, 4 # PRINT_STRING_SYSCALL
+                                            la  $a0, main__2
+                                            li  $v0, 4 # PRINT_STRING_SYSCALL
                                             syscall
 
-                                            move	$a0, $t0
-                                            li	$v0, 1 # PRINT_INT_SYSCALL
+                                            move  $a0, $t0
+                                            li  $v0, 1 # PRINT_INT_SYSCALL
                                             syscall
 
-                                            la	$a0, main__3
-                                            li	$v0, 4 # PRINT_STRING_SYSCALL
+                                            la  $a0, main__3
+                                            li  $v0, 4 # PRINT_STRING_SYSCALL
                                             syscall
 
                                             # return 1  =>  load $v0, jump to epilogue
-                                            li	$v0, 1
-                                            j	main__post
-                                            nop	# in delay slot
+                                            li  $v0, 1
+                                            j  main__post
+                                            nop  # in delay slot
 
                                         main_theLength_lt_MAXCHARS:
                                             # if (theLength < 1)
-                                            li	$t0, 1
-                                            bge	$s0, $t0, main_theLength_ge_1
-                                            nop	# in delay slot
+                                            li  $t0, 1
+                                            bge  $s0, $t0, main_theLength_ge_1
+                                            nop  # in delay slot
 
                                         main_theLength_lt_1:
                                             # printf(...)
-                                            la	$a0, main__4
-                                            li	$v0, 4 # PRINT_STRING_SYSCALL
+                                            la  $a0, main__4
+                                            li  $v0, 4 # PRINT_STRING_SYSCALL
                                             syscall
                                             # exit(1)  =>  return 1  =>  load $v0, jump to epilogue
-                                            li	$v0, 1
-                                            j	main__post
-                                            nop	# in delay slot
+                                            li  $v0, 1
+                                            j  main__post
+                                            nop  # in delay slot
 
 main_theLength_ge_1:
     # Initialise the contents of `bigString`
-    jal bigString_clear
+    jal  bigString_clear
     nop
 
     # Populate the contents of `bigString` with `theString`
-    la $a0, theString       # a0 = &theString
-    jal bigString_populate  # v0 = bigString_populate(&theString)
+    la   $a0, theString       # a0 = &theString
+    jal  bigString_populate   # v0 = bigString_populate(&theString)
     nop
 
     # Calculate the last starting column to display from
-    move $s1, $v0           # s1 = v0       # Set s1 to the length of `theString`
-    mul $s1, $s1, 10        # s1 *= 10      # number of characters * (9 columns + 1 space) is the last start column
+    move $s1, $v0             # s1 = v0            # Set s1 to the length of `theString`
 
-    li $s0, -80             # s0 = -80      # Start off-screen
+    # Calculate the number of columns that each charcater will use
+    # (9 columns + 1 space = 10 characters)
+    lw   $t0, CHRSIZE         # t0 = 9 (CHRSIZE)
+    addi $t0, $t0, 1          # t0 = CHRSIZE + 1 = 10
+
+    mul  $s1, $s1, $t0        # s1 *= 10           # number of characters *  is the last start column
+
+    lw   $s0, NDCOLS          # s0 = 80 (NDCOLS)
+    sub  $s0, $0, $s0         # s0 = -80 (-NDCOLS) # Start off-screen
 
     # Display loop
     display_loop:
         # while (s0 < s1) { ... }
-        beq $s0, $s1, display_loopEnd
+        beq  $s0, $s1, display_loopEnd
 
         # Populate the contents of `display` from `bigString` starting at the column offset
         move $a0, $s0       # a0 = s0       # a0 is the starting column offset
-        jal display_populate
+        jal  display_populate
         nop
 
         # Clear the screen
-        jal clearScreen
+        jal  clearScreen
         nop
 
         # Show the display
-        jal display_show
+        jal  display_show
         nop
 
         # Wait ... for some time ...
-        li $a0, 1 # <--- Change me to a higher value for a longer delay?
-        jal delay
+        li   $a0, 1 # <--- Change me to a higher value for a longer delay?
+        jal  delay
         nop
 
         # Go to the next column in the loop
         addi $s0, $s0, 1    # s++           # Increment the starting column offset
-        j display_loop
+        j    display_loop
         nop
 
     # End display loop
     display_loopEnd:
         move $v0, $zero     # return 0
 
+        # Clear the screen
+        jal  clearScreen
+        nop
+
                                         main__post:
                                             # tear down stack frame
-                                            lw	$s2, -16($fp)
-                                            lw	$s1, -12($fp)
-                                            lw	$s0, -8($fp)
-                                            lw	$ra, -4($fp)
-                                            la	$sp, 4($fp)
-                                            lw	$fp, ($fp)
-                                            jr	$ra
-                                            nop	# in delay slot
+                                            lw  $s2, -16($fp)
+                                            lw  $s1, -12($fp)
+                                            lw  $s0, -8($fp)
+                                            lw  $ra, -4($fp)
+                                            la  $sp, 4($fp)
+                                            lw  $fp, ($fp)
+                                            jr  $ra
+                                            nop  # in delay slot
 
 #
 # <bigString_clear>
@@ -900,34 +914,35 @@ main_theLength_ge_1:
 # vars: t0 - base address of `bigString`
 #       t1 - counter
 #       t2 - space character
+#       t3 - 9000 (NSCOLS)
 #
-	.text
+  .text
 bigString_clear:
     # Setup
     la $t0, bigString    # t0 = &bigString # t0 is the address of `bigString`
     li $t1, 0            # t1 = 0          # t1 is a counter
     li $t2, ' '          # t2 = ' '        # t2 is the space character (dec 32, hex 20)
-
+    lw $t3, NSCOLS       # t3 = 9000 (NSCOLS)
     # Loop
     bigString_clear_loop:
         # while (t1 < 9000) { ... }
-        beq $t1, 9000, bigString_clear_loopEnd
+        beq  $t1, $t3, bigString_clear_loopEnd
         nop
 
         # set the value at address t0 to t2 (space)
-        sb $t2, ($t0)    # *(t0) = t2
+        sb   $t2, ($t0)    # *(t0) = t2
 
         # increment counters
         addi $t0, $t0, 1 # t0++
         addi $t1, $t1, 1 # t1++
 
         # repeat loop
-        j bigString_clear_loop
+        j    bigString_clear_loop
         nop
 
     # End of loop
     bigString_clear_loopEnd:
-        jr	$ra
+        jr   $ra
         nop
 
 #
@@ -943,49 +958,51 @@ bigString_clear:
 #       t0 - character at s2, then (&all_chars + letter offset)
 #       t1 - counter
 #       t2 - character at (&all_chars + letter offset + t1)
-#       t3 - temp
-#       t4 - temp
+#       t3 - address to store in `bigString`
+#       t4 - letter index of the input string
 #       t5 - temp
-#       t6 - address to store in `bigString`
-#       t7 - letter index of the input string
+#       t6 - temp
+#       t7 - 81 (CHRSIZE * NROWS)
+#       t8 - 10 (NROWS + 1)
+#       t9 - 1000 ( (NROWS+1) * MAXCHARS )
 #
     .text
 bigString_populate:
     # Set up stack frame
-	sw	$fp, -4($sp)
-	la	$fp, -4($sp)
-	sw	$ra, -4($fp)
-	sw	$s0, -8($fp)
-	sw	$s1, -12($fp)
-	sw	$s2, -16($fp)
-	addi	$sp, $sp, -20
+    sw   $fp, -4($sp)
+    la   $fp, -4($sp)
+    sw   $ra, -4($fp)
+    sw   $s0, -8($fp)
+    sw   $s1, -12($fp)
+    sw   $s2, -16($fp)
+    addi $sp, $sp, -20
 
     # Setup
-    la $s0, bigString # s0 = &bigString
-    la $s1, all_chars # s1 = &all_chars
-    move $s2, $a0     # s2 = a0
+    la   $s0, bigString # s0 = &bigString
+    la   $s1, all_chars # s1 = &all_chars
+    move $s2, $a0       # s2 = a0
 
-    li $t7, 0         # t7 = 0          # index of input string
+    li   $t4, 0         # t4 = 0          # index of input string
 
     # Loop
     bigString_populate_loop:
-        lb $t0, ($s2) # t0 = *(s2)      # t0 holds the character at address in s2
+        lb   $t0, ($s2) # t0 = *(s2)      # t0 holds the character at address in s2
 
         # if (t0 == NULL) --> break
-        beq $t0, 0, bigString_populate_loopEnd
+        beq  $t0, 0, bigString_populate_loopEnd
         nop
 
         # if (t0 == ' ') --> continue
-        beq $t0, ' ', bigString_populate_loop_continue
+        beq  $t0, ' ', bigString_populate_loop_continue
         nop
 
         # Check if t0 is a lowercase letter
         move $a0, $t0
-        jal isLower
+        jal  isLower
         nop
 
         # if (!isLower()) { ... }
-        beq $v0, 0, bigString_populate_loop_character_loopPrepare
+        beq  $v0, 0, bigString_populate_loop_character_loopPrepare
         nop
 
         # Subtract 6 from t0 for lowercase letters to handle the ASCII offset difference
@@ -998,7 +1015,8 @@ bigString_populate:
           ###                    There are 6 characters between 'Z' and 'a'
            ##                                                    90      97
             #                       91-96 -> 6 chars extra offset
-        sub $t0, $t0, 6 # t0 -= 6
+        sub  $t0, $t0, 6 # t0 -= 6
+        # We could have subtracted 'a' instead of 'A', but this method saves one line :)
 
         bigString_populate_loop_character_loopPrepare:
 
@@ -1008,22 +1026,29 @@ bigString_populate:
         # 'Z'   - 'A' == 25
         # 'a'-6 - 'A' == 26
         # 'z'-6 - 'A' == 51
-        sub $t0, $t0, 'A'   # t0 -= 'A'
+        sub  $t0, $t0, 'A'   # t0 -= 'A'
 
-        mul $t0, $t0, 81    # t0 *= 81      # Multiply the offset by 81 to get the 9x9 letter matrix offset
-        add $t0, $s1, $t0   # t0 += s1      # Set t0 to the address of all_chars offset by the previous result
+        lw   $t7, CHRSIZE    # t7  = CHRSIZE         = 9
+        lw   $t8, NROWS      # t8  = NROWS           = 9
+        mul  $t7, $t7, $t8   # t7  = CHRSIZE * NROWS = 81
+        mul  $t0, $t0, $t7   # t0 *= 81      # Multiply the offset by 81 to get the 9x9 letter matrix offset
+        add  $t0, $s1, $t0   # t0 += s1      # Set t0 to the address of all_chars offset by the previous result
 
-        li $t1, 0  # loop counter
+        addi $t8, $t8, 1     # t8 = NROWS + 1 = 10 (9 columns + 1 space)
+        lw   $t9, MAXCHARS   # t9 = MAXCHARS = 100
+        mul  $t9, $t8, $t9   # t9 = (NROWS + 1) * MAXCHARS  = 1000
+
+        li   $t1, 0  # loop counter
 
         # Matrix loop
         bigString_populate_loop_character_loop:
             # while (t1 < 81) { ... }
-            beq $t1, 81, bigString_populate_loop_continue
+            beq  $t1, $t7, bigString_populate_loop_continue
             nop
 
             # Get the character in the 9x9 letter matrix
-            add $t2, $t0, $t1 # t2 = t0 #   # t2 is (&all_chars + letter offset) + position offset
-            lb $t2, ($t2)     # t2 = *(t2)  # Load the character at the memory of t2
+            add  $t2, $t0, $t1 # t2 = t0 #   # t2 is (&all_chars + letter offset) + position offset
+            lb   $t2, ($t2)     # t2 = *(t2)  # Load the character at the memory of t2
 
             # Calculate the address in `bigString` to store our character
             ##### Address = base address + index*10 + offset/9*1000 + offset%9
@@ -1031,50 +1056,50 @@ bigString_populate:
              ####           |              |          | row position in the matrix * columns per row in `bigString`
               ###           |              | current letter count * (number of columns in a 9x9 matrix + 1 space column)
                ##           | base address of `bigString`
-                # Address = $s0 + $t7*10 + $t1/9*1000 + $t1%9
+                # Address = $s0 + $t4*10 + $t1/9*1000 + $t1%9
 
-            move $t6, $s0               # address = base
+            move $t3, $s0                 # address = base
 
-            mul $t3, $t7, 10            # temp1 = t7 * 10    # offset to get correct position (with space separators)
-            add $t6, $t6, $t3           # address = base + temp1
+            mul  $t5, $t4, $t8            # temp1 = t4 * 10    # offset to get correct position (with space separators)
+            add  $t3, $t3, $t5            # address = base + temp1
 
-            li $t3, 9                   # set our divisor to 9
-            div $t1, $t3                # divide by 9        # LO = $t1 / 9, HI = $t1 % 9
-            mflo $t3                    # temp2 = LO
-            mfhi $t4                    # temp3 = HI
+            lw   $t5, CHRSIZE             # set our divisor to 9 (CHRSIZE)
+            div  $t1, $t5                 # divide by 9        # LO = $t1 / 9, HI = $t1 % 9
+            mflo $t5                      # temp2 = LO
+            mfhi $t6                      # temp3 = HI
 
-            mul $t3, $t3, 1000          # temp2 *= 1000      # Multiply temp2 by 1000
-            add $t6, $t6, $t3           # address = base + temp1 + temp2
+            mul  $t5, $t5, $t9            # temp2 *= 1000      # Multiply temp2 by 1000
+            add  $t3, $t3, $t5            # address = base + temp1 + temp2
 
-            add $t6, $t6, $t4           # address = base + temp1 + temp2 + temp3
+            add  $t3, $t3, $t6            # address = base + temp1 + temp2 + temp3
 
-            sb $t2, ($t6)               # *(address) = t2    # store the character into the address in `bigString`
+            sb   $t2, ($t3)               # *(address) = t2    # store the character into the address in `bigString`
 
             # Go to next character in the matrix
-            addi $t1, $t1, 1            # t1++
-            j bigString_populate_loop_character_loop
+            addi $t1, $t1, 1              # t1++
+            j    bigString_populate_loop_character_loop
             nop
 
         bigString_populate_loop_continue:
             # Go to next letter in the input
-            addi $s2, $s2, 1            # s2++               # Increment the address position in input string
-            addi $t7, $t7, 1            # t7++               # Increment the string length count
-            j bigString_populate_loop
+            addi $s2, $s2, 1              # s2++               # Increment the address position in input string
+            addi $t4, $t4, 1              # t4++               # Increment the string length count
+            j    bigString_populate_loop
             nop
 
         # End of loop
         bigString_populate_loopEnd:
             # Set the return value to the number of characters read
-            move $v0, $t7               # v0 = t7
+            move $v0, $t4                 # v0 = t4
 
             # Clean up
-            lw	$s2, -16($fp)
-            lw	$s1, -12($fp)
-            lw	$s0, -8($fp)
-            lw	$ra, -4($fp)
-            la	$sp, 4($fp)
-            lw	$fp, ($fp)
-            jr	$ra
+            lw   $s2, -16($fp)
+            lw   $s1, -12($fp)
+            lw   $s0, -8($fp)
+            lw   $ra, -4($fp)
+            la   $sp, 4($fp)
+            lw   $fp, ($fp)
+            jr   $ra
             nop
 
 #
@@ -1082,7 +1107,7 @@ bigString_populate:
 # info: Clear the display of the output window
 #       As a utility function, the previous values of a0 and v0 should probably be preserved... oh well!
 #
-	.text
+    .text
 clearScreen:
     la $a0, CLEAR # load the escape sequences that clear the screen
     li $v0, 4     # syscall 4 -> print string
@@ -1090,109 +1115,106 @@ clearScreen:
     nop
 
     # return from function
-	jr	$ra
-	nop
+    jr $ra
+    nop
 
                                         ########################################################################
                                         # .TEXT <delay>
                                             .text
                                         delay:
 
-                                        # Frame:	$fp, $ra
-                                        # Uses:		$a0, $t0, $t1, $t2, $t3, $t4, $t5
-                                        # Clobbers:	$t0, $t1, $t2, $t3, $t4, $t5
+                                        # Frame:  $fp, $ra
+                                        # Uses:    $a0, $t0, $t1, $t2, $t3, $t4, $t5
+                                        # Clobbers:  $t0, $t1, $t2, $t3, $t4, $t5
 
                                         # Locals:
-                                        #	- `n' in $a0
-                                        #	- `x' in $t0
-                                        #	- `i' in $t1
-                                        #	- `j' in $t2
-                                        #	- `k' in $t3
+                                        #  - `n' in $a0
+                                        #  - `x' in $t0
+                                        #  - `i' in $t1
+                                        #  - `j' in $t2
+                                        #  - `k' in $t3
 
                                         # Structure:
-                                        #	delay
-                                        #	-> [prologue]
-                                        #	-> delay_i_init
-                                        #	-> delay_i_cond
-                                        #	   -> delay_j_init
-                                        #	   -> delay_j_cond
-                                        #	      -> delay_k_init
-                                        #	      -> delay_k_cond
-                                        #	         -> delay_k_step
-                                        #	      -> delay_k_f
-                                        #	      -> delay_j_step
-                                        #	   -> delay_j_f
-                                        #	   -> delay_i_step
-                                        #	-> delay_i_f
-                                        #	-> [epilogue]
+                                        #  delay
+                                        #  -> [prologue]
+                                        #  -> delay_i_init
+                                        #  -> delay_i_cond
+                                        #     -> delay_j_init
+                                        #     -> delay_j_cond
+                                        #        -> delay_k_init
+                                        #        -> delay_k_cond
+                                        #           -> delay_k_step
+                                        #        -> delay_k_f
+                                        #        -> delay_j_step
+                                        #     -> delay_j_f
+                                        #     -> delay_i_step
+                                        #  -> delay_i_f
+                                        #  -> [epilogue]
 
                                         # Code:
-                                            sw	$fp, -4($sp)
-                                            la	$fp, -4($sp)
-                                            sw	$ra, -4($fp)
-                                            la	$sp, -8($fp)
+                                            sw   $fp, -4($sp)
+                                            la   $fp, -4($sp)
+                                            sw   $ra, -4($fp)
+                                            la   $sp, -8($fp)
 
                                             # x <- 0
-                                            move	$t0, $zero
+                                            move $t0, $zero
                                             # These values control the busy-wait.
-                                            li	$t4, 150
-                                            li	$t5, 100
+                                            li   $t4, 150
+                                            li   $t5, 100
 
-                                        delay_i_init:
-                                            # i = 0;
-                                            move	$t1, $zero
-                                        delay_i_cond:
-                                            # i < n;
-                                            bge	$t1, $a0, delay_i_f
-                                            nop	# in delay slot
+                                            delay_i_init:
+                                                # i = 0;
+                                                move $t1, $zero
+                                            delay_i_cond:
+                                                # i < n;
+                                                bge   $t1, $a0, delay_i_f
+                                                nop   # in delay slot
 
-                                        delay_j_init:
-                                            # j = 0;
-                                            move	$t2, $zero
-                                        delay_j_cond:
-                                            # j < DELAY_J;
-                                            bge	$t2, $t4, delay_j_f
-                                            nop	# in delay slot
+                                            delay_j_init:
+                                                # j = 0;
+                                                move $t2, $zero
+                                            delay_j_cond:
+                                                # j < DELAY_J;
+                                                bge   $t2, $t4, delay_j_f
+                                                nop   # in delay slot
 
-                                        delay_k_init:
-                                            # k = 0;
-                                            move	$t3, $zero
-                                        delay_k_cond:
-                                            # k < DELAY_K;
-                                            bge	$t3, $t5, delay_k_f
-                                            nop	# in delay slot
+                                            delay_k_init:
+                                                # k = 0;
+                                                move $t3, $zero
+                                            delay_k_cond:
+                                                # k < DELAY_K;
+                                                bge  $t3, $t5, delay_k_f
+                                                nop  # in delay slot
 
-                                            # x = x + 1
-                                            addi	$t0, $t0, 1
+                                                # x = x + 1
+                                                addi $t0, $t0, 1
 
-                                        delay_k_step:
-                                            # k = k + 1
-                                            addi	$t3, $t3, 1
-                                            j	delay_k_cond
-                                            nop	# in delay slot
-                                        delay_k_f:
-
-                                        delay_j_step:
-                                            # j = j + 1
-                                            addi	$t2, $t2, 1
-                                            j	delay_j_cond
-                                            nop	# in delay slot
-                                        delay_j_f:
-
-                                        delay_i_step:
-                                            # i = i + 1
-                                            addi	$t1, $t1, 1
-                                            j	delay_i_cond
-                                            nop	# in delay slot
-                                        delay_i_f:
-
-                                        delay__post:
-                                            # tear down stack frame
-                                            lw	$ra, -4($fp)
-                                            la	$sp, 4($fp)
-                                            lw	$fp, ($fp)
-                                            jr	$ra
-                                            nop	# in delay slot
+                                            delay_k_step:
+                                                # k = k + 1
+                                                addi $t3, $t3, 1
+                                                j    delay_k_cond
+                                                nop   # in delay slot
+                                            delay_k_f:
+                                            delay_j_step:
+                                                # j = j + 1
+                                                addi $t2, $t2, 1
+                                                j    delay_j_cond
+                                                nop  # in delay slot
+                                            delay_j_f:
+                                            delay_i_step:
+                                                # i = i + 1
+                                                addi $t1, $t1, 1
+                                                j    delay_i_cond
+                                                nop  # in delay slot
+                                            delay_i_f:
+                                            delay__post:
+                                                # tear down stack frame
+                                                lw   $ra, -4($fp)
+                                                la   $sp, 4($fp)
+                                                lw   $fp, ($fp)
+                                                jr   $ra
+                                                nop  # in delay slot
 
 #
 # <display_populate>
@@ -1206,68 +1228,79 @@ clearScreen:
 #       t3 - column counter
 #       t4 - space character
 #       t5 - starting offset + column counter offset
+#       t7 - 9    (CHRSIZE)
+#       t8 - 80   (NDCOLS)
+#       t9 - 1000 ( (CHRSIZE+1)*MAXCHARS )
 #
     .text
 display_populate:
     # Setup
-    la $t0, display         # t0 = &display
-    la $t1, bigString       # t1 = &bigString
-    li $t2, 0               # t2 = 0             # row counter
+    la   $t0, display        # t0 = &display
+    la   $t1, bigString      # t1 = &bigString
+    li   $t2, 0              # t2 = 0             # row counter
+
+    lw   $t7, CHRSIZE        # t7 = CHRSIZE     = 9
+
+    addi $t9, $t7, 1         # t9 = CHRSIZE + 1 = 10
+    lw   $t8, MAXCHARS       # t8 = MAXCHARS    = 100
+    mul  $t9, $t9, $t8       # t9 = 10*100      = 1000 = number of columns per row in `bigString`
+
+    lw   $t8, NDCOLS         # t8 = NDCOLS      = 80
 
     # Row loop
     display_populate_loopRow:
         # while (t2 < 9) { ... }
-        beq $t2, 9, display_populate_loopRowEnd
+        beq  $t2, $t7, display_populate_loopRowEnd
         nop
 
-        li $t3, 0           # t3 = 0             # column counter
+        li   $t3, 0          # t3 = 0             # column counter
 
         # Column loop
         display_populate_loopCol:
             # while (t3 < 80) { ... }
-            beq $t3, 80, display_populate_loopColEnd
+            beq  $t3, $t8, display_populate_loopColEnd
             nop
 
-            li $t4, ' '     # t4 = ' '           # t4 stores the space character
+            li   $t4, ' '        # t4 = ' '       # t4 stores the space character
 
-            add $t5, $t3, $a0   # t5 = offset + current position
+            add  $t5, $t3, $a0   # t5 = offset + current position
 
             # if t5 is less than zero, or greater than or equal to 1000,
             # then the current position in our viewing window is not inside `bigString`,
             # so just display blank in that position (a space character)
-            blt $t5, 0, display_populate_loopCol_write
+            blt  $t5, 0, display_populate_loopCol_write
             nop
-            bge $t5, 1000, display_populate_loopCol_write
-            nop
-
-            # 0 <= t5 < 1000 has passed, meaning that the current position is inside `bigString`
-            mul $t4, $t2, 1000  # t4 = t2*1000   # Calculate the `bigString` offset, given a row position
+            bge  $t5, $t9, display_populate_loopCol_write
             nop
 
-            add $t4, $t4, $t5   # t4 += t5       # Add on the start offset and column counter offset
-            add $t4, $t4, $t1   # t4 += t1       # Add on the base address of `bigString`
+            # 0 <= t5 < 1000 is true meaning that the current position is inside `bigString`
+            mul  $t4, $t2, $t9   # t4 = t2*1000   # Calculate the `bigString` offset, given a row position
+            nop
 
-            lb $t4, ($t4)       # t4 = (*t4)     # Get *(&bigString + start offset + column offset + row offset)
+            add  $t4, $t4, $t5   # t4 += t5       # Add on the start offset and column counter offset
+            add  $t4, $t4, $t1   # t4 += t1       # Add on the base address of `bigString`
+
+            lb   $t4, ($t4)      # t4 = (*t4)     # Get *(&bigString + start offset + column offset + row offset)
 
             display_populate_loopCol_write:
-            sb $t4, ($t0)       # *(t0) = t4     # Store the character to the current position in `display`
+            sb   $t4, ($t0)      # *(t0) = t4     # Store the character to the current position in `display`
 
             # Go the next column in the row
-            addi $t0, $t0, 1    # t0++           # Increment the address position in `display`
-            addi $t3, $t3, 1    # t3++           # Increment the column counter
-            j display_populate_loopCol
+            addi $t0, $t0, 1     # t0++           # Increment the address position in `display`
+            addi $t3, $t3, 1     # t3++           # Increment the column counter
+            j    display_populate_loopCol
             nop
 
         # End of column loop
         display_populate_loopColEnd:
-        addi $t2, $t2, 1        # t2++           # Increment the row counter
+        addi $t2, $t2, 1         # t2++           # Increment the row counter
 
-        j display_populate_loopRow
+        j    display_populate_loopRow
         nop
 
     # End of row loop
     display_populate_loopRowEnd:
-        jr $ra
+        jr   $ra
         nop
 
 #
@@ -1279,55 +1312,59 @@ display_populate:
 #       t0 - address position in `display`
 #       t1 - temp
 #       t7 - loop counter
+#       t8 - 9  (CHRSIZE)
+#       t9 - 80 (NDCOLS)
 #
-	.text
+    .text
 display_show:
-    la $a0, display         # a0 = &display     # address position in `display`
-    li $t7, 0               # t7 = 0            # loop counter
+    la $a0, display       # a0 = &display     # address position in `display`
+    li $t7, 0             # t7 = 0            # loop counter
+    lw $t8, CHRSIZE       # t8 = CHRSIZE = 9
+    lw $t9, NDCOLS        # t9 = NDCOLS = 80
 
     # Loop
     display_show_loop:
         # while (t7 < 9 ) { ... }
-        beq $t7, 9, display_show_loopEnd
+        beq  $t7, $t8, display_show_loopEnd
         nop
 
         # Go to the start of the next row
-        addi $t0, $a0, 80
+        add  $t0, $a0, $t9
 
         # Store the byte at the first column, and change it to a null terminator (\0)
-        lb $t1, ($t0)       # t1 = *(t0)
-        sb $0, ($t0)        # *(t0) = '\0'      # Strings end with \0. eg. { 'H', 'i', '\0' }
+        lb   $t1, ($t0)       # t1 = *(t0)
+        sb   $0, ($t0)        # *(t0) = '\0'      # Strings end with \0. eg. { 'H', 'i', '\0' }
 
         # Print the row
-        li $v0, 4           # syscall 4 -> print string
+        li   $v0, 4           # syscall 4 -> print string
         syscall
         nop
 
         # Restore the value of the byte that we changed into a null terminator
-        sb $t1, ($t0)       # *(t0) = t1
+        sb   $t1, ($t0)       # *(t0) = t1
 
         # Print out a new-line character
         ## Note: Couldn't have replaced the first columns with a new line instead of a null terminator
         ##       because then the first column would have been lost (Need a 9x81 matrix instead of a 9x80)
-        li $a0, 10          # 0x10 is the new line character
-        li $v0, 11          # syscall 4 -> print character
+        li   $a0, 10          # 0x10 is the new line character
+        li   $v0, 11          # syscall 4 -> print character
         syscall
         nop
 
-        move $a0, $t0       # Restore a0 as the address position in the display matrix
+        move $a0, $t0         # Restore a0 as the address position in the display matrix
 
         # Go to the next row
-        addi $t7, $t7, 1    # t7++      # Increment the row counter
-        j display_show_loop
+        addi $t7, $t7, 1      # t7++      # Increment the row counter
+        j    display_show_loop
         nop
 
     # End loop
     display_show_loopEnd:
-        jr	$ra
+        jr  $ra
         nop
 
 ### OLD VERSION - Uses syscall 11 (much slower!) ##
-#	.text
+#  .text
 #display_show:
 #    # Method: Perform modulo operation to check for new lines
 #    li $t0, 0 # counter
@@ -1356,7 +1393,7 @@ display_show:
 #        j display_show_loop
 #
 #    display_show_loopEnd:
-#        jr	$ra
+#        jr  $ra
 #        nop
 
                                         ########################################################################
@@ -1364,60 +1401,61 @@ display_show:
                                             .text
                                         isLower:
 
-                                        # Frame:	$fp, $ra
-                                        # Uses:		$a0
-                                        # Clobbers:	$v0
+                                        # Frame:  $fp, $ra
+                                        # Uses:    $a0
+                                        # Clobbers:  $v0
 
                                         # Locals:
-                                        #	- `ch' in $a0
-                                        #	- ... $v0 used as temporary register
+                                        #  - `ch' in $a0
+                                        #  - ... $v0 used as temporary register
 
                                         # Structure:
-                                        #	isLower
-                                        #	-> [prologue]
-                                        #	[ch cond]
-                                        #	   | isLower_ch_ge_a
-                                        #	   | isLower_ch_le_z
-                                        #	   | isLower_ch_lt_a
-                                        #	   | isLower_ch_gt_z
-                                        #	-> isLower_ch_phi
-                                        #	-> [epilogue]
+                                        #  isLower
+                                        #  -> [prologue]
+                                        #  [ch cond]
+                                        #     | isLower_ch_ge_a
+                                        #     | isLower_ch_le_z
+                                        #     | isLower_ch_lt_a
+                                        #     | isLower_ch_gt_z
+                                        #  -> isLower_ch_phi
+                                        #  -> [epilogue]
 
                                         # Code:
                                             # set up stack frame
-                                            sw	$fp, -4($sp)
-                                            la	$fp, -4($sp)
-                                            sw	$ra, -4($fp)
-                                            la	$sp, -8($fp)
+                                            sw  $fp, -4($sp)
+                                            la  $fp, -4($sp)
+                                            sw  $ra, -4($fp)
+                                            la  $sp, -8($fp)
 
                                             # if (ch >= 'a')
-                                            li	$v0, 'a'
-                                            blt	$a0, $v0, isLower_ch_lt_a
-                                            nop	# in delay slot
-                                        isLower_ch_ge_a:
-                                            # if (ch <= 'z')
-                                            li	$v0, 'z'
-                                            bgt	$a0, $v0, isLower_ch_gt_z
-                                            nop	# in delay slot
-                                        isLower_ch_le_z:
-                                            addi	$v0, $zero, 1
-                                            j	isLower_ch_phi
-                                            nop	# in delay slot
+                                            li  $v0, 'a'
+                                            blt  $a0, $v0, isLower_ch_lt_a
+                                            nop  # in delay slot
 
-                                            # ... else
-                                        isLower_ch_lt_a:
-                                        isLower_ch_gt_z:
-                                            move	$v0, $zero
-                                            # fallthrough
-                                        isLower_ch_phi:
+                                            isLower_ch_ge_a:
+                                                # if (ch <= 'z')
+                                                li  $v0, 'z'
+                                                bgt  $a0, $v0, isLower_ch_gt_z
+                                                nop  # in delay slot
+                                            isLower_ch_le_z:
+                                                addi  $v0, $zero, 1
+                                                j  isLower_ch_phi
+                                                nop  # in delay slot
 
-                                        isLower__post:
-                                            # tear down stack frame
-                                            lw	$ra, -4($fp)
-                                            la	$sp, 4($fp)
-                                            lw	$fp, ($fp)
-                                            jr	$ra
-                                            nop	# in delay slot
+                                                # ... else
+                                            isLower_ch_lt_a:
+                                            isLower_ch_gt_z:
+                                                move  $v0, $zero
+                                                # fallthrough
+                                            isLower_ch_phi:
+
+                                            isLower__post:
+                                                # tear down stack frame
+                                                lw  $ra, -4($fp)
+                                                la  $sp, 4($fp)
+                                                lw  $fp, ($fp)
+                                                jr  $ra
+                                                nop  # in delay slot
 
 #
 # <isUpper>
@@ -1425,19 +1463,19 @@ display_show:
 # args: a0 - character to check
 #  ret: v0 - 1 if true, 0 if false
 #
-	.text
+    .text
 isUpper:
-	li $v0, 0                   # result = 0
+    li  $v0, 0                  # result = 0
 
     # If `ch` < 'A' or `ch` > 'Z', then return from the function (as result was already set to false (1)
-	blt $a0, 'A', isUpper_end   # if (ch < 'A') --> false
-	nop
-	bgt $a0, 'Z', isUpper_end   # if (ch > 'Z') --> false
-	nop
+    blt $a0, 'A', isUpper_end   # if (ch < 'A') --> false
+    nop
+    bgt $a0, 'Z', isUpper_end   # if (ch > 'Z') --> false
+    nop
 
     # 'A' <= `ch` <= 'Z', so set the result to true (1)
-	li $v0, 1                   # result = true
+    li  $v0, 1                  # result = true
 
     isUpper_end:
-        jr	$ra
+        jr  $ra
         nop
