@@ -30,7 +30,7 @@
 
                                         main__0:   .asciiz "Usage: ./scroll String\n"
                                         main__1:   .asciiz "Only letters and spaces are allowed in the string!\n"
-                                        main__2:   .asciiz "String mush be < "
+                                        main__2:   .asciiz "String must be < "
                                         main__3:   .asciiz " chars\n"
                                         main__4:   .asciiz "Please enter a string with at least one character!\n"
 

@@ -246,7 +246,7 @@ main_theLength_ge_1:
         nop
 
         # Wait ... for some time ...
-        li   $a0, 1 # <--- Change me to a higher value for a longer delay?
+        li   $a0, 1         # <--- Change me to a higher value for a longer delay?
         jal  delay
         nop
 
