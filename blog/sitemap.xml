@@ -3,8 +3,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>/post/week06/</loc>
+    <lastmod>2018-08-30T00:21:11+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>/post/ass01/</loc>
     <lastmod>2018-08-29T01:57:14+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/spim-branch-delays/</loc>
+    <lastmod>2018-08-17T00:19:01+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/week04_05/</loc>
+    <lastmod>2018-08-15T00:01:15+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/week03/</loc>
+    <lastmod>2018-08-07T00:14:18+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/week01/</loc>
+    <lastmod>2018-07-29T00:18:02+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/week02/</loc>
+    <lastmod>2018-07-29T00:18:02+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -17,14 +59,14 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-08-29T01:57:14+10:00</lastmod>
+    <lastmod>2018-08-30T00:21:11+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2018-08-29T01:57:14+10:00</lastmod>
+    <lastmod>2018-08-30T00:21:11+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
