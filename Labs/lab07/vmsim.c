@@ -128,8 +128,15 @@ int physicalAddress(uint vAddr, char action) {
 
             int LRU = -1;
             for (int pageIndex = 0; pageIndex < nPages; pageIndex++) {
-                if (LRU == -1 && PageTable[pageIndex].status >= Loaded) LRU = pageIndex;
-                else if (LRU != -1 && PageTable[pageIndex].status >= Loaded && PageTable[pageIndex].lastAccessed < PageTable[LRU].lastAccessed) LRU = pageIndex;
+                if (LRU == -1 && PageTable[pageIndex].status == Loaded) LRU = pageIndex;
+                else if (LRU != -1 && PageTable[pageIndex].status == Loaded && PageTable[pageIndex].lastAccessed < PageTable[LRU].lastAccessed) LRU = pageIndex;
+            }
+
+            if (LRU == -1) {
+                for (int pageIndex = 0; pageIndex < nPages; pageIndex++) {
+                    if (LRU == -1 && PageTable[pageIndex].status == Modified) LRU = pageIndex;
+                    else if (LRU != -1 && PageTable[pageIndex].status == Modified && PageTable[pageIndex].lastAccessed < PageTable[LRU].lastAccessed) LRU = pageIndex;
+                }
             }
 
             if (PageTable[LRU].status == Modified) nSaves++; // nSaves, not nWrites
