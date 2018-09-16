@@ -10,7 +10,7 @@ enableEmoji = true
 theme = "hugo-theme-even"
 
 preserveTaxonomyNames = true
-paginate = 5                                              # 首页每页显示的文章数
+paginate = 50                                              # 首页每页显示的文章数
 copyright = "Andrew Wong (z5206677)"
 
 [author]                  # essential                     # 必需
@@ -21,17 +21,17 @@ copyright = "Andrew Wong (z5206677)"
   priority = 0.5
   filename = "sitemap.xml"
 
-#[[menu.main]]             # config your menu              # 配置目录
-#  name = "Home"
-#  weight = 10
-#  identifier = "home"
-#  url = "/"
-#[[menu.main]]
-#  name = "Archives"
-#  weight = 20
-#  identifier = "archives"
-#  url = "/post/"
-#[[menu.main]]
+[[menu.main]]             # config your menu              # 配置目录
+  name = "Home"
+  weight = 10
+  identifier = "home"
+  url = "/"
+[[menu.main]]
+  name = "GitHub"
+  weight = 20
+  identifier = "code"
+  url = "https://github.com/featherbear/UNSW-COMP1521"
+[[menu.main]]
 #  name = "Tags"
 #  weight = 30
 #  identifier = "tags"

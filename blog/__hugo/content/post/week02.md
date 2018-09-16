@@ -1,5 +1,5 @@
 ---
-title: "Week Two - BigNum.c"
+title: "Lab Two - BigNum.c"
 date: 2018-08-05T00:01:39+10:00
 
 hiddenFromHomePage: false

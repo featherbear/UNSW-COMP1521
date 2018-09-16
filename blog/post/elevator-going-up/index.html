@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Lab Three - Bit Fields, Unions - Musings of a COMP1521 Kid</title>
+  <title>Elevator - Going Up! - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="This week&amp;rsquo;s lab revealed a pretty important piece of information, that" />
+  <meta name="description" content="Sometimes" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week03/" />
+<link rel="canonical" href="../../post/elevator-going-up/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Lab Three - Bit Fields, Unions" />
-<meta property="og:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that" />
+<meta property="og:title" content="Elevator - Going Up!" />
+<meta property="og:description" content="Sometimes" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week03/" /><meta property="article:published_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta property="article:modified_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta itemprop="name" content="Lab Three - Bit Fields, Unions">
-<meta itemprop="description" content="This week&rsquo;s lab revealed a pretty important piece of information, that">
+<meta property="og:url" content="/post/elevator-going-up/" /><meta property="article:published_time" content="2018-08-09T00:13:02&#43;10:00"/>
+<meta property="article:modified_time" content="2018-08-09T00:13:02&#43;10:00"/>
+<meta itemprop="name" content="Elevator - Going Up!">
+<meta itemprop="description" content="Sometimes">
 
 
-<meta itemprop="datePublished" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="dateModified" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="wordCount" content="165">
+<meta itemprop="datePublished" content="2018-08-09T00:13:02&#43;10:00" />
+<meta itemprop="dateModified" content="2018-08-09T00:13:02&#43;10:00" />
+<meta itemprop="wordCount" content="136">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Lab Three - Bit Fields, Unions"/>
-<meta name="twitter:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that"/>
+<meta name="twitter:title" content="Elevator - Going Up!"/>
+<meta name="twitter:description" content="Sometimes"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Lab Three - Bit Fields, Unions</h1>
+      <h1 class="post-title">Elevator - Going Up!</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-08-07 </span>
+        <span class="post-time"> 2018-08-09 </span>
         
         
         
@@ -151,31 +151,190 @@
 
     
     <div class="post-content">
-      <p>This week&rsquo;s lab revealed a pretty important piece of information, that<br />
-<strong>bit fields are structured in reverse order</strong></p>
+      <p>Sometimes</p>
 
-<p>Consider the C code</p>
+<p>you</p>
 
-<pre><code>struct _bit_fields {
-   unsigned int a : 4,
-                b : 8,
-                c : 20;
-};
-</code></pre>
+<p>get</p>
 
-<p>This struct could be represented in two ways<br />
-A) <code>aaaabbbb bbbbcccc cccccccc cccccccc</code><br />
-OR<br />
-B) <code>cccccccc cccccccc ccccbbbb bbbbaaaa</code></p>
+<p>bored</p>
 
-<p>We can find out by using a <code>union</code>!
-A <code>union</code> allows the same portion of memory to be intepreted as different data types.</p>
+<p>and</p>
 
-<p>What that means for this question, is that we can represent the entire <code>struct _bit_fields</code> as one thing, like an integer!
-So if we create a variable with this type, and through a <code>union</code>, set the value to <code>1</code> - we can check if <code>a</code> is 1, or if <code>c</code> is one.</p>
+<p>need</p>
 
-<p>(On the CSE machines, <code>a</code> becomes 1, so therefore representation A was correct)<br />
-Therefore it tells us that the order that we define our bitfields are important, and are mapped in the reverse order!</p>
+<p>to</p>
+
+<p>have</p>
+
+<p>some</p>
+
+<p>relaxation</p>
+
+<p>so</p>
+
+<p>you</p>
+
+<p>listen</p>
+
+<p>to</p>
+
+<p>elevator</p>
+
+<p>music</p>
+
+<p>while</p>
+
+<p>scrolling</p>
+
+<p>your</p>
+
+<p>facebook</p>
+
+<p>newsfeed</p>
+
+<p>BUT</p>
+
+<p>what</p>
+
+<p>if</p>
+
+<p>you</p>
+
+<p>want</p>
+
+<p>to</p>
+
+<p>look</p>
+
+<p>at</p>
+
+<p>the</p>
+
+<p>firt</p>
+
+<p>post</p>
+
+<p>on</p>
+
+<p>the</p>
+
+<p>page!</p>
+
+<p>You&rsquo;d</p>
+
+<p>have</p>
+
+<p>to</p>
+
+<p>scroll</p>
+
+<p>up</p>
+
+<p>and</p>
+
+<p>up</p>
+
+<p>and</p>
+
+<p>up</p>
+
+<p>and</p>
+
+<p>up</p>
+
+<p>n</p>
+
+<p>up</p>
+
+<p>and</p>
+
+<p>up</p>
+
+<p>and</p>
+
+<p>upppppppppppp</p>
+
+<p>&hellip;</p>
+
+<p>&hellip;</p>
+
+<p>You</p>
+
+<p>could</p>
+
+<p>press</p>
+
+<p>the</p>
+
+<p>home</p>
+
+<p>key</p>
+
+<p>but</p>
+
+<p>what</p>
+
+<p>about</p>
+
+<p>pressing</p>
+
+<p>this</p>
+
+<p>conveniently</p>
+
+<p>looking</p>
+
+<p>elevator</p>
+
+<p>icon</p>
+
+<p>&mdash;&mdash;&mdash;&mdash;&mdash;-&gt;</p>
+
+<script src="../../js/elevator.min.js"></script>
+
+<script>
+window.onload = function() {
+  var elevator = new Elevator({
+    element: document.querySelector('.elevator'),
+    mainAudio: '/js/elevator.js/elevator.mp3',
+    endAudio: '/js/elevator.js/ding.mp3',
+    duration: 10000 // milliseconds
+  });
+}
+</script>
+
+<p><style>
+.elevator {
+    text-align: center;
+    cursor: pointer;
+    width: 140px;
+    margin: auto;
+}</p>
+
+<p>.elevator:hover {
+    opacity: 0.7;
+}</p>
+
+<p>.elevator svg {
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin: auto;
+    margin-bottom: 5px;
+}
+</style>
+<div class='align-center'>
+  <div class="elevator">
+<svg class="sweet-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" height="100px" width="100px">
+<path d="M70,47.5H30c-1.4,0-2.5,1.1-2.5,2.5v40c0,1.4,1.1,2.5,2.5,2.5h40c1.4,0,2.5-1.1,2.5-2.5V50C72.5,48.6,71.4,47.5,70,47.5z   M47.5,87.5h-5v-25h5V87.5z M57.5,87.5h-5v-25h5V87.5z M67.5,87.5h-5V60c0-1.4-1.1-2.5-2.5-2.5H40c-1.4,0-2.5,1.1-2.5,2.5v27.5h-5  v-35h35V87.5z"/>
+<path d="M50,42.5c1.4,0,2.5-1.1,2.5-2.5V16l5.7,5.7c0.5,0.5,1.1,0.7,1.8,0.7s1.3-0.2,1.8-0.7c1-1,1-2.6,0-3.5l-10-10  c-1-1-2.6-1-3.5,0l-10,10c-1,1-1,2.6,0,3.5c1,1,2.6,1,3.5,0l5.7-5.7v24C47.5,41.4,48.6,42.5,50,42.5z"/>
+</svg>
+</div>
+
+</div></p>
+
+<p><em>/* Found this script a few years back, showed it to my friend today! */</em></p>
 
     </div>
 
@@ -191,14 +350,14 @@ Therefore it tells us that the order that we define our bitfields are important,
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/elevator-going-up/">
+          <a class="prev" href="../../post/week04_05/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Elevator - Going Up!</span>
+            <span class="prev-text nav-default">Weeks Four and Five - MIPS</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/week02/">
-            <span class="next-text nav-default">Lab Two - BigNum.c</span>
+          <a class="next" href="../../post/week03/">
+            <span class="next-text nav-default">Lab Three - Bit Fields, Unions</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Musings of a COMP1521 Kid</title>
+  <title>Process Management - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,8 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="Musings of a COMP1521 student" />
+  <meta name="description" content="A process is an instance of a program that is being executed." />
+
   <meta name="keywords" content="Hugo, theme, even" />
 
 
@@ -28,9 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../" />
-<link href="../../index.xml" rel="alternate" type="application/rss+xml" title="Musings of a COMP1521 Kid" />
-  <link href="../../index.xml" rel="feed" type="application/rss+xml" title="Musings of a COMP1521 Kid" />
+<link rel="canonical" href="../../post/process_management/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -50,17 +49,25 @@
 
 
 
-<meta property="og:title" content="Musings of a COMP1521 Kid" />
-<meta property="og:description" content="Musings of a COMP1521 student" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="/" />
-<meta property="og:updated_time" content="2018-08-05T00:01:39&#43;10:00"/>
-<meta itemprop="name" content="Musings of a COMP1521 Kid">
-<meta itemprop="description" content="Musings of a COMP1521 student">
+<meta property="og:title" content="Process Management" />
+<meta property="og:description" content="A process is an instance of a program that is being executed." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/process_management/" /><meta property="article:published_time" content="2018-09-16T19:41:17&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-16T19:41:17&#43;10:00"/>
+<meta itemprop="name" content="Process Management">
+<meta itemprop="description" content="A process is an instance of a program that is being executed.">
 
+
+<meta itemprop="datePublished" content="2018-09-16T19:41:17&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-16T19:41:17&#43;10:00" />
+<meta itemprop="wordCount" content="140">
+
+
+
+<meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Musings of a COMP1521 Kid"/>
-<meta name="twitter:description" content="Musings of a COMP1521 student"/>
+<meta name="twitter:title" content="Process Management"/>
+<meta name="twitter:description" content="A process is an instance of a program that is being executed."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -85,7 +92,13 @@
 </div>
 <nav id="mobile-menu" class="mobile-menu slideout-menu">
   <ul class="mobile-menu-list">
-    
+    <a href="../../">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="https://github.com/featherbear/UNSW-COMP1521">
+        <li class="mobile-menu-item">GitHub</li>
+      </a><a href="">
+        <li class="mobile-menu-item"></li>
+      </a>
   </ul>
 </nav>
   <div class="container" id="mobile-panel">
@@ -96,7 +109,13 @@
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
-    
+    <li class="menu-item">
+        <a class="menu-item-link" href="../../">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="https://github.com/featherbear/UNSW-COMP1521">GitHub</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href=""></a>
+      </li>
   </ul>
 </nav>
     </header>
@@ -104,66 +123,94 @@
     <main id="main" class="main">
       <div class="content-wrapper">
         <div id="content" class="content">
-          
-  <section id="posts" class="posts">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Process Management</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-16 </span>
+        
+        
+        
+      </div>
+    </header>
+
     
     
-    
-      <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../post/week02/">Week Two - BigNum.c</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2018-08-05 </span>
-      
-      
-    </div>
-  </header>
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
   
-  <div class="post-content">
-    <div class="post-summary">
-      This week&rsquo;s lab dealt with handling (simple) arithmetic of large numbers larger than 2,147,483,647 (2^32).
-    </div>
-    <div class="read-more">
-      <a href="../../post/week02/" class="read-more-link">Read more..</a>
-    </div>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#multitasking-more-like-task-switching">Multitasking, more like task switching.</a></li>
+</ul>
+</nav>
   </div>
-</article>
+</div>
 
     
-      <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="../../post/week01/">Week One - Bitwise Operations</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2018-07-29 </span>
+    
+
+    
+    <div class="post-content">
       
+
+<p>A process is an instance of a program that is being executed.</p>
+
+<p>Each process has associated metadata, such as:</p>
+
+<ul>
+<li>Execution point (PC)</li>
+<li>Register values</li>
+<li>Virtual Address mapping</li>
+<li>File and Socket descriptors</li>
+</ul>
+
+<p>The operating system also keeps extra metadata, such as how long the process has been running for, and its priority</p>
+
+<h1 id="multitasking-more-like-task-switching">Multitasking, more like task switching.</h1>
+
+<p>A computer cannot do two things at once, rather a lot of things in a negligible amount of time. (Ignore multi-core CPUs).
+Each process is given an allocated amount of time to run, before it is &lsquo;pre-empted&rsquo; (paused) and another process is resumed.
+During this pre-emption process, the process&rsquo; state is saved, and the process is marked as suspended, and put into a priority queue to await for its next execution period.</p>
+
+<p>Each process is identified by a Process ID, or PID for short.</p>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
       
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Finally, courses &lsquo;start&rsquo; to delve into the cool part of computing!
-    </div>
-    <div class="read-more">
-      <a href="../../post/week01/" class="read-more-link">Read more..</a>
-    </div>
-  </div>
-</article>
 
-    
-  </section>
-  
-  <nav class="pagination">
-    
-      <a class="prev" href="../../">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text">Prev</span>
-      </a>
-    
-  </nav>
-
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="../../post/program_concurrency/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Program Concurrency</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+          <a class="next" href="../../post/data_representation/">
+            <span class="next-text nav-default">The Representation of Data</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
         </div>
         
+  
+
+  
 
       </div>
     </main>

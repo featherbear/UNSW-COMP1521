@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Lab Three - Bit Fields, Unions - Musings of a COMP1521 Kid</title>
+  <title>Program Concurrency - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="This week&amp;rsquo;s lab revealed a pretty important piece of information, that" />
+  <meta name="description" content="Do it, again." />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week03/" />
+<link rel="canonical" href="../../post/program_concurrency/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Lab Three - Bit Fields, Unions" />
-<meta property="og:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that" />
+<meta property="og:title" content="Program Concurrency" />
+<meta property="og:description" content="Do it, again." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week03/" /><meta property="article:published_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta property="article:modified_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta itemprop="name" content="Lab Three - Bit Fields, Unions">
-<meta itemprop="description" content="This week&rsquo;s lab revealed a pretty important piece of information, that">
+<meta property="og:url" content="/post/program_concurrency/" /><meta property="article:published_time" content="2018-09-16T19:50:57&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-16T19:50:57&#43;10:00"/>
+<meta itemprop="name" content="Program Concurrency">
+<meta itemprop="description" content="Do it, again.">
 
 
-<meta itemprop="datePublished" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="dateModified" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="wordCount" content="165">
+<meta itemprop="datePublished" content="2018-09-16T19:50:57&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-16T19:50:57&#43;10:00" />
+<meta itemprop="wordCount" content="276">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Lab Three - Bit Fields, Unions"/>
-<meta name="twitter:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that"/>
+<meta name="twitter:title" content="Program Concurrency"/>
+<meta name="twitter:description" content="Do it, again."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Lab Three - Bit Fields, Unions</h1>
+      <h1 class="post-title">Program Concurrency</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-08-07 </span>
+        <span class="post-time"> 2018-09-16 </span>
         
         
         
@@ -142,7 +142,30 @@
   <h2 class="post-toc-title">Contents</h2>
   
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#process-forking">Process Forking</a>
+<ul>
+<li><a href="#functions">Functions</a>
+<ul>
+<li><a href="#pid-t-fork-void"><code>pid_t fork(void)</code></a></li>
+<li><a href="#pid-t-waitpid-pid-t-pid-int-status-int-options"><code>pid_t waitpid(pid_t pid, int *status, int options)</code></a></li>
+<li><a href="#pid-t-wait-int-status"><code>pid_t wait(int *status)</code></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#threading">Threading</a>
+<ul>
+<li><a href="#functions-1">Functions</a>
+<ul>
+<li><a href="#int-pthread-create-pthread-t-thread-pthread-attr-t-attr-void-func-void-void-arg"><code>int pthread_create(pthread_t *Thread, pthread_attr_t *Attr, void *(*Func)(void *), void *Arg)</code></a></li>
+<li><a href="#pthread-t-pthread-self-void"><code>pthread_t pthread_self(void)</code></a></li>
+<li><a href="#pthread-t-pthread-equal-pthread-t-t1-pthread-t-t2"><code>pthread_t pthread_equal(pthread_t t1, pthread_t t2)</code></a></li>
+<li><a href="#int-pthread-join-pthread-t-t-void-value-ptr"><code>int pthread_join(pthread_t T, void **value_ptr)</code></a></li>
+<li><a href="#void-pthread-exit-void-value-ptr"><code>void pthread_exit(void *value_ptr)</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
   </div>
 </div>
 
@@ -151,31 +174,71 @@
 
     
     <div class="post-content">
-      <p>This week&rsquo;s lab revealed a pretty important piece of information, that<br />
-<strong>bit fields are structured in reverse order</strong></p>
+      
 
-<p>Consider the C code</p>
+<p>Do it, again.</p>
 
-<pre><code>struct _bit_fields {
-   unsigned int a : 4,
-                b : 8,
-                c : 20;
-};
-</code></pre>
+<p>There are (more than but I&rsquo;ll talk about) two ways for a program to create concurrent tasks, forks and threads.</p>
 
-<p>This struct could be represented in two ways<br />
-A) <code>aaaabbbb bbbbcccc cccccccc cccccccc</code><br />
-OR<br />
-B) <code>cccccccc cccccccc ccccbbbb bbbbaaaa</code></p>
+<h1 id="process-forking">Process Forking</h1>
 
-<p>We can find out by using a <code>union</code>!
-A <code>union</code> allows the same portion of memory to be intepreted as different data types.</p>
+<p>A fork duplicates/clones the current process into its own separate space
+(Memory, variables, state is independently cloned)</p>
 
-<p>What that means for this question, is that we can represent the entire <code>struct _bit_fields</code> as one thing, like an integer!
-So if we create a variable with this type, and through a <code>union</code>, set the value to <code>1</code> - we can check if <code>a</code> is 1, or if <code>c</code> is one.</p>
+<h2 id="functions">Functions</h2>
 
-<p>(On the CSE machines, <code>a</code> becomes 1, so therefore representation A was correct)<br />
-Therefore it tells us that the order that we define our bitfields are important, and are mapped in the reverse order!</p>
+<p>Library: unistd.h</p>
+
+<h3 id="pid-t-fork-void"><code>pid_t fork(void)</code></h3>
+
+<p>Returns -1 on errorm, 0 if child, else the PID of the child process</p>
+
+<h3 id="pid-t-waitpid-pid-t-pid-int-status-int-options"><code>pid_t waitpid(pid_t pid, int *status, int options)</code></h3>
+
+<p>Waits for a process, storing its return value into <code>status</code>. Returns the PID of the exited process.</p>
+
+<p><code>pid &lt; -1</code> - wait for any child process in the process group |<code>pid</code>|<br />
+<code>pid == -1</code> - wait for any child process<br />
+<code>pid == 0</code> - wait for any child process in the same PID group<br />
+<code>pid &gt; 0</code> - wait for <code>pid</code></p>
+
+<h3 id="pid-t-wait-int-status"><code>pid_t wait(int *status)</code></h3>
+
+<p>Waits for any process to exit, and stores its return value into <code>status</code>. Returns the PID of the exited process.<br />
+Equivalent to <code>waitpid(-1, &amp;status, 0)</code></p>
+
+<h1 id="threading">Threading</h1>
+
+<p>The biggest difference between child processes and threads is that threads <strong>share resources</strong>.</p>
+
+<h2 id="functions-1">Functions</h2>
+
+<p>Library: pthread.h</p>
+
+<h3 id="int-pthread-create-pthread-t-thread-pthread-attr-t-attr-void-func-void-void-arg"><code>int pthread_create(pthread_t *Thread, pthread_attr_t *Attr, void *(*Func)(void *), void *Arg)</code></h3>
+
+<p>Create a new thread<br />
+Arg 1 - Thread information to store into<br />
+Arg 2 - Attributes<br />
+Arg 3 - Function for thread to run<br />
+Arg 4 - Arguments for thread&rsquo;s function to run</p>
+
+<h3 id="pthread-t-pthread-self-void"><code>pthread_t pthread_self(void)</code></h3>
+
+<p>Gets current thread ID</p>
+
+<h3 id="pthread-t-pthread-equal-pthread-t-t1-pthread-t-t2"><code>pthread_t pthread_equal(pthread_t t1, pthread_t t2)</code></h3>
+
+<p>Returns a non-zero value if <code>t1</code> and <code>t2</code> are the same.<br />
+Returns <strong>0 if NOT THE SAME</strong></p>
+
+<h3 id="int-pthread-join-pthread-t-t-void-value-ptr"><code>int pthread_join(pthread_t T, void **value_ptr)</code></h3>
+
+<p>Wait for thread <code>T</code> to finish, storing the thread&rsquo;s return value into <code>value_ptr</code></p>
+
+<h3 id="void-pthread-exit-void-value-ptr"><code>void pthread_exit(void *value_ptr)</code></h3>
+
+<p>Terminates the current thread, storing a return value in <code>value_ptr</code></p>
 
     </div>
 
@@ -191,14 +254,9 @@ Therefore it tells us that the order that we define our bitfields are important,
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/elevator-going-up/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Elevator - Going Up!</span>
-            <span class="prev-text nav-mobile">Prev</span>
-          </a>
         
-          <a class="next" href="../../post/week02/">
-            <span class="next-text nav-default">Lab Two - BigNum.c</span>
+          <a class="next" href="../../post/process_management/">
+            <span class="next-text nav-default">Process Management</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

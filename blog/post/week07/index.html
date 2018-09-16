@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Lab Three - Bit Fields, Unions - Musings of a COMP1521 Kid</title>
+  <title>Week Seven - Virtual Memory - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="This week&amp;rsquo;s lab revealed a pretty important piece of information, that" />
+  <meta name="description" content="Computers are pretty cool, eh?" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week03/" />
+<link rel="canonical" href="../../post/week07/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Lab Three - Bit Fields, Unions" />
-<meta property="og:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that" />
+<meta property="og:title" content="Week Seven - Virtual Memory" />
+<meta property="og:description" content="Computers are pretty cool, eh?" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week03/" /><meta property="article:published_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta property="article:modified_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta itemprop="name" content="Lab Three - Bit Fields, Unions">
-<meta itemprop="description" content="This week&rsquo;s lab revealed a pretty important piece of information, that">
+<meta property="og:url" content="/post/week07/" /><meta property="article:published_time" content="2018-09-05T00:15:52&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-05T00:15:52&#43;10:00"/>
+<meta itemprop="name" content="Week Seven - Virtual Memory">
+<meta itemprop="description" content="Computers are pretty cool, eh?">
 
 
-<meta itemprop="datePublished" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="dateModified" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="wordCount" content="165">
+<meta itemprop="datePublished" content="2018-09-05T00:15:52&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-05T00:15:52&#43;10:00" />
+<meta itemprop="wordCount" content="93">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Lab Three - Bit Fields, Unions"/>
-<meta name="twitter:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that"/>
+<meta name="twitter:title" content="Week Seven - Virtual Memory"/>
+<meta name="twitter:description" content="Computers are pretty cool, eh?"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Lab Three - Bit Fields, Unions</h1>
+      <h1 class="post-title">Week Seven - Virtual Memory</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-08-07 </span>
+        <span class="post-time"> 2018-09-05 </span>
         
         
         
@@ -151,31 +151,13 @@
 
     
     <div class="post-content">
-      <p>This week&rsquo;s lab revealed a pretty important piece of information, that<br />
-<strong>bit fields are structured in reverse order</strong></p>
+      <p>Computers are pretty cool, eh?</p>
 
-<p>Consider the C code</p>
+<p>So in managing the memory of a system, there is this concept of pages and frames.
+Essentially, the pages are memory mappings to arbitrarily orderd frames. When a program requests a specific memory, the page table redirects the program to a physical memory address dictated by the frame that that page corresponds to.</p>
 
-<pre><code>struct _bit_fields {
-   unsigned int a : 4,
-                b : 8,
-                c : 20;
-};
-</code></pre>
-
-<p>This struct could be represented in two ways<br />
-A) <code>aaaabbbb bbbbcccc cccccccc cccccccc</code><br />
-OR<br />
-B) <code>cccccccc cccccccc ccccbbbb bbbbaaaa</code></p>
-
-<p>We can find out by using a <code>union</code>!
-A <code>union</code> allows the same portion of memory to be intepreted as different data types.</p>
-
-<p>What that means for this question, is that we can represent the entire <code>struct _bit_fields</code> as one thing, like an integer!
-So if we create a variable with this type, and through a <code>union</code>, set the value to <code>1</code> - we can check if <code>a</code> is 1, or if <code>c</code> is one.</p>
-
-<p>(On the CSE machines, <code>a</code> becomes 1, so therefore representation A was correct)<br />
-Therefore it tells us that the order that we define our bitfields are important, and are mapped in the reverse order!</p>
+<p>It reminds me of the VirtualStore system on Windows-based systems.<br />
+It&rsquo;s like a sandbox - the program has access to request any memory range. However the actual memory address it will access will be different.</p>
 
     </div>
 
@@ -191,14 +173,14 @@ Therefore it tells us that the order that we define our bitfields are important,
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/elevator-going-up/">
+          <a class="prev" href="../../post/computer_systems/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Elevator - Going Up!</span>
+            <span class="prev-text nav-default">Computer Systems</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/week02/">
-            <span class="next-text nav-default">Lab Two - BigNum.c</span>
+          <a class="next" href="../../post/week06/">
+            <span class="next-text nav-default">Week Six - stat</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

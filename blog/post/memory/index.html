@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Lab Three - Bit Fields, Unions - Musings of a COMP1521 Kid</title>
+  <title>Memory - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="This week&amp;rsquo;s lab revealed a pretty important piece of information, that" />
+  <meta name="description" content="Endian Little endian a b c d e f g h" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week03/" />
+<link rel="canonical" href="../../post/memory/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Lab Three - Bit Fields, Unions" />
-<meta property="og:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that" />
+<meta property="og:title" content="Memory" />
+<meta property="og:description" content="Endian Little endian a b c d e f g h" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week03/" /><meta property="article:published_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta property="article:modified_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta itemprop="name" content="Lab Three - Bit Fields, Unions">
-<meta itemprop="description" content="This week&rsquo;s lab revealed a pretty important piece of information, that">
+<meta property="og:url" content="/post/memory/" /><meta property="article:published_time" content="2018-09-14T20:22:06&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-14T20:22:06&#43;10:00"/>
+<meta itemprop="name" content="Memory">
+<meta itemprop="description" content="Endian Little endian a b c d e f g h">
 
 
-<meta itemprop="datePublished" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="dateModified" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="wordCount" content="165">
+<meta itemprop="datePublished" content="2018-09-14T20:22:06&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-14T20:22:06&#43;10:00" />
+<meta itemprop="wordCount" content="459">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Lab Three - Bit Fields, Unions"/>
-<meta name="twitter:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that"/>
+<meta name="twitter:title" content="Memory"/>
+<meta name="twitter:description" content="Endian Little endian a b c d e f g h"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Lab Three - Bit Fields, Unions</h1>
+      <h1 class="post-title">Memory</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-08-07 </span>
+        <span class="post-time"> 2018-09-14 </span>
         
         
         
@@ -142,7 +142,16 @@
   <h2 class="post-toc-title">Contents</h2>
   
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#virtual-memory">Virtual Memory</a>
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#page-tables">Page Tables</a></li>
+</ul></li>
+</ul>
+</nav>
   </div>
 </div>
 
@@ -151,31 +160,100 @@
 
     
     <div class="post-content">
-      <p>This week&rsquo;s lab revealed a pretty important piece of information, that<br />
-<strong>bit fields are structured in reverse order</strong></p>
+      
 
-<p>Consider the C code</p>
+<p>Endian
+Little endian
+a b c d
+e f g h</p>
 
-<pre><code>struct _bit_fields {
-   unsigned int a : 4,
-                b : 8,
-                c : 20;
-};
+<p>big endian
+d c b a
+h g f e</p>
+
+<h1 id="virtual-memory">Virtual Memory</h1>
+
+<h2 id="intro">Intro</h2>
+
+<p>Consider a program that stores the number 5 into the address <code>0x00000000</code>, and prints it out a short time later&hellip;</p>
+
+<pre><code>// psuedocode
+*(0x00000000) = 5
+delay()
+print(*(0x00000000))
 </code></pre>
 
-<p>This struct could be represented in two ways<br />
-A) <code>aaaabbbb bbbbcccc cccccccc cccccccc</code><br />
-OR<br />
-B) <code>cccccccc cccccccc ccccbbbb bbbbaaaa</code></p>
+<p><em>// Program written in in <a href="https://github.com/kelseyhightower/nocode">NoCode</a>. kappa</em></p>
 
-<p>We can find out by using a <code>union</code>!
-A <code>union</code> allows the same portion of memory to be intepreted as different data types.</p>
+<p>What we should see when we run the program is the number <code>5</code>.</p>
 
-<p>What that means for this question, is that we can represent the entire <code>struct _bit_fields</code> as one thing, like an integer!
-So if we create a variable with this type, and through a <code>union</code>, set the value to <code>1</code> - we can check if <code>a</code> is 1, or if <code>c</code> is one.</p>
+<pre><code>&gt; ./program1
+5          
+</code></pre>
 
-<p>(On the CSE machines, <code>a</code> becomes 1, so therefore representation A was correct)<br />
-Therefore it tells us that the order that we define our bitfields are important, and are mapped in the reverse order!</p>
+<p>Let&rsquo;s have another program that stores the name &ldquo;Andrew&rdquo; into the address <code>0x00000000</code>, and prints it out a short time later&hellip;</p>
+
+<pre><code>// psuedocode
+*(0x00000000) = &quot;Andrew&quot;
+delay()
+print(&quot;Hello, &quot; + *(0x00000000))
+</code></pre>
+
+<p>Our output would look like this:</p>
+
+<pre><code>&gt; ./program2
+Hello, Andrew
+</code></pre>
+
+<p><strong>But</strong>, what if we ran <code>program2</code> slightly after <code>program1</code>?</p>
+
+<pre><code>&gt; ./program1 | &gt; ./program2
+Andrew       | Hello, Andrew
+</code></pre>
+
+<p>Uh-oh! We just lost the value 5, where did it go?<br />
+It got overwritten, because both programs were writing into the same memory address.</p>
+
+<p>Let&rsquo;s desk check it&hellip;</p>
+
+<pre><code>TIME | &gt; ./program1 | &gt; ./program2     | Value of MEM
+0    | [PROG START] |                  |      -      
+1    | SET MEM = 5  | [PROG START]     |      5      
+2    | DELAY        | SET MEM = Andrew |   Andrew    
+3    | PRINT MEM    | DELAY            |   Andrew    
+4    | [PROG END]   | PRINT MEM        |   Andrew    
+5    |              | [PROG END]       |   Andrew    
+</code></pre>
+
+<p>This is an issue! If two (or even more) programs read and write from the same memory addresses, things will go horribly wrong!<br />
+Luckily, operating systems have a solution to this issue - a mechanism called Virtual Memory!</p>
+
+<h2 id="features">Features</h2>
+
+<p>Each program is effectively sandboxed, isolating it from the rest of the other programs running on a system.<br />
+This also means that the program is unable to corrupt the memory spaces of other programs if something went wrong (memory protection)</p>
+
+<p>As a result, the program is free to access any memory address - virtual memory address that is..</p>
+
+<p>Physical memory addresses point to the actual locations in the computer&rsquo;s memory chips.<br />
+Virtual memory addresses seamlessly resolve into physical addresses through what is known as a Page Table.
+This means that a program accessing the virtual memory address 0x12345678 might access the physical address 0x05206677, without ever actually knowing that physical address.</p>
+
+<h2 id="page-tables">Page Tables</h2>
+
+<p>Page Tables act as a proxy, mapping virtual memory addresses to physical memory addresses.<br />
+Think of a network switch, when a packet comes in, that packet is routed towards and from its source and destination.</p>
+
+<pre><code>-----------------------------
+Virtual Addr | Physical Addr
+   0 -  999  |    0 -  999
+1000 - 1999  | 4000 - 4999
+2000 - 2999  | 5000 - 5999
+</code></pre>
+
+<p>So a program accessing address 1001 would actually be accessing address 4001!</p>
+
+<p>Size of a page = size of a frame</p>
 
     </div>
 
@@ -191,14 +269,14 @@ Therefore it tells us that the order that we define our bitfields are important,
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/elevator-going-up/">
+          <a class="prev" href="../../post/data_representation/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Elevator - Going Up!</span>
+            <span class="prev-text nav-default">The Representation of Data</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/week02/">
-            <span class="next-text nav-default">Lab Two - BigNum.c</span>
+          <a class="next" href="../../post/computer_systems/">
+            <span class="next-text nav-default">Computer Systems</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

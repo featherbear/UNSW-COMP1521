@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Lab Three - Bit Fields, Unions - Musings of a COMP1521 Kid</title>
+  <title>Computer Systems - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="This week&amp;rsquo;s lab revealed a pretty important piece of information, that" />
+  <meta name="description" content="Crash course time!" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week03/" />
+<link rel="canonical" href="../../post/computer_systems/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Lab Three - Bit Fields, Unions" />
-<meta property="og:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that" />
+<meta property="og:title" content="Computer Systems" />
+<meta property="og:description" content="Crash course time!" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week03/" /><meta property="article:published_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta property="article:modified_time" content="2018-08-07T00:14:18&#43;10:00"/>
-<meta itemprop="name" content="Lab Three - Bit Fields, Unions">
-<meta itemprop="description" content="This week&rsquo;s lab revealed a pretty important piece of information, that">
+<meta property="og:url" content="/post/computer_systems/" /><meta property="article:published_time" content="2018-09-14T15:52:36&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-14T15:52:36&#43;10:00"/>
+<meta itemprop="name" content="Computer Systems">
+<meta itemprop="description" content="Crash course time!">
 
 
-<meta itemprop="datePublished" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="dateModified" content="2018-08-07T00:14:18&#43;10:00" />
-<meta itemprop="wordCount" content="165">
+<meta itemprop="datePublished" content="2018-09-14T15:52:36&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-14T15:52:36&#43;10:00" />
+<meta itemprop="wordCount" content="307">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Lab Three - Bit Fields, Unions"/>
-<meta name="twitter:description" content="This week&rsquo;s lab revealed a pretty important piece of information, that"/>
+<meta name="twitter:title" content="Computer Systems"/>
+<meta name="twitter:description" content="Crash course time!"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Lab Three - Bit Fields, Unions</h1>
+      <h1 class="post-title">Computer Systems</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-08-07 </span>
+        <span class="post-time"> 2018-09-14 </span>
         
         
         
@@ -142,7 +142,24 @@
   <h2 class="post-toc-title">Contents</h2>
   
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#components-of-a-system">Components of a System</a>
+<ul>
+<li><a href="#processor">Processor</a></li>
+<li><a href="#storage">Storage</a>
+<ul>
+<li><a href="#primary-storage">Primary Storage</a></li>
+<li><a href="#secondary-storage">Secondary Storage</a>
+<ul>
+<li><a href="#aside-ssds-vs-hdds">Aside: SSDs vs HDDs</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#peripherals">Peripherals</a></li>
+<li><a href="#networking">Networking</a></li>
+</ul></li>
+</ul>
+</nav>
   </div>
 </div>
 
@@ -151,31 +168,62 @@
 
     
     <div class="post-content">
-      <p>This week&rsquo;s lab revealed a pretty important piece of information, that<br />
-<strong>bit fields are structured in reverse order</strong></p>
+      
 
-<p>Consider the C code</p>
+<p>Crash course time!</p>
 
-<pre><code>struct _bit_fields {
-   unsigned int a : 4,
-                b : 8,
-                c : 20;
-};
-</code></pre>
+<h1 id="components-of-a-system">Components of a System</h1>
 
-<p>This struct could be represented in two ways<br />
-A) <code>aaaabbbb bbbbcccc cccccccc cccccccc</code><br />
-OR<br />
-B) <code>cccccccc cccccccc ccccbbbb bbbbaaaa</code></p>
+<ul>
+<li>Processor (CPU)</li>
+<li>Storage</li>
+<li>Memory</li>
+<li>Peripherals</li>
+<li>Networking</li>
+</ul>
 
-<p>We can find out by using a <code>union</code>!
-A <code>union</code> allows the same portion of memory to be intepreted as different data types.</p>
+<h2 id="processor">Processor</h2>
 
-<p>What that means for this question, is that we can represent the entire <code>struct _bit_fields</code> as one thing, like an integer!
-So if we create a variable with this type, and through a <code>union</code>, set the value to <code>1</code> - we can check if <code>a</code> is 1, or if <code>c</code> is one.</p>
+<p>The processor (CPU) is the heart of the computer - the part of the computer which does the &lsquo;computing&rsquo;. In reality it is a bunch of transistors and other components on a chip.
+This chip is able to automagically do stuff.</p>
 
-<p>(On the CSE machines, <code>a</code> becomes 1, so therefore representation A was correct)<br />
-Therefore it tells us that the order that we define our bitfields are important, and are mapped in the reverse order!</p>
+<h2 id="storage">Storage</h2>
+
+<blockquote>
+<p>Read more about storage and memory <a href="../memory">here</a></p>
+</blockquote>
+
+<p>What was that?<br />
+&hellip;<br />
+Exactly.</p>
+
+<p>Storage is an important component in a computer system - we need a way to keep data.</p>
+
+<p>There are two storage types, <em>primary storage</em> and <em>secondary storage</em>.</p>
+
+<h3 id="primary-storage">Primary Storage</h3>
+
+<p>Primary storage devices are directly accessible by the CPU, and is most commonly associated with the computer &ldquo;memory&rdquo;, or <strong>RAM</strong> (<strong>R</strong>andom <strong>A</strong>ccess <strong>M</strong>emory).
+Being directly connected to the system bus, primary storage devices provide faster read and write times.<br />
+Primary storage devices are often considered <em>volatile</em>, meaning that once the computer is turned off, all the data is lost.</p>
+
+<p>Other types of primary storage devices are the registers of the CPU, and cache devices</p>
+
+<h3 id="secondary-storage">Secondary Storage</h3>
+
+<p>Secondary storage devices are where the majority of so called &lsquo;storage mediums&rsquo; lie.<br />
+These include HDDs (Hard Disk Drives), SSDs (Solid State Disk), magnetic tapes, CDs, DVDs, etc&hellip;
+Secondary storage devices are considered to be <em>non-volatile</em>, as they do not require electricity to maintain the data.</p>
+
+<h4 id="aside-ssds-vs-hdds">Aside: SSDs vs HDDs</h4>
+
+<p>SSDs have a faster read and write speed (as well as access time) compared to HDDs due to the nature of how data is read and written.<br />
+On a hard disk, there is a mechanical arm inside which has to physically move to a certain area of the disk and spin the disk to read.<br />
+As SSDs do not have any moving parts, it does not suffer the delay of physical movement, and hence can read and write (and access) data faster.</p>
+
+<h2 id="peripherals">Peripherals</h2>
+
+<h2 id="networking">Networking</h2>
 
     </div>
 
@@ -191,14 +239,14 @@ Therefore it tells us that the order that we define our bitfields are important,
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/elevator-going-up/">
+          <a class="prev" href="../../post/memory/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Elevator - Going Up!</span>
+            <span class="prev-text nav-default">Memory</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/week02/">
-            <span class="next-text nav-default">Lab Two - BigNum.c</span>
+          <a class="next" href="../../post/week07/">
+            <span class="next-text nav-default">Week Seven - Virtual Memory</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

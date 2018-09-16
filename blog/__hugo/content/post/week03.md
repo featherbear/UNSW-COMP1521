@@ -1,5 +1,5 @@
 ---
-title: "Week Three - Bit Fields, Unions"
+title: "Lab Three - Bit Fields, Unions"
 date: 2018-08-07T00:14:18+10:00
 
 hiddenFromHomePage: false
