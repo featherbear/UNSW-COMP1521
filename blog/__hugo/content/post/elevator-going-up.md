@@ -162,8 +162,8 @@ icon
 window.onload = function() {
   var elevator = new Elevator({
     element: document.querySelector('.elevator'),
-    mainAudio: '/js/elevator.js/elevator.mp3',
-    endAudio: '/js/elevator.js/ding.mp3',
+    mainAudio: '../../js/elevator.js/elevator.mp3',
+    endAudio: '../../js/elevator.js/ding.mp3',
     duration: 10000 // milliseconds
   });
 }
