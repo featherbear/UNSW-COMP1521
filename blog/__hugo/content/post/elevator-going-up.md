@@ -156,7 +156,7 @@ icon
 ---------------->
 
 
-<script src="/js/elevator.min.js"></script>
+<script src="../../js/elevator.js/elevator.min.js"></script>
 
 <script>
 window.onload = function() {
