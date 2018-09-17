@@ -50,6 +50,12 @@ void prompt(void);
 
 /* none ... unless you want some */
 
+void printPWD() {
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("%s\n", cwd);
+    }
+}
 
 // Main program
 // Set up enviroment and then run main loop
@@ -85,9 +91,7 @@ int main(int argc, char *argv[], char *envp[]) {
     char line[MAXLINE];
     int tokenLength = 0;
     char **tokens;
-    for (; prompt(), fgets(line, MAXLINE, stdin) != NULL; tokenLength = 0, (*line != '\0' && (freeTokens(tokens),1))) {
-        int stdin = STDIN_FILENO;
-        int stdout = STDOUT_FILENO;
+    for (; prompt(), fgets(line, MAXLINE, stdin) != NULL; tokenLength = 0, (*line != '\0' && (freeTokens(tokens), 1))) {
 
         trim(line); // remove leading/trailing space
         if (*line != '\0') {
@@ -114,35 +118,11 @@ int main(int argc, char *argv[], char *envp[]) {
             }
 
             tokens = tokenise(line, " ");
-            while (tokens[++tokenLength] != NULL);
-
-            if (strContains(tokens[tokenLength - 1], "<>") || strContains(tokens[0], "<>")) {
-                printf("Bad redirection.\n");
-                continue;
-            } else if (tokenLength > 2 && strContains(tokens[tokenLength - 2], "<>")) {
-                if (strcmp(tokens[tokenLength - 2], "<") == 0 &&
-                    (stdin = open(tokens[tokenLength - 1], O_RDONLY)) == -1) {
-                    printf("Could not redirect input from %s.\n", tokens[tokenLength - 1]);
-                    continue;
-                };
-
-                if (strcmp(tokens[tokenLength - 2], ">") == 0 &&
-                    (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
-                    printf("Could not redirect output to %s.\n", tokens[tokenLength - 1]);
-                    continue;
-                }
-
-                if (strcmp(tokens[tokenLength - 2], ">>") == 0 &&
-                    (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_APPEND | O_CREAT, 0644)) == -1) {
-                    printf("Could not redirect output to %s.\n", tokens[tokenLength - 1]);
-                    continue;
-                }
-
-                // Remove the redirect and path tokens as we don't want them to be passed to the program
-                free(tokens[tokenLength-1]);
-                free(tokens[tokenLength-2]);
-                tokens[tokenLength-2] = NULL;
+            if (strContains(line, "*?[~")) {
+                tokens = fileNameExpand(tokens);
             }
+
+            while (tokens[++tokenLength] != NULL);
 
             /* Built-in */
             if (strcmp(tokens[0], "exit") == 0) {
@@ -152,20 +132,58 @@ int main(int argc, char *argv[], char *envp[]) {
                 addToCommandHistory(line);
                 showCommandHistory();
             } else if (strcmp(tokens[0], "pwd") == 0) {
-                char cwd[PATH_MAX];
-                if (getcwd(cwd, sizeof(cwd)) != NULL) {
-                    printf("%s\n", cwd);
-                }
+                printPWD();
                 addToCommandHistory(line);
+                continue;
             } else if (strcmp(tokens[0], "cd") == 0) {
-
+                if (tokens[1] == NULL) {
+                    printf("Supply a directory to change into.\n");
+                } else if (chdir(tokens[1]) == 0) {
+                    addToCommandHistory(line);
+                    printPWD();
+                } else {
+                    printf("Cannot cd into %s!\n", tokens[1]);
+                }
+                continue;
             } else {
                 char *exec;
                 if ((exec = findExecutable(tokens[0], path))) {
+                    int stdin = STDIN_FILENO;
+                    int stdout = STDOUT_FILENO;
+
+
+                    if (strContains(tokens[tokenLength - 1], "<>") || strContains(tokens[0], "<>")) {
+                        printf("Bad redirection.\n");
+                        continue;
+                    } else if (tokenLength > 2 && strContains(tokens[tokenLength - 2], "<>")) {
+                        if (strcmp(tokens[tokenLength - 2], "<") == 0 &&
+                            (stdin = open(tokens[tokenLength - 1], O_RDONLY)) == -1) {
+                            printf("Could not redirect input from %s.\n", tokens[tokenLength - 1]);
+                            continue;
+                        };
+
+                        if (strcmp(tokens[tokenLength - 2], ">") == 0 &&
+                            (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
+                            printf("Could not redirect output to %s.\n", tokens[tokenLength - 1]);
+                            continue;
+                        }
+
+                        if (strcmp(tokens[tokenLength - 2], ">>") == 0 &&
+                            (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_APPEND | O_CREAT, 0644)) == -1) {
+                            printf("Could not redirect output to %s.\n", tokens[tokenLength - 1]);
+                            continue;
+                        }
+
+                        // Remove the redirect and path tokens as we don't want them to be passed to the program
+                        free(tokens[tokenLength - 1]);
+                        free(tokens[tokenLength - 2]);
+                        tokens[tokenLength - 2] = NULL;
+                    }
+
+
                     printf("Running %s ...\n", exec);
                     if (stdout == STDOUT_FILENO) printf("--------------------\n");
                     if ((pid = fork() != 0)) {
-                        // Parent
                         wait(&stat);
 
                         if (stdout == STDOUT_FILENO) printf("--------------------\n");
@@ -196,8 +214,32 @@ int main(int argc, char *argv[], char *envp[]) {
 // fileNameExpand: expand any wildcards in command-line args
 // - returns a possibly larger set of tokens
 char **fileNameExpand(char **tokens) {
-    // TODO
-    return NULL;
+    int tokenLength = 0;
+    while (tokens[++tokenLength] != NULL);
+
+    glob_t *globbuf = malloc(tokenLength * sizeof(glob_t));
+
+    int newTokenLength = 0;
+    for (int i = 0; i < tokenLength; i++) {
+        glob(tokens[i], GLOB_NOCHECK | GLOB_TILDE, NULL, &globbuf[i]);
+        newTokenLength += globbuf[i].gl_pathc;
+    }
+
+    char **newTokens = malloc((newTokenLength + 1) * sizeof(char *));
+    int tokenCounter = 0;
+    for (int i = 0; i < tokenLength; i++) {
+        for (int j = 0; j < globbuf[i].gl_pathc; j++) {
+            newTokens[tokenCounter++] = strdup(globbuf[i].gl_pathv[j]);
+        }
+    }
+    newTokens[tokenCounter] = NULL;
+
+    for (int i = 0; i < tokenLength; i++) globfree(&globbuf[i]);
+
+    free(globbuf);
+    freeTokens(tokens);
+
+    return newTokens;
 }
 
 // findExecutable: look for executable in PATH
