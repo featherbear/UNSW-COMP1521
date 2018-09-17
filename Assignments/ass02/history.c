@@ -29,8 +29,6 @@ HistoryList CommandHistory;
 
 FILE *file;
 char *HISTPATH;
-int MAXHIST_STRLEN;
-char *SHOW_FORMAT;
 
 // strip: remove leading/trailing spaces and newline characters from a string
 void strip(char *str) {
@@ -49,12 +47,6 @@ void strip(char *str) {
 // - read from HISTFILE if it exists
 
 int initCommandHistory() {
-
-    MAXHIST_STRLEN = 0;
-    for (int n = MAXHIST; n; n /= 10, MAXHIST_STRLEN++);
-    SHOW_FORMAT = malloc(10 + MAXHIST_STRLEN);
-    sprintf(SHOW_FORMAT, "  %%%dd  %%s\n", MAXHIST_STRLEN);
-
     CommandHistory.nEntries = 0;
     CommandHistory.position = 0;
 
@@ -95,13 +87,11 @@ void addToCommandHistory(char *cmdLine) {
 // - display the list of commands in the history
 
 void showCommandHistory(void) {
-
     int offsetOne = CommandHistory.position - CommandHistory.nEntries;
     for (int i = 0; i < CommandHistory.nEntries; i++) {
         int j = (offsetOne + i + MAXHIST) % MAXHIST;
-        printf(SHOW_FORMAT, i + 1, CommandHistory.commands[j]);
+        printf(" %3d %s\n", i + 1, CommandHistory.commands[j]);
     }
-    // TODO show one ahead
 }
 
 // getCommandFromHistory()
@@ -145,8 +135,5 @@ void saveCommandHistory() {
 // - release all data allocated to command history
 
 void cleanCommandHistory() {
-    // TODO
-    free(SHOW_FORMAT);
     free(HISTPATH);
-
 }
