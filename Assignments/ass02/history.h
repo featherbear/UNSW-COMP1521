@@ -6,8 +6,10 @@
 // Functions on the Command History object
 
 int initCommandHistory();
-void addToCommandHistory(char *cmdLine, int seqNo);
-void showCommandHistory(FILE *histFile);
+void addToCommandHistory(char *cmdLine);
+void showCommandHistory();
 char *getCommandFromHistory(int cmdNo);
+char *getLastCommandFromHistory();
 void saveCommandHistory();
 void cleanCommandHistory();
+void strip(char *str);
