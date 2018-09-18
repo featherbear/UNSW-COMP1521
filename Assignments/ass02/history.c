@@ -53,7 +53,7 @@ void strip(char *str) {
 int initCommandHistory() {
     // Initialise the values of `CommandHistory`
     CommandHistory.nEntries = 0;
-    CommandHistory.position = 0;
+    CommandHistory.position = 1;
 
     // HISTPATH = $HOME/HISTFILE
     char *HOME = getenv("HOME");
