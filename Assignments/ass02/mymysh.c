@@ -106,9 +106,9 @@ int main(int argc, char *argv[], char *envp[]) {
 
         // Recall command assumed
         if (line[0] == '!') {
-            if (line[1] == '\0') {
-                // Show the command history if the input is just `!`
-                showCommandHistory();
+            if (line[1] == '\0' || line[1] < '0' || line[1] > '9') {
+                // Show error if the given string is not valid
+                printf("Invalid history substitution\n");
                 continue;
             }
             char *recallPtr;
@@ -117,7 +117,7 @@ int main(int argc, char *argv[], char *envp[]) {
             // If `!!` -> getLastCommandFromHistory
             // Else `!n` -> getCommandFromHistory(n-1)
             recallPtr = (line[1] == '!' && line[2] == '\0') ? getLastCommandFromHistory()
-                                                            : getCommandFromHistory((cmdNo = atoi(line + 1)) - 1);
+                                                            : getCommandFromHistory((cmdNo = atoi(line + 1)));
 
             // Check if the command was found
             if (recallPtr) {

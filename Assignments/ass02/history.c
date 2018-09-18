@@ -18,21 +18,16 @@
 #define MAXSTR  200
 
 #define HISTFILE ".mymysh_history"
+#define HISTFORMATTER " %3d  %s\n"
 
-// I got rid of HistoryEntry!!!
-
-/*
- * So, it's pretty important to explain what's happening I guess...
- * This implementation keeps only the last 20 commands, so the recall only goes from !1 - !HISTSIZE   (1 based)
- * This is achieved by using a modulo `n % m` which will give a number between  -(m-1) and (m-1)
- * We want to get a number between 0 and m-1 so we can modify the expression to `(n + m) % m`
- *
- * This makes the numbering cyclical... 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 ... (Where m = 10)
- */
+typedef struct _history_entry {
+    int seqNumber;
+    char commandLine[MAXSTR];
+} HistoryEntry;
 
 typedef struct _history_list {
     int nEntries;
-    char commands[MAXHIST][MAXSTR];
+    HistoryEntry commands[MAXHIST];
     int position;
 } HistoryList;
 
@@ -65,12 +60,19 @@ int initCommandHistory() {
     HISTPATH = malloc(strlen(HOME) + 1 + strlen(HISTFILE) + 1);
     sprintf(HISTPATH, "%s/%s", HOME, HISTFILE);
 
+    // Initialise history entries
+    for (int i = 0; i < MAXHIST; i++) {
+        CommandHistory.commands[i].seqNumber = -1;
+    }
+
     // Read each line in the file
     FILE *file;
     if ((file = fopen(HISTPATH, "r"))) {
-        char cmd[MAXSTR];
-        while (fgets(cmd, MAXSTR, file)) {
-            strip(cmd);
+        char line[MAXSTR];
+        while (fgets(line, MAXSTR, file)) {
+            // strip(line);
+            char cmd[MAXSTR];
+            sscanf(line, "%d %[^\n]", &(CommandHistory.position), cmd);
             addToCommandHistory(cmd);
         }
         fclose(file);
@@ -83,16 +85,13 @@ int initCommandHistory() {
 // - add a command line to the history list
 // - overwrite oldest entry if buffer is full
 void addToCommandHistory(char *cmdLine) {
-    int i = CommandHistory.position;
-
+    int index = CommandHistory.position % MAXHIST;
     // If current entry is empty, increase the entry count
-    if (CommandHistory.commands[i][0] == '\0') CommandHistory.nEntries++;
+    if (CommandHistory.commands[index].seqNumber == -1) CommandHistory.nEntries++;
 
-    // Copy the command into the current entry
-    strcpy(CommandHistory.commands[i], cmdLine);
-
-    // Update current position index
-    CommandHistory.position = (i + 1) % MAXHIST;
+    // Copy the command into the current entry and update position
+    strcpy(CommandHistory.commands[index].commandLine, cmdLine);
+    CommandHistory.commands[index].seqNumber = CommandHistory.position++;
 }
 
 // showCommandHistory()
@@ -104,7 +103,7 @@ void showCommandHistory(void) {
     // Print out each past command
     for (int i = 0; i < CommandHistory.nEntries; i++) {
         int j = (offsetOne + i + MAXHIST) % MAXHIST; // Get index from 0 - MAXHIST-1
-        printf(" %3d %s\n", i + 1, CommandHistory.commands[j]);
+        printf(HISTFORMATTER, CommandHistory.commands[j].seqNumber, CommandHistory.commands[j].commandLine);
     }
 }
 
@@ -113,14 +112,16 @@ void showCommandHistory(void) {
 // - returns NULL if no command with this number
 char *getCommandFromHistory(int cmdNo) {
     // Check for indexes that are out of range
-    if (cmdNo < 0 || cmdNo >= MAXHIST) return NULL;
+    int cmdMin = CommandHistory.position - CommandHistory.nEntries;
+    int cmdMax = CommandHistory.position - 1;
+    if (cmdNo < cmdMin || cmdNo > cmdMax) return NULL;
 
     // Get index from 0 - MAXHIST-1
     int offsetOne = CommandHistory.position - CommandHistory.nEntries;
-    int j = (offsetOne + cmdNo + MAXHIST) % MAXHIST;
+    int j = (offsetOne + cmdNo - cmdMin + MAXHIST) % MAXHIST;
 
     // Return the command if an entry exists
-    if (CommandHistory.commands[j][0] != '\0') return CommandHistory.commands[j];
+    if (CommandHistory.commands[j].seqNumber != '\0') return CommandHistory.commands[j].commandLine;
 
     return NULL;
 }
@@ -143,7 +144,7 @@ void saveCommandHistory() {
     if ((file = fopen(HISTPATH, "w"))) {
         for (int i = 0; i < CommandHistory.nEntries; i++) {
             int j = (offsetOne + i + MAXHIST) % MAXHIST;
-            fprintf(file, "%s\n", CommandHistory.commands[j]);
+            fprintf(file, HISTFORMATTER, CommandHistory.commands[j].seqNumber, CommandHistory.commands[j].commandLine);
         }
         fclose(file);
     }
