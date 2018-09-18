@@ -106,10 +106,12 @@ int main(int argc, char *argv[], char *envp[]) {
 
         // Recall command assumed
         if (line[0] == '!') {
-            if (line[1] == '\0' || line[1] < '0' || line[1] > '9') {
-                // Show error if the given string is not valid
-                printf("Invalid history substitution\n");
-                continue;
+            if (line[1] != '!') {
+                if (line[1] == '\0' || line[1] < '0' || line[1] > '9') {
+                    // Show error if the given string is not valid
+                    printf("Invalid history substitution\n");
+                    continue;
+                }
             }
             char *recallPtr;
             int cmdNo = 1;
@@ -148,9 +150,8 @@ int main(int argc, char *argv[], char *envp[]) {
             break;
 
         } else if (strcmp(tokens[0], "h") == 0 || strcmp(tokens[0], "history") == 0) {
-            // Adding command to history before it is executed to show the correct recall order
-            addToCommandHistory(line);
             showCommandHistory();
+            addToCommandHistory(line);
 
         } else if (strcmp(tokens[0], "pwd") == 0) {
             printPWD();
@@ -208,7 +209,7 @@ int main(int argc, char *argv[], char *envp[]) {
                     // Wait for child to exit, then print return code and add the command to the command history
                     wait(&stat);
                     printf("--------------------\n");
-                    printf("Returns %d\n", stat);
+                    printf("Returns %d\n", WEXITSTATUS(stat));
                     addToCommandHistory(line);
                 } else {
                     /* Child Process */
