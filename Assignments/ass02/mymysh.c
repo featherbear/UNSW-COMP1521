@@ -139,8 +139,17 @@ int main(int argc, char *argv[], char *envp[]) {
         while (tokens[++tokenLength] != NULL); // Count the number of tokens
 
         // Validate redirect tokens
-        if (strContains(tokens[tokenLength - 1], "<>") || strContains(tokens[0], "<>")) {
-            printf("Invalid redirection; need a file\n");
+        // The > or < (mutually exclusive) can only exist as the second last token
+        int validRedirect = 1;
+        for (int i = 0; i < tokenLength; i++) {
+            if (i == tokenLength - 2) continue;
+            if (strcmp(tokens[i], ">") == 0 || strcmp(tokens[i], "<") == 0) {
+                validRedirect = 0;
+                break;
+            }
+        }
+        if (!validRedirect) {
+            printf("Invalid i/o redirection\n");
             continue;
         }
 
@@ -174,7 +183,7 @@ int main(int argc, char *argv[], char *envp[]) {
                 int stdout = STDOUT_FILENO;
 
                 /* Check for redirection */
-                if (tokenLength > 2 && strContains(tokens[tokenLength - 2], "<>")) {
+                if (tokenLength >= 3 && strContains(tokens[tokenLength - 2], "<>")) {
                     // stdin redirection
                     if (strcmp(tokens[tokenLength - 2], "<") == 0 &&
                         (stdin = open(tokens[tokenLength - 1], O_RDONLY)) == -1) {
@@ -189,17 +198,20 @@ int main(int argc, char *argv[], char *envp[]) {
                         continue;
                     }
 
-                    // stdout append redirection
-                    if (strcmp(tokens[tokenLength - 2], ">>") == 0 &&
-                        (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_APPEND | O_CREAT, 0644)) == -1) {
-                        perror("Output redirection");
-                        continue;
-                    }
+                    /*
+                        // stdout append redirection
+                        if (strcmp(tokens[tokenLength - 2], ">>") == 0 &&
+                            (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_APPEND | O_CREAT, 0644)) == -1) {
+                            perror("Output redirection");
+                            continue;
+                        }
+                    */
 
-                    // Remove the redirect and path tokens as we don't want them to be passed to the program
+                    // Remove the redirect tokens as we don't want them to be passed to the program
                     free(tokens[tokenLength - 1]);
                     free(tokens[tokenLength - 2]);
                     tokens[tokenLength - 2] = NULL;
+                    tokenLength -= 2;
                 }
 
                 printf("Running %s ...\n", exec);
@@ -207,7 +219,10 @@ int main(int argc, char *argv[], char *envp[]) {
                 if ((pid = fork() != 0)) {
                     /* Parent Process */
                     // Wait for child to exit, then print return code and add the command to the command history
+                    // Close stdin/stdout redirector file descriptors if needed
                     wait(&stat);
+                    if (stdin != STDIN_FILENO) close(stdin);
+                    if (stdout != STDOUT_FILENO) close(stdout);
                     printf("--------------------\n");
                     printf("Returns %d\n", WEXITSTATUS(stat));
                     addToCommandHistory(line);
