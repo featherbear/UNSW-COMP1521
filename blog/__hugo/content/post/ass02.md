@@ -15,7 +15,8 @@ sequenceDiagrams:
 
 ---
 
-Assignment 2 - Make your own shell!  
+Assignment 2 - Make your own shell!  [[View Files Here]](https://github.com/featherbear/UNSW-COMP1521/tree/master/Assignments/ass02)
+
 
 Considering that I started it the day the assignment was released, the specs changed tirelessly.  
 An endless tirade of constant bug squelching and tweaking, but it's good to see an original (?) assignment.
@@ -30,16 +31,18 @@ Nothing too fancy.
 _Marks: 2_  
 
 The shell was to be able to store (and recall) the most recent 20 valid commands, using the `h` or `history` command.  
-Command recalling was accessible by the `!CMDNO`, or `!!` which recalled the most recent command.
+Command recalling was accessible with  `!(cmdNo)`, or `!!` which recalled the most recent command.
 
 I did have a few disagreements with the assignment spec's requested implementation of the command history.
 
 ## cmdNo
 From my programming experience, I would much prefer longer code that is modular and easily separable than short code intertwined in a mess of different functionalities. _[ironic](https://github.com/featherbear/UNSW-COMP1511/blob/master/Lab/Week%2003/order3_challenge1_golf.c)_  
+
 The history 'module' exposed the current command number (`cmdNo`) to the main program. This left the history functionality as an important dependency to the success execution of the program (even its compilation!). A few of my friends were concerned that their initial program code was not working because they had not yet completed the history component.  
+
 Of course, `history.c` isn't a library, and has a use case very specific to this assignment - but I decided to use `cmdNo` internally within the history component.
 
-## !history Contents
+## The `history` command
 Something that I wanted to change (but didn't because it's an assignment and I gotta follow the specs) was the entries that the `h` and `history` commands displayed.  
 
 Consider a case where twenty arbitrary valid commands were executed.  
@@ -114,3 +117,4 @@ I'll stick to `bash` though :)
 
 > (Flex) Time taken to complete: 4 hours 37 minutes. Woo!
 
+![Visualisation of the assignment](/img/ass02_visualisation.gif)

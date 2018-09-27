@@ -60,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2018-09-17T10:17:36&#43;10:00" />
 <meta itemprop="dateModified" content="2018-09-17T10:17:36&#43;10:00" />
-<meta itemprop="wordCount" content="588">
+<meta itemprop="wordCount" content="591">
 
 
 
@@ -148,7 +148,7 @@
 <li><a href="#command-history">Command History</a>
 <ul>
 <li><a href="#cmdno">cmdNo</a></li>
-<li><a href="#history-contents">!history Contents</a></li>
+<li><a href="#the-history-command">The <code>history</code> command</a></li>
 </ul></li>
 <li><a href="#builtins">Builtins</a></li>
 <li><a href="#wildcard-expansion">Wildcard Expansion</a></li>
@@ -167,7 +167,7 @@
     <div class="post-content">
       
 
-<p>Assignment 2 - Make your own shell!</p>
+<p>Assignment 2 - Make your own shell!  <a href="https://github.com/featherbear/UNSW-COMP1521/tree/master/Assignments/ass02">[View Files Here]</a></p>
 
 <p>Considering that I started it the day the assignment was released, the specs changed tirelessly.<br />
 An endless tirade of constant bug squelching and tweaking, but it&rsquo;s good to see an original (?) assignment.</p>
@@ -184,17 +184,19 @@ Nothing too fancy.</p>
 <p><em>Marks: 2</em></p>
 
 <p>The shell was to be able to store (and recall) the most recent 20 valid commands, using the <code>h</code> or <code>history</code> command.<br />
-Command recalling was accessible by the <code>!CMDNO</code>, or <code>!!</code> which recalled the most recent command.</p>
+Command recalling was accessible with  <code>!(cmdNo)</code>, or <code>!!</code> which recalled the most recent command.</p>
 
 <p>I did have a few disagreements with the assignment spec&rsquo;s requested implementation of the command history.</p>
 
 <h2 id="cmdno">cmdNo</h2>
 
-<p>From my programming experience, I would much prefer longer code that is modular and easily separable than short code intertwined in a mess of different functionalities. _<a href="https://github.com/featherbear/UNSW-COMP1511/blob/master/Lab/Week%2003/order3_challenge1_golf.c">ironic</a>_<br />
-The history &lsquo;module&rsquo; exposed the current command number (<code>cmdNo</code>) to the main program. This left the history functionality as an important dependency to the success execution of the program (even its compilation!). A few of my friends were concerned that their initial program code was not working because they had not yet completed the history component.<br />
-Of course, <code>history.c</code> isn&rsquo;t a library, and has a use case very specific to this assignment - but I decided to use <code>cmdNo</code> internally within the history component.</p>
+<p>From my programming experience, I would much prefer longer code that is modular and easily separable than short code intertwined in a mess of different functionalities. _<a href="https://github.com/featherbear/UNSW-COMP1511/blob/master/Lab/Week%2003/order3_challenge1_golf.c">ironic</a>_</p>
 
-<h2 id="history-contents">!history Contents</h2>
+<p>The history &lsquo;module&rsquo; exposed the current command number (<code>cmdNo</code>) to the main program. This left the history functionality as an important dependency to the success execution of the program (even its compilation!). A few of my friends were concerned that their initial program code was not working because they had not yet completed the history component.</p>
+
+<p>Of course, <code>history.c</code> isn&rsquo;t a library, and has a use case very specific to this assignment - but I decided to use <code>cmdNo</code> internally within the history component.</p>
+
+<h2 id="the-history-command">The <code>history</code> command</h2>
 
 <p>Something that I wanted to change (but didn&rsquo;t because it&rsquo;s an assignment and I gotta follow the specs) was the entries that the <code>h</code> and <code>history</code> commands displayed.</p>
 
@@ -273,6 +275,8 @@ I&rsquo;ll stick to <code>bash</code> though :)</p>
 <blockquote>
 <p>(Flex) Time taken to complete: 4 hours 37 minutes. Woo!</p>
 </blockquote>
+
+<p><img src="../../img/ass02_visualisation.gif" alt="Visualisation of the assignment" /></p>
 
     </div>
 
