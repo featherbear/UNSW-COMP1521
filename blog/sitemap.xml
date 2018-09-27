@@ -3,6 +3,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>/post/networking/</loc>
+    <lastmod>2018-09-27T09:38:34+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/network_ipc/</loc>
+    <lastmod>2018-09-27T09:21:54+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/local_ipc/</loc>
+    <lastmod>2018-09-27T08:45:34+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/week08/</loc>
+    <lastmod>2018-09-23T18:36:02+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/post/ass02/</loc>
+    <lastmod>2018-09-17T10:17:36+10:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>/post/program_concurrency/</loc>
     <lastmod>2018-09-16T19:50:57+10:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -45,7 +80,7 @@
   </url>
   
   <url>
-    <loc>/post/week06/</loc>
+    <loc>/post/lab06/</loc>
     <lastmod>2018-08-30T00:21:11+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -59,7 +94,7 @@
   </url>
   
   <url>
-    <loc>/post/mips-branch-delay/</loc>
+    <loc>/post/mips_branch_delay/</loc>
     <lastmod>2018-08-17T00:19:01+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -80,14 +115,14 @@
   </url>
   
   <url>
-    <loc>/post/week03/</loc>
+    <loc>/post/lab03/</loc>
     <lastmod>2018-08-07T00:14:18+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/post/week02/</loc>
+    <loc>/post/lab02/</loc>
     <lastmod>2018-08-05T00:01:39+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -115,14 +150,14 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-09-16T19:50:57+10:00</lastmod>
+    <lastmod>2018-09-27T09:38:34+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2018-09-16T19:50:57+10:00</lastmod>
+    <lastmod>2018-09-27T09:38:34+10:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>

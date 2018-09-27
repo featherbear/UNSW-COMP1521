@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Weeks Four and Five - MIPS - Musings of a COMP1521 Kid</title>
+  <title>Networking - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="Let&amp;rsquo;s get low(er) level!" />
+  <meta name="description" content="whirrrrrrr clunk" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week04_05/" />
+<link rel="canonical" href="../../post/networking/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Weeks Four and Five - MIPS" />
-<meta property="og:description" content="Let&rsquo;s get low(er) level!" />
+<meta property="og:title" content="Networking" />
+<meta property="og:description" content="whirrrrrrr clunk" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week04_05/" /><meta property="article:published_time" content="2018-08-15T00:01:15&#43;10:00"/>
-<meta property="article:modified_time" content="2018-08-15T00:01:15&#43;10:00"/>
-<meta itemprop="name" content="Weeks Four and Five - MIPS">
-<meta itemprop="description" content="Let&rsquo;s get low(er) level!">
+<meta property="og:url" content="/post/networking/" /><meta property="article:published_time" content="2018-09-27T09:38:34&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-27T09:38:34&#43;10:00"/>
+<meta itemprop="name" content="Networking">
+<meta itemprop="description" content="whirrrrrrr clunk">
 
 
-<meta itemprop="datePublished" content="2018-08-15T00:01:15&#43;10:00" />
-<meta itemprop="dateModified" content="2018-08-15T00:01:15&#43;10:00" />
-<meta itemprop="wordCount" content="431">
+<meta itemprop="datePublished" content="2018-09-27T09:38:34&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-27T09:38:34&#43;10:00" />
+<meta itemprop="wordCount" content="478">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Weeks Four and Five - MIPS"/>
-<meta name="twitter:description" content="Let&rsquo;s get low(er) level!"/>
+<meta name="twitter:title" content="Networking"/>
+<meta name="twitter:description" content="whirrrrrrr clunk"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Weeks Four and Five - MIPS</h1>
+      <h1 class="post-title">Networking</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-08-15 </span>
+        <span class="post-time"> 2018-09-27 </span>
         
         
         
@@ -144,10 +144,21 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
 <ul>
-<li><a href="#stack-frames">Stack Frames</a></li>
-<li><a href="#there-are-ten-temporary-registers">There are ten temporary registers</a></li>
-<li><a href="#labels-point-to-a-memory-address">Labels point to a memory address</a></li>
-<li><a href="#useful-debugging">Useful debugging</a></li>
+<li><a href="#types-of-networks">Types of networks</a></li>
+<li><a href="#communication-over-the-network">Communication over the Network</a></li>
+<li><a href="#the-network-stack">The Network Stack</a></li>
+<li><a href="#protocols">Protocols</a></li>
+<li><a href="#ip-addresses">IP Addresses</a></li>
+<li><a href="#dns-server">DNS Server</a>
+<ul>
+<li><a href="#dns-levels">DNS Levels</a></li>
+</ul></li>
+<li><a href="#tcp-and-udp">TCP and UDP</a>
+<ul>
+<li><a href="#transmission-control-protocol">Transmission Control Protocol</a></li>
+<li><a href="#user-datagram-protocol">User Datagram Protocol</a></li>
+</ul></li>
+<li><a href="#ethernet">Ethernet</a></li>
 </ul>
 </nav>
   </div>
@@ -160,94 +171,94 @@
     <div class="post-content">
       
 
-<p>Let&rsquo;s get low(er) level!</p>
+<p>whirrrrrrr clunk</p>
 
-<h1 id="stack-frames">Stack Frames</h1>
+<h1 id="types-of-networks">Types of networks</h1>
 
-<p>When a stack frames is set up, the values of the specified registers are copied into the stack.<br />
-This allows the register values to be modified, as, at the end of the function, we can restore the original values that we started with.</p>
+<ul>
+<li>Local Area Network (WAN) - A physically contained network</li>
+<li>Wide Area Network (WAN) - A geographically dispersed LAN (ie multi-campus networks)</li>
+<li>Internet - A collection of WANs</li>
+</ul>
 
-<p>Not all functions require a stack frame though. You only need to use one if:
-* You are using the <code>$s?</code> registers
-  The safe registers are, by convention, registers that can only be modified by the function it is used in, and not any other function.
-* You are calling another function within your function
-  If you perform <code>jal func</code> inside your function, the return address to the main function would get lost</p>
+<h1 id="communication-over-the-network">Communication over the Network</h1>
 
-<p>Upon finishing the MIPS part of COMP1521, here&rsquo;s a few things that I&rsquo;ve found amusing.</p>
+<ul>
+<li>Data is split into packets (chunks of data with headers)</li>
+<li>Packets are sent across physical links (wire, radio, fibre)</li>
+<li>Packets pass through multiple nodes (routing)</li>
+<li>Packets reach the destination</li>
+<li>Packets are reordered, verified and buffered</li>
+<li>Data is reassembled</li>
+</ul>
 
-<h1 id="there-are-ten-temporary-registers">There are ten temporary registers</h1>
+<h1 id="the-network-stack">The Network Stack</h1>
 
-<p>In MIPS, registers <code>$t8 - $15</code> are given the common name <code>$t0 - $t7</code>.<br />
-<strong>BUT WAIT THERE&rsquo;S TWO MORE</strong>, <code>$24 - $25</code> which are <code>$t8 - $t9</code>.<br />
-I guess that would have been good to know for the assignment</p>
+<ul>
+<li>Physical layer - transfer of bits</li>
+<li>Link layer - Ethernet, MAC, CSMA, etc</li>
+<li>Network layer - Routing, IP</li>
+<li>Transport layer - TCP/UDP</li>
+<li>Application layer - Application-defined protocols</li>
+</ul>
 
-<h1 id="labels-point-to-a-memory-address">Labels point to a memory address</h1>
+<h1 id="protocols">Protocols</h1>
 
-<p>Let&rsquo;s consider the label <code>display</code>, which points to a memory space of 720 bytes&hellip;</p>
+<p>A protocol is a set of defined rules that dictate how systems communicate with each other, in terms of both communication, and representation of data</p>
 
-<pre><code>    .data
-display: 
-    .space 720
-</code></pre>
+<h1 id="ip-addresses">IP Addresses</h1>
 
-<p>What if we wanted to store something into space 101?</p>
+<p>IPv4 address are given as 32-bit addresses (dotted quad)<br />
+IPv6 address are given as 128-bit addresses<br />
+<code>127.0.0.1</code> (aka <code>localhost</code>) is a special loopback address that points back to the device<br />
+IP addresses can be assigned statically, or dynamically via a DHCP server</p>
 
-<pre><code>    .text
-main:
-    li  $t0, 100        # t0 = 100
-    la  $t1, display    # t1 = base address of `display`
-    add $t2, $t1, $t0   # t2 = base + 100
-    li  $t9, 'A'        # t9 = 'A'
-    
-    sb  $t9, ($t2)      # *(base + 100) = 'A'
-</code></pre>
+<h1 id="dns-server">DNS Server</h1>
 
-<p>We could <em>also</em> do this</p>
+<p>Devices connect to other devices by their IP address.<br />
+Of course, it isn&rsquo;t feasible to memorise every IP address for every website we go to.</p>
 
-<pre><code>    .text
-main:
-    li  $t0, 100        # t0 = 100
-    li  $t9, 'A'        # t9 = 'A'
-    
-    sb  $t9, base($t0)      # *(100 + base) = 'A'
-</code></pre>
+<p>As a result, website names were created, so one could type www.google.com instead of 216.58.196.142.</p>
 
-<p>This way saved two instructions, but more importantly, it used one less register&hellip;<br />
-And that means more places to do more things - hooray!</p>
+<p>The Domain Name System is responsible for the translation of this hostname into an IP address.<br />
+A DNS server (aka name server) is a database that maps hostnames to IP addresses - They operate with other DNS servers to provide a distributed global lookup table for all the devices in the world.</p>
 
-<h1 id="useful-debugging">Useful debugging</h1>
+<ul>
+<li>Iterated Query - Client contacts each DNS Server it knows to resolve an address</li>
+<li>Recursive Query - DNS Servers contacts another server, propagating the query</li>
+</ul>
 
-<p>I&rsquo;m not a fan of debugging software ~because I haven&rsquo;t been bothered to learn how to use them~ so I often don&rsquo;t use the useful features like breakpoints and step by step execution. Instead, what I - and alot of people would do, is to just print out text at certain points.<br />
-In MIPS, you can&rsquo;t print a string directly, rather you need to have created the string in the data segment of the code</p>
+<h2 id="dns-levels">DNS Levels</h2>
 
-<pre><code>    .data
-test: .ascii &quot;foo bar&quot;
+<ul>
+<li>Top-level domain (TLD)</li>
+<li>Authoritative</li>
+<li>Local server</li>
+</ul>
 
-...
+<h1 id="tcp-and-udp">TCP and UDP</h1>
 
-    .text
-la $a0, test
-li $v0, 4
-syscall
-</code></pre>
+<p>The two main transmission protocols are TCP and UDP</p>
 
-<p>If you wanted to print a single character</p>
+<h2 id="transmission-control-protocol">Transmission Control Protocol</h2>
 
-<pre><code>li $a0, 'X'
-li $v0, 11
-syscall
-</code></pre>
+<p>TCP can be considered as a <em>&lsquo;call and response&rsquo;</em> protocol. For every packet the server receives, and acknowledgement of that packet (ACK) should be sent back to the client. If something goes wrong (such as a timeout, or a duplicate ACK), the packet would be resent.</p>
 
-<p>Or maybe an integer</p>
+<p>TCP also contain checksum mechanisms to ensure the integrity of the data inside the packet.</p>
 
-<pre><code>li $a0, 999
-li $v0, 1
-syscall
-</code></pre>
+<h2 id="user-datagram-protocol">User Datagram Protocol</h2>
 
-<div class='align-center'>
-  <img src="https://pics.me.me/who-would-win-full-featured-debugger-worked-on-by-hundreds-of-31204497.png" alt="meme" />
-</div>
+<p>UDP can be considered as <em>&lsquo;fire and forget&rsquo;</em>, as it makes no care if the destination has successfully received the packet or not.</p>
+
+<p>UDP is considerably faster than TCP as there is less overhead from the information in the packet header.</p>
+
+<p>It is preferred over TCP when large amounts of mission-criticial data is sent (ie when playing games, you don&rsquo;t necessarily need every single packet to be received)</p>
+
+<h1 id="ethernet">Ethernet</h1>
+
+<p>CSMA - On collision, wait for a random time and retransmit<br />
+Collision - Two packets received at the same time<br />
+Interference - Two packets sent at the same time</p>
 
     </div>
 
@@ -263,14 +274,9 @@ syscall
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/mips_branch_delay/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">MIPS and Branch Delays</span>
-            <span class="prev-text nav-mobile">Prev</span>
-          </a>
         
-          <a class="next" href="../../post/elevator-going-up/">
-            <span class="next-text nav-default">Elevator - Going Up!</span>
+          <a class="next" href="../../post/network_ipc/">
+            <span class="next-text nav-default">Network Inter-Process Communication</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>MIPS and Branch Delays - Musings of a COMP1521 Kid</title>
+  <title>Network Inter-Process Communication - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?" />
+  <meta name="description" content="&amp;hellip; - - - &amp;hellip;" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/mips-branch-delay/" />
+<link rel="canonical" href="../../post/network_ipc/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="MIPS and Branch Delays" />
-<meta property="og:description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?" />
+<meta property="og:title" content="Network Inter-Process Communication" />
+<meta property="og:description" content="&hellip; - - - &hellip;" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/mips-branch-delay/" /><meta property="article:published_time" content="2018-08-17T00:19:01&#43;10:00"/>
-<meta property="article:modified_time" content="2018-08-17T00:19:01&#43;10:00"/>
-<meta itemprop="name" content="MIPS and Branch Delays">
-<meta itemprop="description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?">
+<meta property="og:url" content="/post/network_ipc/" /><meta property="article:published_time" content="2018-09-27T09:21:54&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-27T09:21:54&#43;10:00"/>
+<meta itemprop="name" content="Network Inter-Process Communication">
+<meta itemprop="description" content="&hellip; - - - &hellip;">
 
 
-<meta itemprop="datePublished" content="2018-08-17T00:19:01&#43;10:00" />
-<meta itemprop="dateModified" content="2018-08-17T00:19:01&#43;10:00" />
-<meta itemprop="wordCount" content="179">
+<meta itemprop="datePublished" content="2018-09-27T09:21:54&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-27T09:21:54&#43;10:00" />
+<meta itemprop="wordCount" content="190">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="MIPS and Branch Delays"/>
-<meta name="twitter:description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?"/>
+<meta name="twitter:title" content="Network Inter-Process Communication"/>
+<meta name="twitter:description" content="&hellip; - - - &hellip;"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">MIPS and Branch Delays</h1>
+      <h1 class="post-title">Network Inter-Process Communication</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-08-17 </span>
+        <span class="post-time"> 2018-09-27 </span>
         
         
         
@@ -142,7 +142,11 @@
   <h2 class="post-toc-title">Contents</h2>
   
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#sockets">Sockets</a></li>
+</ul>
+</nav>
   </div>
 </div>
 
@@ -151,35 +155,61 @@
 
     
     <div class="post-content">
-      <p><strong>If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?</strong></p>
+      
 
-<pre><code>0x00400200   li  $a0, 42
-0x00400204   jal fun
-0x00400208   nop
-0x0040020C   sw  $v0, x
-</code></pre>
+<p>&hellip; - - - &hellip;</p>
 
-<p>So, MIPS has this thing called a <code>branch delay slot</code>, which allows an extra instruction to be performed before the jump - as to keep the clock in sync.</p>
+<blockquote>
+<p><a href="../networking">Read more about networking</a></p>
+</blockquote>
 
-<p>Do I get it, yes.<br />
-Do I understand, maybe?</p>
+<p>Networked communication between devices play an important role in the running of systems.<br />
+Sure we could just copy everything onto USBs and CDs, then get them posted to our destination -<br />
+but that&rsquo;s slow&hellip; <em><a href="https://rfc1149.net/rfc1149.html">or is it????</a></em></p>
 
-<hr />
+<h1 id="sockets">Sockets</h1>
 
-<p>So it looks like the branch and jump instructions first get loaded into the memory.<br />
-But before they execute, the next instruction directly afterwards gets loaded while the jump is performed.</p>
+<p>Sockets are the method in which programs connect to programs on other devices.</p>
 
-<hr />
+<p>The server creates a socket, binding itself to an address, and waits for connections.<br />
+The client creates a socket, connecting to the address of the server, and writes and reads from the socket</p>
 
-<p>That means, that to answer this question, then <code>$ra = 0x0040020C</code>.<br />
-That makes sense, as the return address becomes <code>$ra + 8</code></p>
+<p><code>sys/socket.h</code> provides the functionality for sockets</p>
 
-<p>But wait!
-The answer could also be <code>0x00400208</code>.</p>
+<p><code>int socket(int Domain, int Type, int Protocol)</code><br />
+Domain: <code>AF_LOCAL</code>, <code>AF_INET</code><br />
+Type: <code>SOCK_STREAM</code>, <code>SOCK_DGRAM</code><br />
+Protocol: See <code>etc/protocols</code></p>
 
-<p>If you&rsquo;re use SPIM this is the result you would get.<br />
-That&rsquo;s because SPIM has branch delay execution <strong>disabled by default</strong>.<br />
-And what that means, is that a function call will return to the immediate next address <code>$ra + 4</code>.</p>
+<p>ret: socket descriptor, or -1 on error</p>
+
+<p><code>int bind(int Sockfd, SockAddr *Addr, socklen_t AddrLen)</code></p>
+
+<p><code>int listen(int Sockfd, int Backlog)</code></p>
+
+<p><code>typedef struct sockaddr_in SockAddr</code><br />
+<code>.sin_family</code> - domain<br />
+<code>.sin_port</code> - port<br />
+<code>.sin_addr</code> - address<br />
+<code>.sin_zero[8]</code> - padding</p>
+
+<p><code>int accept(int Sockfd, SockAddr *Addr, socklen_t *AddrLen)</code></p>
+
+<ul>
+<li>Blocks until connection request</li>
+<li>Returns new socket descriptor, or -1 on error</li>
+</ul>
+
+<p><code>int connect(int Sockfd, SockAddr *Addr, socklen_t AddrLen)</code></p>
+
+<ul>
+<li>Connect to the socket<br /></li>
+<li>Returns 0, or -1 on error</li>
+</ul>
+
+<blockquote>
+<p><a href="../networking">Read more about networking</a></p>
+</blockquote>
 
     </div>
 
@@ -195,14 +225,14 @@ And what that means, is that a function call will return to the immediate next a
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/ass01/">
+          <a class="prev" href="../../post/networking/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Assignment 1 - Scrolling Text (MIPS)</span>
+            <span class="prev-text nav-default">Networking</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/week04_05/">
-            <span class="next-text nav-default">Weeks Four and Five - MIPS</span>
+          <a class="next" href="../../post/local_ipc/">
+            <span class="next-text nav-default">Talk To Me! Local Inter-Process Communication</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

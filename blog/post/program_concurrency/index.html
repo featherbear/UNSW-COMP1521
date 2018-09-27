@@ -60,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2018-09-16T19:50:57&#43;10:00" />
 <meta itemprop="dateModified" content="2018-09-16T19:50:57&#43;10:00" />
-<meta itemprop="wordCount" content="276">
+<meta itemprop="wordCount" content="465">
 
 
 
@@ -164,6 +164,18 @@
 <li><a href="#void-pthread-exit-void-value-ptr"><code>void pthread_exit(void *value_ptr)</code></a></li>
 </ul></li>
 </ul></li>
+<li><a href="#implications-of-concurrency">Implications of Concurrency</a>
+<ul>
+<li><a href="#the-good">The Good</a></li>
+<li><a href="#the-not-so-good">The Not-So-Good</a>
+<ul>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#solution-semaphores">Solution? Semaphores!</a>
+<ul>
+<li><a href="#semaphore-h-definitions">semaphore.h definitions</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
 </ul>
 </nav>
   </div>
@@ -182,8 +194,8 @@
 
 <h1 id="process-forking">Process Forking</h1>
 
-<p>A fork duplicates/clones the current process into its own separate space
-(Memory, variables, state is independently cloned)</p>
+<p>A fork duplicates/clones the current process into its own separate space.<br />
+(Memory, variables, state is independently cloned).</p>
 
 <h2 id="functions">Functions</h2>
 
@@ -240,6 +252,55 @@ Returns <strong>0 if NOT THE SAME</strong></p>
 
 <p>Terminates the current thread, storing a return value in <code>value_ptr</code></p>
 
+<h1 id="implications-of-concurrency">Implications of Concurrency</h1>
+
+<h2 id="the-good">The Good</h2>
+
+<ul>
+<li>Programs can run &lsquo;simultaneously&rsquo;</li>
+<li>If there are multiple CPU cores, multiple programs can actually be run simultaneously.</li>
+
+<li><p>Each program operates without affecting other processes</p>
+
+<h2 id="the-not-so-good">The Not-So-Good</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>If a program intended for concurrent use is poorly written, the program may experience the following issues:</p></li>
+
+<li><p>Non-deterministic output - the same input produces different outputs</p></li>
+
+<li><p>Deadlock - processes indefinitely wait for each other to signal</p></li>
+
+<li><p>Starvation - a process keeps missing access to a resource</p></li>
+
+<li><p>Corruption - (bank example)</p></li>
+</ul>
+
+<h3 id="solution-semaphores">Solution? Semaphores!</h3>
+
+<p>Semaphores can be considered as an overpowered locking flag that processes can use.</p>
+
+<p>It basically performs the below operation, except without requiring execution cycles to wait.</p>
+
+<pre><code>while (!flag);
+doThis();
+</code></pre>
+
+<p>Instead of repeatedly checking the value of <code>flag</code>, semaphores communicate with the operating system to instruct the program when to continue.</p>
+
+<h4 id="semaphore-h-definitions">semaphore.h definitions</h4>
+
+<pre><code>#include &lt;semaphore.h&gt;
+
+int sem_init(sem_t *Sem, int Shared, uint Value) // Initialise Sem
+int sem_wait(sem_t *Sem) // Wait for Sem &gt; 0, then decrement and continue
+int sem_post(sem_t *Sem) // Increment Sem and continue
+int sem_destroy(sem_t *Sem) // Free Sem
+</code></pre>
+
+<p>A locking flag allows concurrent functions to fully complete before other operations are executed.</p>
+
     </div>
 
     
@@ -254,6 +315,11 @@ Returns <strong>0 if NOT THE SAME</strong></p>
       
       <nav class="post-nav">
         
+          <a class="prev" href="../../post/ass02/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Assignment 2 - My Very Own Shell</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         
           <a class="next" href="../../post/process_management/">
             <span class="next-text nav-default">Process Management</span>

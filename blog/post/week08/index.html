@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Week Seven - Virtual Memory - Musings of a COMP1521 Kid</title>
+  <title>Week Eight - Devices - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="Computers are pretty cool, eh?" />
+  <meta name="description" content="Devices In Unix, devices can be accessed via a filepath!" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week07/" />
+<link rel="canonical" href="../../post/week08/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Week Seven - Virtual Memory" />
-<meta property="og:description" content="Computers are pretty cool, eh?" />
+<meta property="og:title" content="Week Eight - Devices" />
+<meta property="og:description" content="Devices In Unix, devices can be accessed via a filepath!" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week07/" /><meta property="article:published_time" content="2018-09-05T00:15:52&#43;10:00"/>
-<meta property="article:modified_time" content="2018-09-05T00:15:52&#43;10:00"/>
-<meta itemprop="name" content="Week Seven - Virtual Memory">
-<meta itemprop="description" content="Computers are pretty cool, eh?">
+<meta property="og:url" content="/post/week08/" /><meta property="article:published_time" content="2018-09-23T18:36:02&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-23T18:36:02&#43;10:00"/>
+<meta itemprop="name" content="Week Eight - Devices">
+<meta itemprop="description" content="Devices In Unix, devices can be accessed via a filepath!">
 
 
-<meta itemprop="datePublished" content="2018-09-05T00:15:52&#43;10:00" />
-<meta itemprop="dateModified" content="2018-09-05T00:15:52&#43;10:00" />
-<meta itemprop="wordCount" content="93">
+<meta itemprop="datePublished" content="2018-09-23T18:36:02&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-23T18:36:02&#43;10:00" />
+<meta itemprop="wordCount" content="123">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Week Seven - Virtual Memory"/>
-<meta name="twitter:description" content="Computers are pretty cool, eh?"/>
+<meta name="twitter:title" content="Week Eight - Devices"/>
+<meta name="twitter:description" content="Devices In Unix, devices can be accessed via a filepath!"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Week Seven - Virtual Memory</h1>
+      <h1 class="post-title">Week Eight - Devices</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-09-05 </span>
+        <span class="post-time"> 2018-09-23 </span>
         
         
         
@@ -142,7 +142,21 @@
   <h2 class="post-toc-title">Contents</h2>
   
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#devices">Devices</a>
+<ul>
+<li><a href="#unix-devices">Unix Devices</a></li>
+<li><a href="#special-devices">Special Devices</a>
+<ul>
+<li><a href="#character-devices">Character Devices</a></li>
+<li><a href="#block-devices">Block Devices</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#local-ipc-click-to-view-local-ipc"><a href="../local_ipc">Local IPC (Click to view)</a></a></li>
+<li><a href="#network-ipc-click-to-view-network-ipc"><a href="../network_ipc">Network IPC (Click to view)</a></a></li>
+</ul>
+</nav>
   </div>
 </div>
 
@@ -151,13 +165,48 @@
 
     
     <div class="post-content">
-      <p>Computers are pretty cool, eh?</p>
+      
 
-<p>So in managing the memory of a system, there is this concept of pages and frames.
-Essentially, the pages are memory mappings to arbitrarily orderd frames. When a program requests a specific memory, the page table redirects the program to a physical memory address dictated by the frame that that page corresponds to.</p>
+<h1 id="devices">Devices</h1>
 
-<p>It reminds me of the VirtualStore system on Windows-based systems.<br />
-It&rsquo;s like a sandbox - the program has access to request any memory range. However the actual memory address it will access will be different.</p>
+<p>In Unix, devices can be accessed via a filepath!<br />
+Have a try and look at <code>ls /dev</code>!</p>
+
+<p>Though we cannot directly access the contents by just reading the contents of the (<em>or can you</em>), this convention allows programs to be function more synonymously as a &lsquo;file&rsquo;.</p>
+
+<h2 id="unix-devices">Unix Devices</h2>
+
+<p><code>/dev/diskN</code> - Hard disk partition<br />
+<code>/dev/ttyN</code> - Terminal device<br />
+<code>/dev/ptyN</code> - Pseudo-terminal device</p>
+
+<p><code>/dev/mem</code> - Physical memory (RO)<br />
+<code>/dev/null</code> - Data sink<br />
+<code>/dev/random</code> - Pesudo-random number stream</p>
+
+<h2 id="special-devices">Special Devices</h2>
+
+<h3 id="character-devices">Character Devices</h3>
+
+<ul>
+<li>Unbuffered direct access to hardware device</li>
+<li>Read and write by bytes</li>
+</ul>
+
+<h3 id="block-devices">Block Devices</h3>
+
+<ul>
+<li>Buffered access to hardware device</li>
+<li>Read and write by chunks of bytes at a time</li>
+</ul>
+
+<h1 id="local-ipc-click-to-view-local-ipc"><a href="../local_ipc">Local IPC (Click to view)</a></h1>
+
+<h1 id="network-ipc-click-to-view-network-ipc"><a href="../network_ipc">Network IPC (Click to view)</a></h1>
+
+<blockquote>
+<p><a href="../ass02">Also, assignment 2 was released&hellip;</a></p>
+</blockquote>
 
     </div>
 
@@ -173,14 +222,14 @@ It&rsquo;s like a sandbox - the program has access to request any memory range. 
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/computer_systems/">
+          <a class="prev" href="../../post/local_ipc/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Computer Systems</span>
+            <span class="prev-text nav-default">Talk To Me! Local Inter-Process Communication</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/lab06/">
-            <span class="next-text nav-default">Week Six - stat</span>
+          <a class="next" href="../../post/ass02/">
+            <span class="next-text nav-default">Assignment 2 - My Very Own Shell</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

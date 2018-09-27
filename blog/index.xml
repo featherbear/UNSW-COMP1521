@@ -7,10 +7,55 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Andrew Wong (z5206677)</copyright>
-    <lastBuildDate>Sun, 16 Sep 2018 19:50:57 +1000</lastBuildDate>
+    <lastBuildDate>Thu, 27 Sep 2018 09:38:34 +1000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Networking</title>
+      <link>/post/networking/</link>
+      <pubDate>Thu, 27 Sep 2018 09:38:34 +1000</pubDate>
+      
+      <guid>/post/networking/</guid>
+      <description>whirrrrrrr clunk</description>
+    </item>
+    
+    <item>
+      <title>Network Inter-Process Communication</title>
+      <link>/post/network_ipc/</link>
+      <pubDate>Thu, 27 Sep 2018 09:21:54 +1000</pubDate>
+      
+      <guid>/post/network_ipc/</guid>
+      <description>&amp;hellip; - - - &amp;hellip;</description>
+    </item>
+    
+    <item>
+      <title>Talk To Me! Local Inter-Process Communication</title>
+      <link>/post/local_ipc/</link>
+      <pubDate>Thu, 27 Sep 2018 08:45:34 +1000</pubDate>
+      
+      <guid>/post/local_ipc/</guid>
+      <description>In one ear, out the other&amp;hellip;wait.</description>
+    </item>
+    
+    <item>
+      <title>Week Eight - Devices</title>
+      <link>/post/week08/</link>
+      <pubDate>Sun, 23 Sep 2018 18:36:02 +1000</pubDate>
+      
+      <guid>/post/week08/</guid>
+      <description>Devices In Unix, devices can be accessed via a filepath!</description>
+    </item>
+    
+    <item>
+      <title>Assignment 2 - My Very Own Shell</title>
+      <link>/post/ass02/</link>
+      <pubDate>Mon, 17 Sep 2018 10:17:36 +1000</pubDate>
+      
+      <guid>/post/ass02/</guid>
+      <description>Assignment 2 - Make your own shell!</description>
+    </item>
     
     <item>
       <title>Program Concurrency</title>
@@ -68,10 +113,10 @@
     
     <item>
       <title>Week Six - stat</title>
-      <link>/post/week06/</link>
+      <link>/post/lab06/</link>
       <pubDate>Thu, 30 Aug 2018 00:21:11 +1000</pubDate>
       
-      <guid>/post/week06/</guid>
+      <guid>/post/lab06/</guid>
       <description>MIPS stuff done, back to C.</description>
     </item>
     
@@ -86,10 +131,10 @@
     
     <item>
       <title>MIPS and Branch Delays</title>
-      <link>/post/mips-branch-delay/</link>
+      <link>/post/mips_branch_delay/</link>
       <pubDate>Fri, 17 Aug 2018 00:19:01 +1000</pubDate>
       
-      <guid>/post/mips-branch-delay/</guid>
+      <guid>/post/mips_branch_delay/</guid>
       <description>If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?</description>
     </item>
     
@@ -113,19 +158,19 @@
     
     <item>
       <title>Lab Three - Bit Fields, Unions</title>
-      <link>/post/week03/</link>
+      <link>/post/lab03/</link>
       <pubDate>Tue, 07 Aug 2018 00:14:18 +1000</pubDate>
       
-      <guid>/post/week03/</guid>
+      <guid>/post/lab03/</guid>
       <description>This week&amp;rsquo;s lab revealed a pretty important piece of information, that</description>
     </item>
     
     <item>
       <title>Lab Two - BigNum.c</title>
-      <link>/post/week02/</link>
+      <link>/post/lab02/</link>
       <pubDate>Sun, 05 Aug 2018 00:01:39 +1000</pubDate>
       
-      <guid>/post/week02/</guid>
+      <guid>/post/lab02/</guid>
       <description>This week&amp;rsquo;s lab dealt with handling (simple) arithmetic of large numbers larger than 2,147,483,647 (2^32).</description>
     </item>
     

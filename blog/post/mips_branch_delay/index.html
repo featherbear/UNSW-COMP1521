@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Week Seven - Virtual Memory - Musings of a COMP1521 Kid</title>
+  <title>MIPS and Branch Delays - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="Computers are pretty cool, eh?" />
+  <meta name="description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?" />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week07/" />
+<link rel="canonical" href="../../post/mips_branch_delay/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Week Seven - Virtual Memory" />
-<meta property="og:description" content="Computers are pretty cool, eh?" />
+<meta property="og:title" content="MIPS and Branch Delays" />
+<meta property="og:description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week07/" /><meta property="article:published_time" content="2018-09-05T00:15:52&#43;10:00"/>
-<meta property="article:modified_time" content="2018-09-05T00:15:52&#43;10:00"/>
-<meta itemprop="name" content="Week Seven - Virtual Memory">
-<meta itemprop="description" content="Computers are pretty cool, eh?">
+<meta property="og:url" content="/post/mips_branch_delay/" /><meta property="article:published_time" content="2018-08-17T00:19:01&#43;10:00"/>
+<meta property="article:modified_time" content="2018-08-17T00:19:01&#43;10:00"/>
+<meta itemprop="name" content="MIPS and Branch Delays">
+<meta itemprop="description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?">
 
 
-<meta itemprop="datePublished" content="2018-09-05T00:15:52&#43;10:00" />
-<meta itemprop="dateModified" content="2018-09-05T00:15:52&#43;10:00" />
-<meta itemprop="wordCount" content="93">
+<meta itemprop="datePublished" content="2018-08-17T00:19:01&#43;10:00" />
+<meta itemprop="dateModified" content="2018-08-17T00:19:01&#43;10:00" />
+<meta itemprop="wordCount" content="179">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Week Seven - Virtual Memory"/>
-<meta name="twitter:description" content="Computers are pretty cool, eh?"/>
+<meta name="twitter:title" content="MIPS and Branch Delays"/>
+<meta name="twitter:description" content="If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Week Seven - Virtual Memory</h1>
+      <h1 class="post-title">MIPS and Branch Delays</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-09-05 </span>
+        <span class="post-time"> 2018-08-17 </span>
         
         
         
@@ -151,13 +151,35 @@
 
     
     <div class="post-content">
-      <p>Computers are pretty cool, eh?</p>
+      <p><strong>If the label fun is at 0x00401000, what value is contained in register $ra immediately after the execution of the jal instruction on the spim virtual machine?</strong></p>
 
-<p>So in managing the memory of a system, there is this concept of pages and frames.
-Essentially, the pages are memory mappings to arbitrarily orderd frames. When a program requests a specific memory, the page table redirects the program to a physical memory address dictated by the frame that that page corresponds to.</p>
+<pre><code>0x00400200   li  $a0, 42
+0x00400204   jal fun
+0x00400208   nop
+0x0040020C   sw  $v0, x
+</code></pre>
 
-<p>It reminds me of the VirtualStore system on Windows-based systems.<br />
-It&rsquo;s like a sandbox - the program has access to request any memory range. However the actual memory address it will access will be different.</p>
+<p>So, MIPS has this thing called a <code>branch delay slot</code>, which allows an extra instruction to be performed before the jump - as to keep the clock in sync.</p>
+
+<p>Do I get it, yes.<br />
+Do I understand, maybe?</p>
+
+<hr />
+
+<p>So it looks like the branch and jump instructions first get loaded into the memory.<br />
+But before they execute, the next instruction directly afterwards gets loaded while the jump is performed.</p>
+
+<hr />
+
+<p>That means, that to answer this question, then <code>$ra = 0x0040020C</code>.<br />
+That makes sense, as the return address becomes <code>$ra + 8</code></p>
+
+<p>But wait!
+The answer could also be <code>0x00400208</code>.</p>
+
+<p>If you&rsquo;re use SPIM this is the result you would get.<br />
+That&rsquo;s because SPIM has branch delay execution <strong>disabled by default</strong>.<br />
+And what that means, is that a function call will return to the immediate next address <code>$ra + 4</code>.</p>
 
     </div>
 
@@ -173,14 +195,14 @@ It&rsquo;s like a sandbox - the program has access to request any memory range. 
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/computer_systems/">
+          <a class="prev" href="../../post/ass01/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Computer Systems</span>
+            <span class="prev-text nav-default">Assignment 1 - Scrolling Text (MIPS)</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/lab06/">
-            <span class="next-text nav-default">Week Six - stat</span>
+          <a class="next" href="../../post/week04_05/">
+            <span class="next-text nav-default">Weeks Four and Five - MIPS</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>

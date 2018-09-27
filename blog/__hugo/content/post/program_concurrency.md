@@ -20,8 +20,8 @@ Do it, again.
 There are (more than but I'll talk about) two ways for a program to create concurrent tasks, forks and threads.
 
 # Process Forking
-A fork duplicates/clones the current process into its own separate space
-(Memory, variables, state is independently cloned)
+A fork duplicates/clones the current process into its own separate space.  
+(Memory, variables, state is independently cloned).
 
 ## Functions
 Library: unistd.h  
@@ -66,3 +66,38 @@ Wait for thread `T` to finish, storing the thread's return value into `value_ptr
 
 ### `void pthread_exit(void *value_ptr)`
 Terminates the current thread, storing a return value in `value_ptr`
+
+# Implications of Concurrency
+## The Good
+* Programs can run 'simultaneously'
+* If there are multiple CPU cores, multiple programs can actually be run simultaneously.
+* Each program operates without affecting other processes
+## The Not-So-Good
+### Problem
+If a program intended for concurrent use is poorly written, the program may experience the following issues:  
+* Non-deterministic output - the same input produces different outputs
+* Deadlock - processes indefinitely wait for each other to signal
+* Starvation - a process keeps missing access to a resource
+* Corruption - (bank example)
+
+### Solution? Semaphores!
+Semaphores can be considered as an overpowered locking flag that processes can use.  
+
+It basically performs the below operation, except without requiring execution cycles to wait.
+```
+while (!flag);
+doThis();
+```
+Instead of repeatedly checking the value of `flag`, semaphores communicate with the operating system to instruct the program when to continue.
+
+#### semaphore.h definitions
+```
+#include <semaphore.h>
+
+int sem_init(sem_t *Sem, int Shared, uint Value) // Initialise Sem
+int sem_wait(sem_t *Sem) // Wait for Sem > 0, then decrement and continue
+int sem_post(sem_t *Sem) // Increment Sem and continue
+int sem_destroy(sem_t *Sem) // Free Sem
+```
+
+A locking flag allows concurrent functions to fully complete before other operations are executed.

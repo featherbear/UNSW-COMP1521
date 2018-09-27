@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Week Seven - Virtual Memory - Musings of a COMP1521 Kid</title>
+  <title>Talk To Me! Local Inter-Process Communication - Musings of a COMP1521 Kid</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -17,7 +17,7 @@
 
 
 <meta name="author" content="z5206677" />
-  <meta name="description" content="Computers are pretty cool, eh?" />
+  <meta name="description" content="In one ear, out the other&amp;hellip;wait." />
 
   <meta name="keywords" content="Hugo, theme, even" />
 
@@ -29,7 +29,7 @@
 <meta name="generator" content="Hugo 0.47.1" />
 
 
-<link rel="canonical" href="../../post/week07/" />
+<link rel="canonical" href="../../post/local_ipc/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
@@ -49,25 +49,25 @@
 
 
 
-<meta property="og:title" content="Week Seven - Virtual Memory" />
-<meta property="og:description" content="Computers are pretty cool, eh?" />
+<meta property="og:title" content="Talk To Me! Local Inter-Process Communication" />
+<meta property="og:description" content="In one ear, out the other&hellip;wait." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/post/week07/" /><meta property="article:published_time" content="2018-09-05T00:15:52&#43;10:00"/>
-<meta property="article:modified_time" content="2018-09-05T00:15:52&#43;10:00"/>
-<meta itemprop="name" content="Week Seven - Virtual Memory">
-<meta itemprop="description" content="Computers are pretty cool, eh?">
+<meta property="og:url" content="/post/local_ipc/" /><meta property="article:published_time" content="2018-09-27T08:45:34&#43;10:00"/>
+<meta property="article:modified_time" content="2018-09-27T08:45:34&#43;10:00"/>
+<meta itemprop="name" content="Talk To Me! Local Inter-Process Communication">
+<meta itemprop="description" content="In one ear, out the other&hellip;wait.">
 
 
-<meta itemprop="datePublished" content="2018-09-05T00:15:52&#43;10:00" />
-<meta itemprop="dateModified" content="2018-09-05T00:15:52&#43;10:00" />
-<meta itemprop="wordCount" content="93">
+<meta itemprop="datePublished" content="2018-09-27T08:45:34&#43;10:00" />
+<meta itemprop="dateModified" content="2018-09-27T08:45:34&#43;10:00" />
+<meta itemprop="wordCount" content="217">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Week Seven - Virtual Memory"/>
-<meta name="twitter:description" content="Computers are pretty cool, eh?"/>
+<meta name="twitter:title" content="Talk To Me! Local Inter-Process Communication"/>
+<meta name="twitter:description" content="In one ear, out the other&hellip;wait."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -126,10 +126,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Week Seven - Virtual Memory</h1>
+      <h1 class="post-title">Talk To Me! Local Inter-Process Communication</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2018-09-05 </span>
+        <span class="post-time"> 2018-09-27 </span>
         
         
         
@@ -142,7 +142,12 @@
   <h2 class="post-toc-title">Contents</h2>
   
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#pipes">Pipes</a></li>
+<li><a href="#message-queues">Message Queues</a></li>
+</ul>
+</nav>
   </div>
 </div>
 
@@ -151,13 +156,56 @@
 
     
     <div class="post-content">
-      <p>Computers are pretty cool, eh?</p>
+      
 
-<p>So in managing the memory of a system, there is this concept of pages and frames.
-Essentially, the pages are memory mappings to arbitrarily orderd frames. When a program requests a specific memory, the page table redirects the program to a physical memory address dictated by the frame that that page corresponds to.</p>
+<p>In one ear, out the other&hellip;wait.</p>
 
-<p>It reminds me of the VirtualStore system on Windows-based systems.<br />
-It&rsquo;s like a sandbox - the program has access to request any memory range. However the actual memory address it will access will be different.</p>
+<blockquote>
+<p><a href="../network_IPC">Network IPC? Click here</a></p>
+</blockquote>
+
+<h1 id="pipes">Pipes</h1>
+
+<p>Pipes allow forked processes to communicate with each other, and is often used to redirect the output of a process into the process of another.</p>
+
+<p>A common usage pattern for pipes is:</p>
+
+<ul>
+<li>Create a pipe</li>
+<li>Fork the process (both processes contain the pipe file descriptors)</li>
+<li>Write into the pipe as the parent/child</li>
+<li>Read from the pipe as the child/parent</li>
+</ul>
+
+<p><code>unistd.h</code> provides <code>STDIN_FILENO</code> and <code>STDOUT_FILENO</code> (and <code>STDERR_FILENO</code>)</p>
+
+<p><code>int dup2(int oldfd, int newfd)</code><br />
+Close <code>newfd</code> if necessary, and copy <code>oldfd</code> into <code>newfd</code></p>
+
+<p><code>int pipe(int fd[2])</code><br />
+ret: 0<br />
+err: -1</p>
+
+<p><code>FILE *popen(char *Cmd, char *Mode)</code><br />
+ret: FILE*<br />
+err: NULL</p>
+
+<h1 id="message-queues">Message Queues</h1>
+
+<p>Message Queues allow for unrelated processes (ie a process that was not forked) to communicate with other processes. As opposed to the buffer stream that pipes provide, message queues separate each message from another.</p>
+
+<p><em>Note: Message queue names start with a forward slash <code>/</code></em></p>
+
+<p><code>mqueue.h</code> provides the functionality for message queues.</p>
+
+<p><code>mqd_t mq_open(char *Name, int Flags)</code> - Create/open a message queue<br />
+<code>int mq_close(mqd_t *MQ)</code> - Close access to a message queue<br />
+<code>int mq_send(mqd_t MQ, char *Msg, int Size, uint Prio)</code> - Block and wait until MQ has space<br />
+<code>int mq_receive(mqd_t MQ, char *Msg, int Size, uint *Prio)</code> - Receive highest priority message in MQ</p>
+
+<blockquote>
+<p><a href="../network_IPC">Network IPC? Click here</a></p>
+</blockquote>
 
     </div>
 
@@ -173,14 +221,14 @@ It&rsquo;s like a sandbox - the program has access to request any memory range. 
       
       <nav class="post-nav">
         
-          <a class="prev" href="../../post/computer_systems/">
+          <a class="prev" href="../../post/network_ipc/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Computer Systems</span>
+            <span class="prev-text nav-default">Network Inter-Process Communication</span>
             <span class="prev-text nav-mobile">Prev</span>
           </a>
         
-          <a class="next" href="../../post/lab06/">
-            <span class="next-text nav-default">Week Six - stat</span>
+          <a class="next" href="../../post/week08/">
+            <span class="next-text nav-default">Week Eight - Devices</span>
             <span class="next-text nav-mobile">Next</span>
             <i class="iconfont icon-right"></i>
           </a>
