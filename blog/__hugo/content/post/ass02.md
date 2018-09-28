@@ -19,7 +19,8 @@ Assignment 2 - Make your own shell!  [[View Files Here]](https://github.com/feat
 
 
 Considering that I started it the day the assignment was released, the specs changed tirelessly.  
-An endless tirade of constant bug squelching and tweaking, but it's good to see an original (?) assignment.
+An endless tirade of constant bug squelching and tweaking, but it's good to see an ~~original assignment~~.  
+  [EDIT: no it's not](https://cs.senecac.on.ca/~murray.saul/PRO511/assn3_f03/Assign3a.html).
 
 # Command Execution
 _Marks: 1_  
