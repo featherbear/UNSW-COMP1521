@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 // mysh.c ... a small shell
 // Started by John Shepherd, September 2018
 
@@ -58,7 +60,7 @@ void printPWD() {
 }
 
 // Main program
-// Set up enviroment and then run main loop
+// Set up environment and then run main loop
 // - read command, execute command, repeat
 
 int main(int argc, char *argv[], char *envp[]) {
@@ -138,16 +140,30 @@ int main(int argc, char *argv[], char *envp[]) {
         tokenised = 1; // Flag for freeTokens()
         while (tokens[++tokenLength] != NULL); // Count the number of tokens
 
-        // Validate redirect tokens
-        // The > or < (mutually exclusive) can only exist as the second last token
+        // Validate redirect and pipe tokens
+        // ">" or "<" (mutually exclusive) can only exist as the second last token
+        // "|" token cannot be be adjacent to another pipe token
+        // "|" token cannot exist as the first or last token
+
         int validRedirect = 1;
         for (int i = 0; i < tokenLength; i++) {
+
+            // Pipe checking
+            if ((i == 0 && strcmp(tokens[0], "|") == 0)
+                || (i == tokenLength - 1 && strcmp(tokens[tokenLength - 1], "|") == 0)
+                || (i > 0 && strcmp(tokens[i], "|") == 0 && strcmp(tokens[i - 1], "|") == 0)) {
+                validRedirect = 0;
+                break;
+            }
+
+            // Redirect token checking
             if (i == tokenLength - 2) continue;
             if (strcmp(tokens[i], ">") == 0 || strcmp(tokens[i], "<") == 0) {
                 validRedirect = 0;
                 break;
             }
         }
+
         if (!validRedirect) {
             printf("Invalid i/o redirection\n");
             continue;
@@ -174,68 +190,150 @@ int main(int argc, char *argv[], char *envp[]) {
             } else {
                 perror(tokens[1]);
             }
-
         } else {
-            /* Handle programs */
-            char *exec;
-            if ((exec = findExecutable(tokens[0], path))) {
-                int stdin = STDIN_FILENO;
-                int stdout = STDOUT_FILENO;
+            // Retokenise by the pipe character '|' (note, all pipe characters will be split, not just " | "
+            char **pipeTokens = tokenise(line, "|");
 
-                /* Check for redirection */
-                if (tokenLength >= 3 && strContains(tokens[tokenLength - 2], "<>")) {
-                    // stdin redirection
-                    if (strcmp(tokens[tokenLength - 2], "<") == 0 &&
-                        (stdin = open(tokens[tokenLength - 1], O_RDONLY)) == -1) {
-                        perror("Input redirection");
-                        continue;
-                    };
+            int pipeTokensLength = 0;
+            while (pipeTokens[pipeTokensLength] != NULL)
+                trim(pipeTokens[pipeTokensLength++]); // Count the number of tokens
 
-                    // stdout redirection
-                    if (strcmp(tokens[tokenLength - 2], ">") == 0 &&
-                        (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
-                        perror("Output redirection");
-                        continue;
-                    }
+            int nPipes = pipeTokensLength - 1;
+            int (*pipes)[2] = malloc(nPipes * sizeof(int) * 2);
 
-                    /*
-                        // stdout append redirection
-                        if (strcmp(tokens[tokenLength - 2], ">>") == 0 &&
-                            (stdout = open(tokens[tokenLength - 1], O_WRONLY | O_APPEND | O_CREAT, 0644)) == -1) {
+            // [IN,OUT], [IN,OUT], [IN,OUT], [IN,OUT]
+            //      \_____/    \____/    |____/    \_____STDOUT
+
+            // only need n-1 pipes
+
+            // Explode the glob and expand everything first.
+            char ***arrTokens = malloc(sizeof(char **) * pipeTokensLength);
+            char **exec = malloc(sizeof(char *) * pipeTokensLength);
+
+            int allProgramsFound = 1;
+            for (int i = 0; i < pipeTokensLength; i++) {
+                arrTokens[i] = tokenise(pipeTokens[i], " ");
+                if (strContains(pipeTokens[i], "*?[~"))
+                    arrTokens[i] = fileNameExpand(arrTokens[i]); // Resolve wildcards
+
+                // Whilst we're at it, confirm the paths exist
+                if (!(exec[i] = findExecutable(arrTokens[i][0], path))) {
+                    printf("%s: Command not found\n", arrTokens[i][0]);
+                    allProgramsFound = 0;
+                }
+            }
+
+            if (allProgramsFound) {
+                for (int i = 0; i < pipeTokensLength; i++) {
+//                    if (i == 0 ) close(pipes[0][0])
+                    char **cmd = arrTokens[i];
+
+                    /* Handle programs */
+                    int stdin = STDIN_FILENO;
+                    int stdout = STDOUT_FILENO;
+
+                    int cmdLength = 0;
+                    while (cmd[++cmdLength] != NULL); // Count the number of tokens
+
+                    /* Check for redirection */
+                    if (cmdLength >= 3 && strContains(cmd[cmdLength - 2], "<>")) {
+                        // stdin redirection
+                        if (strcmp(cmd[cmdLength - 2], "<") == 0 &&
+                            (stdin = open(cmd[cmdLength - 1], O_RDONLY)) == -1) {
+                            perror("Input redirection");
+                            continue;
+                        };
+
+                        // stdout redirection
+                        if (strcmp(cmd[cmdLength - 2], ">") == 0 &&
+                            (stdout = open(cmd[cmdLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
                             perror("Output redirection");
                             continue;
                         }
-                    */
 
-                    // Remove the redirect tokens as we don't want them to be passed to the program
-                    free(tokens[tokenLength - 1]);
-                    free(tokens[tokenLength - 2]);
-                    tokens[tokenLength - 2] = NULL;
-                    tokenLength -= 2;
-                }
+                        // Remove the redirect tokens as we don't want them to be passed to the program
+                        free(cmd[cmdLength - 1]);
+                        free(cmd[cmdLength - 2]);
+                        cmd[cmdLength - 2] = NULL;
+                        cmdLength -= 2;
+                    }
 
-                printf("Running %s ...\n", exec);
-                printf("--------------------\n");
-                if ((pid = fork() != 0)) {
-                    /* Parent Process */
-                    // Wait for child to exit, then print return code and add the command to the command history
-                    // Close stdin/stdout redirector file descriptors if needed
-                    wait(&stat);
-                    if (stdin != STDIN_FILENO) close(stdin);
-                    if (stdout != STDOUT_FILENO) close(stdout);
-                    printf("--------------------\n");
-                    printf("Returns %d\n", WEXITSTATUS(stat));
-                    addToCommandHistory(line);
-                } else {
-                    /* Child Process */
-                    // Redirect stdin and stdout if needed and transform process
-                    if (stdin != STDIN_FILENO) dup2(stdin, STDIN_FILENO);
-                    if (stdout != STDOUT_FILENO) dup2(stdout, STDOUT_FILENO);
-                    execve(exec, tokens, envp);
-                    return -1;
+                    if (i == 0) {
+                        printf("Running ");
+                        if (nPipes) {
+                            for (char ***toks = arrTokens; toks < arrTokens + pipeTokensLength; toks++) {
+                                if (toks != arrTokens) printf(" | ");
+
+                                for (char **toks2 = *toks; *toks2; toks2++) {
+                                    if (toks2 != *toks) printf(" ");
+                                    printf("%s", *toks2);
+                                }
+                            }
+                        } else {
+                            printf("%s", exec[i]);
+                        }
+                        printf(" ...\n--------------------\n");
+                    }
+
+//printf("i is %d, nPipes is %d\n", i, nPipes);
+                    if (i < nPipes) {
+                        printf("CREATING PIPE [%d]\n", i);
+                        if (pipe2(pipes[i], O_CLOEXEC ) != 0) {
+                            perror(NULL);
+                        };
+                    }
+                    if ((pid = fork() != 0)) {
+                        /* Parent Process */
+                        // Wait for child to exit, then print return code and add the command to the command history
+                        // Close stdin/stdout redirector file descriptors if needed
+
+                        if (i>0) {
+printf("Close pipe %dW\n", i-1); close(pipes[i - 1][1]);
+printf("Close pipe %dR\n", i-1); close(pipes[i - 1][0]);
+                        }
+
+                        wait(&stat);
+
+                        if (stdin != STDIN_FILENO) close(stdin);
+                        if (stdout != STDOUT_FILENO) close(stdout);
+                        if (i == pipeTokensLength - 1) {
+                            printf("--------------------\n");
+                            printf("Returns %d\n", WEXITSTATUS(stat));
+                            addToCommandHistory(line);
+                        }
+                    } else {
+                        /* Child Process */
+                        // Redirect stdin and stdout if needed and transform process
+//                        printf("Child %d: %s\n", i, exec[i]);
+
+//                        printf("`stdin` = %d\n", stdin);
+//                        printf("`stdout` = %d\n", stdout);
+//                        if (i > 0) printf("`pipes[%d]` = [%d, %d]\n", i - 1, pipes[i - 1][0], pipes[i - 1][1]);
+//                        printf("`pipes[%d]` = [%d, %d] \n\n", i, pipes[i][0], pipes[i][1]);
+
+                        if (nPipes) {
+                            if (i != 0) {
+//                                printf("Reading from fd %d\n", pipes[i - 1][0]);
+                                dup2(pipes[i - 1][0], STDIN_FILENO);
+                            } else {
+//                                printf("Reading from STDIN\n");
+                            }
+
+                            if (i < nPipes) {
+//                                printf("Writing to fd %d\n", pipes[i][1]);
+                                dup2(pipes[i][1], STDOUT_FILENO);
+                            } else {
+//                                printf("Writing to STDOUT\n");
+                            }
+                        }
+
+                        if (stdin != STDIN_FILENO) dup2(stdin, STDIN_FILENO);
+                        if (stdout != STDOUT_FILENO) dup2(stdout, STDOUT_FILENO);
+
+                        execve(exec[i], arrTokens[i], envp);
+                        return -1;
+                    }
                 }
-            } else {
-                printf("%s: Command not found\n", tokens[0]);
             }
         }
     }
