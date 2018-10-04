@@ -108,7 +108,21 @@ _Marks: 3_
 Input and output redirection was pretty straightforward, just utilising the `dup2` function to change the sinks for `stdin` and `stdout`.  
 _I originally also implemented the stdout append redirection, but took that feature out incase it broke the autotests_
 
-# Bonus: Piping
+# Challenge: Piping
+_Marks: 0_
+
+I did it!  
+Implementing piping involved having to reimplement the most of my pre-execution procedures.  
+I had to retokenise the input line by the pipe character, and then tokenise each of those pipe-delimited tokens.  
+And I had to store them somewhere  
+and I had to create an array of pipe pairs  
+and I had to create an array of path-resolved executables  
+and I had to figure out how to efficiently redirect the inputs and outputs  
+and I had to get the memory management working  
+
+But we did it.  
+
+Happy ^_^  
 
 
 # Remarks
@@ -116,6 +130,7 @@ Overall a quite interesting assignment for students to understand what exactly a
 I'll stick to `bash` though :)  
 
 
-> (Flex) Time taken to complete: 4 hours 37 minutes. Woo!
+> (Flex) Time taken to complete: 4 hours 37 minutes. Woo!  
+> Though the challenge part took an additional 3 hours...
 
 ![Visualisation of the assignment](/img/ass02_visualisation.gif)

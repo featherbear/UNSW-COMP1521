@@ -60,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2018-09-17T10:17:36&#43;10:00" />
 <meta itemprop="dateModified" content="2018-09-17T10:17:36&#43;10:00" />
-<meta itemprop="wordCount" content="594">
+<meta itemprop="wordCount" content="695">
 
 
 
@@ -153,7 +153,7 @@
 <li><a href="#builtins">Builtins</a></li>
 <li><a href="#wildcard-expansion">Wildcard Expansion</a></li>
 <li><a href="#i-o-redirection">I/O Redirection</a></li>
-<li><a href="#bonus-piping">Bonus: Piping</a></li>
+<li><a href="#challenge-piping">Challenge: Piping</a></li>
 <li><a href="#remarks">Remarks</a></li>
 </ul>
 </nav>
@@ -266,7 +266,22 @@ It allows you to expand wildcards and aliases like <code>~</code> and <code>*.c<
 <p>Input and output redirection was pretty straightforward, just utilising the <code>dup2</code> function to change the sinks for <code>stdin</code> and <code>stdout</code>.<br />
 <em>I originally also implemented the stdout append redirection, but took that feature out incase it broke the autotests</em></p>
 
-<h1 id="bonus-piping">Bonus: Piping</h1>
+<h1 id="challenge-piping">Challenge: Piping</h1>
+
+<p><em>Marks: 0</em></p>
+
+<p>I did it!<br />
+Implementing piping involved having to reimplement the most of my pre-execution procedures.<br />
+I had to retokenise the input line by the pipe character, and then tokenise each of those pipe-delimited tokens.<br />
+And I had to store them somewhere<br />
+and I had to create an array of pipe pairs<br />
+and I had to create an array of path-resolved executables<br />
+and I had to figure out how to efficiently redirect the inputs and outputs<br />
+and I had to get the memory management working</p>
+
+<p>But we did it.</p>
+
+<p>Happy ^_^</p>
 
 <h1 id="remarks">Remarks</h1>
 
@@ -274,7 +289,8 @@ It allows you to expand wildcards and aliases like <code>~</code> and <code>*.c<
 I&rsquo;ll stick to <code>bash</code> though :)</p>
 
 <blockquote>
-<p>(Flex) Time taken to complete: 4 hours 37 minutes. Woo!</p>
+<p>(Flex) Time taken to complete: 4 hours 37 minutes. Woo!<br />
+Though the challenge part took an additional 3 hours&hellip;</p>
 </blockquote>
 
 <p><img src="../../img/ass02_visualisation.gif" alt="Visualisation of the assignment" /></p>
