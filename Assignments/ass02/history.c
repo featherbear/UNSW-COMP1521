@@ -34,19 +34,6 @@ typedef struct _history_list {
 HistoryList CommandHistory;
 char *HISTPATH;
 
-// strip: remove leading/trailing spaces and newline characters from a string
-// 'inspired' by trim() from mymysh.c :)
-void strip(char *str) {
-    int first, last;
-    first = 0;
-    while (str[first] == ' ' || str[first] == '\n') first++;
-    last = strlen(str) - 1;
-    while (str[last] == ' ' || str[last] == '\n') last--;
-    int i, j = 0;
-    for (i = first; i <= last; i++) str[j++] = str[i];
-    str[j] = '\0';
-}
-
 // initCommandHistory()
 // - initialise the data structure
 // - read from HISTFILE if it exists
@@ -70,7 +57,6 @@ int initCommandHistory() {
     if ((file = fopen(HISTPATH, "r"))) {
         char line[MAXSTR];
         while (fgets(line, MAXSTR, file)) {
-            // strip(line);
             char cmd[MAXSTR];
             sscanf(line, "%d %[^\n]", &(CommandHistory.position), cmd);
             addToCommandHistory(cmd);
@@ -96,14 +82,14 @@ void addToCommandHistory(char *cmdLine) {
 
 // showCommandHistory()
 // - display the list of commands in the history
-void showCommandHistory(void) {
+void showCommandHistory(FILE *dest) {
     // Get the first entry
     int offsetOne = CommandHistory.position - CommandHistory.nEntries;
 
     // Print out each past command
     for (int i = 0; i < CommandHistory.nEntries; i++) {
         int j = (offsetOne + i + MAXHIST) % MAXHIST; // Get index from 0 - MAXHIST-1
-        printf(HISTFORMATTER, CommandHistory.commands[j].seqNumber, CommandHistory.commands[j].commandLine);
+        fprintf(dest, HISTFORMATTER, CommandHistory.commands[j].seqNumber, CommandHistory.commands[j].commandLine);
     }
 }
 
@@ -136,16 +122,9 @@ char *getLastCommandFromHistory() {
 // saveCommandHistory()
 // - write history to $HOME/.mymysh_history
 void saveCommandHistory() {
-    // Get the first entry
-    int offsetOne = CommandHistory.position - CommandHistory.nEntries;
-
-    // Write each command, starting from the first entry
     FILE *file;
     if ((file = fopen(HISTPATH, "w"))) {
-        for (int i = 0; i < CommandHistory.nEntries; i++) {
-            int j = (offsetOne + i + MAXHIST) % MAXHIST;
-            fprintf(file, HISTFORMATTER, CommandHistory.commands[j].seqNumber, CommandHistory.commands[j].commandLine);
-        }
+        showCommandHistory(file);
         fclose(file);
     }
 }

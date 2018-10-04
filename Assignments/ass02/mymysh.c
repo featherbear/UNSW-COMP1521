@@ -1,10 +1,10 @@
-#define _GNU_SOURCE
-
 // mysh.c ... a small shell
 // Started by John Shepherd, September 2018
 
 // Completed by Andrew Wong (z5206677), September/October 2018
 // https://github.com/featherbear/UNSW-COMP1521/tree/master/Assignments/ass02
+
+#define _GNU_SOURCE // Need this to make pipe2() work
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,10 +23,9 @@
 
 // This is defined in string.h
 // BUT ONLY if you use -std=gnu99
-//extern char *strdup(char *);
+// extern char *strdup(char *);
 
 // Function forward references
-
 void trim(char *);
 
 int strContains(char *, char *);
@@ -43,15 +42,13 @@ int isExecutable(char *);
 
 void prompt(void);
 
-
-// Global Constants
-
+// Globals
 #define MAXLINE 200
 
-// Global Data
+#define TRUE  1
+#define FALSE 0
 
-/* none ... unless you want some */
-
+// Print the current working directory
 void printPWD() {
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -62,7 +59,6 @@ void printPWD() {
 // Main program
 // Set up environment and then run main loop
 // - read command, execute command, repeat
-
 int main(int argc, char *argv[], char *envp[]) {
     pid_t pid;   // pid of child process
     int stat;    // return status of child
@@ -78,36 +74,39 @@ int main(int argc, char *argv[], char *envp[]) {
     else
         // &envp[i][5] skips over "PATH=" prefix
         path = tokenise(&envp[i][5], ":");
+
 #ifdef DBUG
     for (i = 0; path[i] != NULL;i++)
        printf("path[%d] = %s\n",i,path[i]);
 #endif
 
     // initialise command history
-    // - use content of ~/.mymysh_history file if it exists
+    // - use contents of ~/.mymysh_history file if it exists
     initCommandHistory();
 
+    char line[MAXLINE];      // Line buffer to hold the input
+    char **lineTokens;       // Array of strings to hold the tokenised line
+
+    int tokenised = FALSE;   // Flag to freeTokens(lineTokens) on next loop
+
     // main loop: print prompt, read line, execute command
-    char line[MAXLINE];
-    int tokenLength = 0;
-    char **tokens;
-    int tokenised = 0;
-
     for (; prompt(), fgets(line, MAXLINE, stdin) != NULL;
-           tokenLength = 0, (tokenised && (freeTokens(tokens), 1)), tokenised = 0) {
+           tokenised = (tokenised && (freeTokens(lineTokens), 1)) && FALSE) {
+
         // For each loop, print out the prompt and request input
-        // At the end of each loop, set `tokenLength` and `tokenised` to 0.
-        //   Additionally, call `freeTokens(tokens)` if `tokenised` was previously 1.
+        // At the end of each loop, set `lineTokensLength` and `tokenised` to FALSE.
+        //   Additionally, call `freeTokens(lineTokens)` if `tokenised` was TRUE.
         //   (tokenised && (..., 1)) is a hack to use the void function `freeTokens` in an expression
+        //   ... tbh this is all a hack.
 
-        // remove leading/trailing space
-        trim(line);
+        trim(line);                  // remove leading/trailing spaces
+        if (*line == '\0') continue; // An empty line was entered, ignore
 
-        // An empty line was entered, ignore
-        if (*line == '\0') continue;
-
-        // Recall command assumed
+        // Command history recall
         if (line[0] == '!') {
+
+            // Validate syntax
+            // - !! or !n
             if (line[1] != '!') {
                 if (line[1] == '\0' || line[1] < '0' || line[1] > '9') {
                     // Show error if the given string is not valid
@@ -115,18 +114,19 @@ int main(int argc, char *argv[], char *envp[]) {
                     continue;
                 }
             }
-            char *recallPtr;
+
+            char *recallCmd;
             int cmdNo = 1;
 
-            // If `!!` -> getLastCommandFromHistory
-            // Else `!n` -> getCommandFromHistory(n-1)
-            recallPtr = (line[1] == '!' && line[2] == '\0') ? getLastCommandFromHistory()
-                                                            : getCommandFromHistory((cmdNo = atoi(line + 1)));
+            // If `!!` -> getLastCommandFromHistory()
+            // Else `!n` -> getCommandFromHistory(n)
+            recallCmd = (line[1] == '!' && line[2] == '\0') ? getLastCommandFromHistory()
+                                                            : getCommandFromHistory((cmdNo = atoi(&line[1])));
 
             // Check if the command was found
-            if (recallPtr) {
-                // Command found, so copy into `line`.
-                strcpy(line, recallPtr);
+            if (recallCmd) {
+                // Command found, so replace contents of `line`.
+                strcpy(line, recallCmd);
                 printf("%s\n", line);
             } else {
                 printf("No command #%d\n", cmdNo);
@@ -134,33 +134,41 @@ int main(int argc, char *argv[], char *envp[]) {
             }
         }
 
-        /* TOKENISER */
-        tokens = tokenise(line, " "); // Tokenise input line
-        if (strContains(line, "*?[~")) tokens = fileNameExpand(tokens); // Resolve wildcards
-        tokenised = 1; // Flag for freeTokens()
-        while (tokens[++tokenLength] != NULL); // Count the number of tokens
+        /* Tokeniser */
 
-        // Validate redirect and pipe tokens
-        // ">" or "<" (mutually exclusive) can only exist as the second last token
+        // This tokenisation operation is only used for builtins and syntax validation
+        // It is called again for each piped command
+        lineTokens = tokenise(line, " "); // Tokenise input line
+        if (strContains(line, "*?[~")) lineTokens = fileNameExpand(lineTokens); // Resolve wildcards
+        tokenised = 1; // Flag for freeTokens()
+
+        int lineTokensLength = 0;         // Count the number elements in `lineTokens`
+        while (lineTokens[++lineTokensLength] != NULL);
+
+        // Validate pipe and redirect tokens
         // "|" token cannot be be adjacent to another pipe token
         // "|" token cannot exist as the first or last token
-
+        // ">" or "<" (mutually exclusive) can only exist as the second last token
         int validRedirect = 1;
-        for (int i = 0; i < tokenLength; i++) {
 
-            // Pipe checking
-            if ((i == 0 && strcmp(tokens[0], "|") == 0)
-                || (i == tokenLength - 1 && strcmp(tokens[tokenLength - 1], "|") == 0)
-                || (i > 0 && strcmp(tokens[i], "|") == 0 && strcmp(tokens[i - 1], "|") == 0)) {
-                validRedirect = 0;
-                break;
-            }
+        // Check if first or last token is a pipe
+        if (strcmp(lineTokens[0], "|") == 0 ||
+            (lineTokensLength > 1 && strcmp(lineTokens[lineTokensLength - 1], "|") == 0)) {
+            validRedirect = 0;
+        } else {
+            for (int i = 0; i < lineTokensLength; i++) {
+                // Sequential pipe check
+                if (i > 0 && strcmp(lineTokens[i], "|") == 0 && strcmp(lineTokens[i - 1], "|") == 0) {
+                    validRedirect = 0;
+                    break;
+                }
 
-            // Redirect token checking
-            if (i == tokenLength - 2) continue;
-            if (strcmp(tokens[i], ">") == 0 || strcmp(tokens[i], "<") == 0) {
-                validRedirect = 0;
-                break;
+                // Redirect '>'/'<' checking (can only be in the second last position)
+                if (i == lineTokensLength - 2) continue;
+                if (strcmp(lineTokens[i], ">") == 0 || strcmp(lineTokens[i], "<") == 0) {
+                    validRedirect = 0;
+                    break;
+                }
             }
         }
 
@@ -170,53 +178,76 @@ int main(int argc, char *argv[], char *envp[]) {
         }
 
         /* Handle built-in commands */
-        if (strcmp(tokens[0], "exit") == 0) {
-            freeTokens(tokens);
+        if (strcmp(lineTokens[0], "exit") == 0) {
+            // Free tokens then exit
+            freeTokens(lineTokens);
             break;
-
-        } else if (strcmp(tokens[0], "h") == 0 || strcmp(tokens[0], "history") == 0) {
-            showCommandHistory();
+        } else if (strcmp(lineTokens[0], "h") == 0 || strcmp(lineTokens[0], "history") == 0) {
+            // Show the command history
+            showCommandHistory(stdout);
             addToCommandHistory(line);
-
-        } else if (strcmp(tokens[0], "pwd") == 0) {
+        } else if (strcmp(lineTokens[0], "pwd") == 0) {
+            // Show the current working directory
             printPWD();
             addToCommandHistory(line);
-
-        } else if (strcmp(tokens[0], "cd") == 0) {
-            // Change directory into arg1, else $HOME
-            if (chdir(tokens[1] ? tokens[1] : getenv("HOME")) == 0) {
+        } else if (strcmp(lineTokens[0], "cd") == 0) {
+            // Change directory into `lineTokens[1]`, else the user's home directory
+            if (chdir(lineTokens[1] ? lineTokens[1] : getenv("HOME")) == 0) {
                 addToCommandHistory(line);
                 printPWD();
             } else {
-                perror(tokens[1]);
+                perror(lineTokens[1]);
             }
         } else {
+            /*
+             * User commands
+             */
+
             // Retokenise by the pipe character '|' (note, all pipe characters will be split, not just " | "
             char **pipeTokens = tokenise(line, "|");
 
+            // Count the number of pipe character delimited tokens, also trimming each string to account for spaces
             int pipeTokensLength = 0;
-            while (pipeTokens[pipeTokensLength] != NULL)
-                trim(pipeTokens[pipeTokensLength++]); // Count the number of tokens
+            while (pipeTokens[pipeTokensLength] != NULL) trim(pipeTokens[pipeTokensLength++]);
 
+            // For `n` piped commands, we need `n-1` pipes
             int nPipes = pipeTokensLength - 1;
+
+            // Allocate memory for `nPipes` amount of two-width integer arrays
             int (*pipes)[2] = malloc(nPipes * sizeof(int) * 2);
 
-            // [IN,OUT], [IN,OUT], [IN,OUT], [IN,OUT]
-            //      \_____/    \____/    |____/    \_____STDOUT
+            /* VISUALISATION
+             *
+             *      A         B         C         D
+             *
+             *   [IN,OUT], [IN,OUT], [IN,OUT], [IN,OUT]
+             *         \___/     \___/     |___/     \_____STDOUT
+             *
+             *           a         b         c
+             *
+             *
+             * Here we have four commands A B C D
+             * We only need three pipes a b c
+             *
+             */
 
-            // only need n-1 pipes
+            /* Explode the glob and expand everything first */
 
-            // Explode the glob and expand everything first.
+            // Allocate memory for an array of an array of tokens
             char ***arrTokens = malloc(sizeof(char **) * pipeTokensLength);
+
+            // Allocate memory for an array of path resolved executables
             char **exec = malloc(sizeof(char *) * pipeTokensLength);
+            int allProgramsFound = 1; // Flag to check if all executables were path resolved successfully
 
-            int allProgramsFound = 1;
             for (int i = 0; i < pipeTokensLength; i++) {
+                // Tokenise each separate command
                 arrTokens[i] = tokenise(pipeTokens[i], " ");
-                if (strContains(pipeTokens[i], "*?[~"))
-                    arrTokens[i] = fileNameExpand(arrTokens[i]); // Resolve wildcards
 
-                // Whilst we're at it, confirm the paths exist
+                // Resolve wildcards if they exist
+                if (strContains(pipeTokens[i], "*?[~")) arrTokens[i] = fileNameExpand(arrTokens[i]);
+
+                // Check that the executable exists
                 if (!(exec[i] = findExecutable(arrTokens[i][0], path))) {
                     printf("%s: Command not found\n", arrTokens[i][0]);
                     allProgramsFound = 0;
@@ -224,29 +255,29 @@ int main(int argc, char *argv[], char *envp[]) {
             }
 
             if (allProgramsFound) {
+                /* Handle programs */
                 for (int i = 0; i < pipeTokensLength; i++) {
-//                    if (i == 0 ) close(pipes[0][0])
                     char **cmd = arrTokens[i];
 
-                    /* Handle programs */
-                    int stdin = STDIN_FILENO;
-                    int stdout = STDOUT_FILENO;
+                    int redirIn  = STDIN_FILENO;
+                    int redirOut = STDOUT_FILENO;
 
+                    // Count the number of tokens in the command
                     int cmdLength = 0;
-                    while (cmd[++cmdLength] != NULL); // Count the number of tokens
+                    while (cmd[++cmdLength] != NULL);
 
                     /* Check for redirection */
                     if (cmdLength >= 3 && strContains(cmd[cmdLength - 2], "<>")) {
                         // stdin redirection
                         if (strcmp(cmd[cmdLength - 2], "<") == 0 &&
-                            (stdin = open(cmd[cmdLength - 1], O_RDONLY)) == -1) {
+                            (redirIn = open(cmd[cmdLength - 1], O_RDONLY)) == -1) {
                             perror("Input redirection");
                             continue;
                         };
 
                         // stdout redirection
                         if (strcmp(cmd[cmdLength - 2], ">") == 0 &&
-                            (stdout = open(cmd[cmdLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
+                            (redirOut = open(cmd[cmdLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
                             perror("Output redirection");
                             continue;
                         }
@@ -258,8 +289,11 @@ int main(int argc, char *argv[], char *envp[]) {
                         cmdLength -= 2;
                     }
 
+                    // Print the command to run
                     if (i == 0) {
                         printf("Running ");
+
+                        // If there are piped processes, print the entire command (with wildcards expanded)
                         if (nPipes) {
                             for (char ***toks = arrTokens; toks < arrTokens + pipeTokensLength; toks++) {
                                 if (toks != arrTokens) printf(" | ");
@@ -270,71 +304,65 @@ int main(int argc, char *argv[], char *envp[]) {
                                 }
                             }
                         } else {
+                            // Else print just the program name
                             printf("%s", exec[i]);
                         }
                         printf(" ...\n--------------------\n");
                     }
 
-//printf("i is %d, nPipes is %d\n", i, nPipes);
-                    if (i < nPipes) {
-                        printf("CREATING PIPE [%d]\n", i);
-                        if (pipe2(pipes[i], O_CLOEXEC ) != 0) {
-                            perror(NULL);
-                        };
-                    }
+                    // Open n-1 pipes
+                    if (i < nPipes && pipe2(pipes[i], O_CLOEXEC) != 0) perror("Pipe");
+
                     if ((pid = fork() != 0)) {
                         /* Parent Process */
-                        // Wait for child to exit, then print return code and add the command to the command history
-                        // Close stdin/stdout redirector file descriptors if needed
 
-                        if (i>0) {
-printf("Close pipe %dW\n", i-1); close(pipes[i - 1][1]);
-printf("Close pipe %dR\n", i-1); close(pipes[i - 1][0]);
+                        // Close the previous pipe
+                        if (i > 0) {
+                            close(pipes[i - 1][1]);
+                            close(pipes[i - 1][0]);
                         }
 
                         wait(&stat);
 
-                        if (stdin != STDIN_FILENO) close(stdin);
-                        if (stdout != STDOUT_FILENO) close(stdout);
+                        // Close stdin/stdout redirector file descriptors if needed
+                        if (redirIn != STDIN_FILENO) close(redirIn);
+                        if (redirOut != STDOUT_FILENO) close(redirOut);
+
+                        // Print return code of the final command and add the original line to the command history
                         if (i == pipeTokensLength - 1) {
                             printf("--------------------\n");
                             printf("Returns %d\n", WEXITSTATUS(stat));
                             addToCommandHistory(line);
+                            free(exec[i]);
                         }
                     } else {
                         /* Child Process */
                         // Redirect stdin and stdout if needed and transform process
-//                        printf("Child %d: %s\n", i, exec[i]);
-
-//                        printf("`stdin` = %d\n", stdin);
-//                        printf("`stdout` = %d\n", stdout);
-//                        if (i > 0) printf("`pipes[%d]` = [%d, %d]\n", i - 1, pipes[i - 1][0], pipes[i - 1][1]);
-//                        printf("`pipes[%d]` = [%d, %d] \n\n", i, pipes[i][0], pipes[i][1]);
 
                         if (nPipes) {
-                            if (i != 0) {
-//                                printf("Reading from fd %d\n", pipes[i - 1][0]);
-                                dup2(pipes[i - 1][0], STDIN_FILENO);
-                            } else {
-//                                printf("Reading from STDIN\n");
-                            }
-
-                            if (i < nPipes) {
-//                                printf("Writing to fd %d\n", pipes[i][1]);
-                                dup2(pipes[i][1], STDOUT_FILENO);
-                            } else {
-//                                printf("Writing to STDOUT\n");
-                            }
+                            // Programs take the output of the previous program as their input
+                            // - The first program doesn't take any input
+                            // - The last program writes to STDOUT, or a specified redirected file
+                            if (i != 0) dup2(pipes[i - 1][0], STDIN_FILENO);
+                            if (i < nPipes) dup2(pipes[i][1], STDOUT_FILENO);
                         }
 
-                        if (stdin != STDIN_FILENO) dup2(stdin, STDIN_FILENO);
-                        if (stdout != STDOUT_FILENO) dup2(stdout, STDOUT_FILENO);
+                        // Redirect input/output if redirect file specified
+                        // - Redirecting the input of a file in a piped command won't work... eh.
+                        if (redirIn  != STDIN_FILENO)  dup2(redirIn, STDIN_FILENO);
+                        if (redirOut != STDOUT_FILENO) dup2(redirOut, STDOUT_FILENO);
 
                         execve(exec[i], arrTokens[i], envp);
                         return -1;
                     }
+                    freeTokens(arrTokens[i]);
                 }
             }
+            // Clean up
+            free(pipes);
+            free(exec);
+            free(arrTokens);
+            freeTokens(pipeTokens);
         }
     }
 
@@ -376,7 +404,7 @@ char **fileNameExpand(char **tokens) {
         }
     }
 
-    // NULL terminate the token array
+    // NULL-terminate the token array
     newTokens[tokenCounter] = NULL;
 
     // Clean up
