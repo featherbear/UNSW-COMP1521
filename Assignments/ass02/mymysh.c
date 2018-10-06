@@ -140,7 +140,7 @@ int main(int argc, char *argv[], char *envp[]) {
 
         // This tokenisation operation is only used for builtins and syntax validation
         // It is called again for each piped command
-        lineTokens = tokenise(line, " "); // Tokenise input line
+        lineTokens = tokenise(line, " \t"); // Tokenise input line
         if (strContains(line, "*?[~")) lineTokens = fileNameExpand(lineTokens); // Resolve wildcards
         tokenised = 1; // Flag for freeTokens()
 
@@ -268,28 +268,39 @@ int main(int argc, char *argv[], char *envp[]) {
                     int cmdLength = 0;
                     while (cmd[++cmdLength] != NULL);
 
-                    /* Check for redirection */
-                    if (cmdLength >= 3 && strContains(cmd[cmdLength - 2], "<>")) {
+
+                    /* Check for redirection on the last process */
+                    if (i == pipeTokensLength - 1 && cmdLength >= 3) {
+                        int redirectSuccess = FALSE;
+
                         // stdin redirection
-                        if (strcmp(cmd[cmdLength - 2], "<") == 0 &&
-                            (redirIn = open(cmd[cmdLength - 1], O_RDONLY)) == -1) {
-                            perror("Input redirection");
-                            continue;
+                        if (strcmp(cmd[cmdLength - 2], "<") == 0) {
+                            if ((redirIn = open(cmd[cmdLength - 1], O_RDONLY)) == -1) {
+                                perror("Input redirection");
+                                break;
+                            }
+                            redirectSuccess = TRUE;
                         };
 
+
                         // stdout redirection
-                        if (strcmp(cmd[cmdLength - 2], ">") == 0 &&
-                            (redirOut = open(cmd[cmdLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
-                            perror("Output redirection");
-                            continue;
+                        if (strcmp(cmd[cmdLength - 2], ">") == 0) {
+                            if ((redirOut = open(cmd[cmdLength - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644)) == -1) {
+                                perror("Output redirection");
+                                break;
+                            }
+                            redirectSuccess = TRUE;
                         }
 
-                        // Remove the redirect tokens as we don't want them to be passed to the program
-                        free(cmd[cmdLength - 1]);
-                        free(cmd[cmdLength - 2]);
-                        cmd[cmdLength - 2] = NULL;
-                        cmdLength -= 2;
+                        if (redirectSuccess) {
+                            // Remove the redirect tokens as we don't want them to be passed to the program
+                            free(cmd[cmdLength - 1]);
+                            free(cmd[cmdLength - 2]);
+                            cmd[cmdLength - 2] = NULL;
+                            cmdLength -= 2;
+                        }
                     }
+
 
                     // Print the command to run
                     if (i == 0) {
@@ -311,6 +322,8 @@ int main(int argc, char *argv[], char *envp[]) {
                         }
                         printf(" ...\n--------------------\n");
                     }
+
+
 
                     // Open n-1 pipes
                     if (i < nPipes && pipe2(pipes[i], O_CLOEXEC) != 0) perror("Pipe");
