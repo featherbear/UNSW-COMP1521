@@ -308,7 +308,6 @@ int main(int argc, char *argv[], char *envp[]) {
                             printf("--------------------\n");
                             printf("Returns %d\n", WEXITSTATUS(stat));
                             addToCommandHistory(line);
-                            free(exec[i]);
                         }
                     } else {
                         /* Child Process */
@@ -333,10 +332,14 @@ int main(int argc, char *argv[], char *envp[]) {
                         fprintf(stdout, "%s: unknown type of executable\n", exec[i]);
                         return -1;
                     }
-                    freeTokens(arrTokens[i]);
+
                 }
             }
             // Clean up
+            for (int i = 0; i < pipeTokensLength; i++) {
+                freeTokens(arrTokens[i]);
+                free(exec[i]);
+            }
             free(pipes);
             free(exec);
             free(arrTokens);
