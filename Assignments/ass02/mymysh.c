@@ -27,36 +27,22 @@
 
 // Function forward references
 void trim(char *);
-
 int strContains(char *, char *);
-
 char **tokenise(char *, char *);
-
 char **fileNameExpand(char **);
-
 void freeTokens(char **);
-
 char *findExecutable(char *, char **);
-
 int isExecutable(char *);
-
 void prompt(void);
+
+void printPWD();
+int isValidRedirect(char **, int);
 
 // Globals
 #define MAXLINE 200
 
 #define TRUE  1
 #define FALSE 0
-
-// Print the current working directory
-void printPWD() {
-    char cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        printf("%s\n", cwd);
-    } else {
-        printf("Can't find working directory!!\n");
-    }
-}
 
 // Main program
 // Set up environment and then run main loop
@@ -148,33 +134,7 @@ int main(int argc, char *argv[], char *envp[]) {
         while (lineTokens[++lineTokensLength] != NULL);
 
         // Validate pipe and redirect tokens
-        // "|" token cannot be be adjacent to another pipe token
-        // "|" token cannot exist as the first or last token
-        // ">" or "<" (mutually exclusive) can only exist as the second last token
-        int validRedirect = 1;
-
-        // Check if first or last token is a pipe
-        if (strcmp(lineTokens[0], "|") == 0 ||
-            (lineTokensLength > 1 && strcmp(lineTokens[lineTokensLength - 1], "|") == 0)) {
-            validRedirect = 0;
-        } else {
-            for (int i = 0; i < lineTokensLength; i++) {
-                // Sequential pipe check
-                if (i > 0 && strcmp(lineTokens[i], "|") == 0 && strcmp(lineTokens[i - 1], "|") == 0) {
-                    validRedirect = 0;
-                    break;
-                }
-
-                // Redirect '>'/'<' checking (can only be in the second last position)
-                if (i == lineTokensLength - 2) continue;
-                if (strcmp(lineTokens[i], ">") == 0 || strcmp(lineTokens[i], "<") == 0) {
-                    validRedirect = 0;
-                    break;
-                }
-            }
-        }
-
-        if (!validRedirect) {
+        if (!isValidRedirect(lineTokens, lineTokensLength)) {
             printf("Invalid i/o redirection\n");
             continue;
         }
@@ -368,6 +328,9 @@ int main(int argc, char *argv[], char *envp[]) {
                         if (redirOut != STDOUT_FILENO) dup2(redirOut, STDOUT_FILENO);
 
                         execve(exec[i], arrTokens[i], envp);
+
+                        // Print to stdout instead of stderr to follow jas' version
+                        fprintf(stdout, "%s: unknown type of executable\n", exec[i]);
                         return -1;
                     }
                     freeTokens(arrTokens[i]);
@@ -531,4 +494,43 @@ int strContains(char *str, char *chars) {
 // done as a function to allow switching to $PS1
 void prompt(void) {
     printf("mymysh$ ");
+}
+
+/* My additional functions */
+
+
+// printPWD: print the current working directory
+void printPWD() {
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("%s\n", cwd);
+    } else {
+        printf("Can't find working directory!!\n");
+    }
+}
+
+// isValidRedirect: validate pipe and redirect tokens
+// "|" token cannot be be adjacent to another pipe token
+// "|" token cannot exist as the first or last token
+// ">" or "<" (mutually exclusive) can only exist as the second last token
+int isValidRedirect(char** lineTokens, int lineTokensLength) {
+    // Check if first or last token is a pipe
+    if (strcmp(lineTokens[0], "|") == 0 ||
+        (lineTokensLength > 1 && strcmp(lineTokens[lineTokensLength - 1], "|") == 0)) {
+        return FALSE;
+    } else {
+        for (int i = 0; i < lineTokensLength; i++) {
+            // Sequential pipe check
+            if (i > 0 && strcmp(lineTokens[i], "|") == 0 && strcmp(lineTokens[i - 1], "|") == 0) {
+                return FALSE;
+            }
+
+            // Redirect '>'/'<' checking (can only be in the second last position)
+            if (i == lineTokensLength - 2) continue;
+            if (strcmp(lineTokens[i], ">") == 0 || strcmp(lineTokens[i], "<") == 0) {
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
 }
