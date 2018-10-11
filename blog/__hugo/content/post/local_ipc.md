@@ -21,7 +21,7 @@ In one ear, out the other...wait.
 
 
 # Pipes
-Pipes allow forked processes to communicate with each other, and is often used to redirect the output of a process into the process of another.
+Pipes allow forked processes to communicate with each other, and is often used to redirect the output of a process into the input of another process.
 
 A common usage pattern for pipes is:
 
@@ -34,11 +34,17 @@ A common usage pattern for pipes is:
 `unistd.h` provides `STDIN_FILENO` and `STDOUT_FILENO` (and `STDERR_FILENO`)
 
 `int dup2(int oldfd, int newfd)`  
-Close `newfd` if necessary, and copy `oldfd` into `newfd`
+Close `newfd` if necessary, and copy `oldfd` into `newfd`.  
+
+Effectively, the `dup2` function sets `newfd` to `oldfd`.  
+For example `dup2(fd, STDOUT_FILENO)` will set the output to go into `fd` instead of through the standard output
 
 `int pipe(int fd[2])`  
 ret: 0  
 err: -1
+
+The `pipe` function allocates a pair of file descriptors in which the first is read from, and the second is written into.  
+This allows a child process to communicate with the parent process.
 
 `FILE *popen(char *Cmd, char *Mode)`  
 ret: FILE*  

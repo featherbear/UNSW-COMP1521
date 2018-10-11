@@ -1,6 +1,7 @@
 ---
 title: "Assignment 2 - My Very Own Shell"
 date: 2018-09-17T10:17:36+10:00
+categories: ["Assignments"]
 
 hiddenFromHomePage: false
 postMetaInFooter: false

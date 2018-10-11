@@ -60,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2018-09-24T08:45:34&#43;10:00" />
 <meta itemprop="dateModified" content="2018-09-24T08:45:34&#43;10:00" />
-<meta itemprop="wordCount" content="217">
+<meta itemprop="wordCount" content="277">
 
 
 
@@ -96,6 +96,8 @@
         <li class="mobile-menu-item">Home</li>
       </a><a href="https://github.com/featherbear/UNSW-COMP1521">
         <li class="mobile-menu-item">GitHub</li>
+      </a><a href="../../categories/">
+        <li class="mobile-menu-item">Categories</li>
       </a><a href="">
         <li class="mobile-menu-item"></li>
       </a>
@@ -113,6 +115,8 @@
         <a class="menu-item-link" href="../../">Home</a>
       </li><li class="menu-item">
         <a class="menu-item-link" href="https://github.com/featherbear/UNSW-COMP1521">GitHub</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../../categories/">Categories</a>
       </li><li class="menu-item">
         <a class="menu-item-link" href=""></a>
       </li>
@@ -166,7 +170,7 @@
 
 <h1 id="pipes">Pipes</h1>
 
-<p>Pipes allow forked processes to communicate with each other, and is often used to redirect the output of a process into the process of another.</p>
+<p>Pipes allow forked processes to communicate with each other, and is often used to redirect the output of a process into the input of another process.</p>
 
 <p>A common usage pattern for pipes is:</p>
 
@@ -180,11 +184,17 @@
 <p><code>unistd.h</code> provides <code>STDIN_FILENO</code> and <code>STDOUT_FILENO</code> (and <code>STDERR_FILENO</code>)</p>
 
 <p><code>int dup2(int oldfd, int newfd)</code><br />
-Close <code>newfd</code> if necessary, and copy <code>oldfd</code> into <code>newfd</code></p>
+Close <code>newfd</code> if necessary, and copy <code>oldfd</code> into <code>newfd</code>.</p>
+
+<p>Effectively, the <code>dup2</code> function sets <code>newfd</code> to <code>oldfd</code>.<br />
+For example <code>dup2(fd, STDOUT_FILENO)</code> will set the output to go into <code>fd</code> instead of through the standard output</p>
 
 <p><code>int pipe(int fd[2])</code><br />
 ret: 0<br />
 err: -1</p>
+
+<p>The <code>pipe</code> function allocates a pair of file descriptors in which the first is read from, and the second is written into.<br />
+This allows a child process to communicate with the parent process.</p>
 
 <p><code>FILE *popen(char *Cmd, char *Mode)</code><br />
 ret: FILE*<br />

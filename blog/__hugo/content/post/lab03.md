@@ -32,10 +32,10 @@ A) `aaaabbbb bbbbcccc cccccccc cccccccc`
 OR  
 B) `cccccccc cccccccc ccccbbbb bbbbaaaa`  
 
-We can find out by using a `union`!
+We can find out by using a `union`!  
 A `union` allows the same portion of memory to be intepreted as different data types.  
 
-What that means for this question, is that we can represent the entire `struct _bit_fields` as one thing, like an integer!
+What that means for this question, is that we can represent the entire `struct _bit_fields` as one thing, like an integer!  
 So if we create a variable with this type, and through a `union`, set the value to `1` - we can check if `a` is 1, or if `c` is one.
   
 (On the CSE machines, `a` becomes 1, so therefore representation A was correct)  

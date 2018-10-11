@@ -96,6 +96,8 @@
         <li class="mobile-menu-item">Home</li>
       </a><a href="https://github.com/featherbear/UNSW-COMP1521">
         <li class="mobile-menu-item">GitHub</li>
+      </a><a href="../../categories/">
+        <li class="mobile-menu-item">Categories</li>
       </a><a href="">
         <li class="mobile-menu-item"></li>
       </a>
@@ -113,6 +115,8 @@
         <a class="menu-item-link" href="../../">Home</a>
       </li><li class="menu-item">
         <a class="menu-item-link" href="https://github.com/featherbear/UNSW-COMP1521">GitHub</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="../../categories/">Categories</a>
       </li><li class="menu-item">
         <a class="menu-item-link" href=""></a>
       </li>
@@ -168,10 +172,10 @@ A) <code>aaaabbbb bbbbcccc cccccccc cccccccc</code><br />
 OR<br />
 B) <code>cccccccc cccccccc ccccbbbb bbbbaaaa</code></p>
 
-<p>We can find out by using a <code>union</code>!
+<p>We can find out by using a <code>union</code>!<br />
 A <code>union</code> allows the same portion of memory to be intepreted as different data types.</p>
 
-<p>What that means for this question, is that we can represent the entire <code>struct _bit_fields</code> as one thing, like an integer!
+<p>What that means for this question, is that we can represent the entire <code>struct _bit_fields</code> as one thing, like an integer!<br />
 So if we create a variable with this type, and through a <code>union</code>, set the value to <code>1</code> - we can check if <code>a</code> is 1, or if <code>c</code> is one.</p>
 
 <p>(On the CSE machines, <code>a</code> becomes 1, so therefore representation A was correct)<br />

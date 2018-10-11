@@ -15,15 +15,14 @@ sequenceDiagrams:
 
 ---
 
-Endian
-Little endian
-a b c d
-e f g h
+**Endian**  
+Little-Endian  
+a b c d  
+e f g h  
 
-
-big endian
-d c b a 
-h g f e
+Big-Endian  
+d c b a  
+h g f e  
 
 # Virtual Memory
 ## Intro
