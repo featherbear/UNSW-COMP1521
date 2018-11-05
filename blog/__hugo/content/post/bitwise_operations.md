@@ -145,3 +145,8 @@ By combining the different bit-wise operations, we can do cool stuff
 * Unix access flags
 * They're cool!
 * More stuff too!
+
+
+
+## Graphic
+![Bitwise Operations](/img/bitwise_operations.png)

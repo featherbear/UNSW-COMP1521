@@ -131,3 +131,18 @@ SIGN | EXP(8)   | FRAC(23)
 
 So we get the result `01000011000101101100000000000000`  
 
+## TL;DR Float to IEEE Float
+1) Convert the float to its binary form, keep the decimal point
+2) Turn the binary into its proper scientific form (only one bit on the left of the decimal point)
+3) Convert the exponent (number of times you've moved left), and add it on to the bias (2^n - 1)
+4) Write out the IEEE Float. First bit is the sign bit, then the exponent+bias, then the fraction binary
+
+![Float to IEEE Float](/img/float_1.png)
+
+## TL;DR IEEE Float to Float
+1) Note down the sign (if the first bit is a 1, the value is a negative)
+2) Subtract the bias from the exponent, this gives us the number of times we need to shift right
+3) Assemble the float, (sign) 1.fraction
+4) Shift the decimal place right
+
+![IEEE Float to Float](/img/float_2.png)

@@ -60,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2018-09-14T20:30:54&#43;10:00" />
 <meta itemprop="dateModified" content="2018-09-14T20:30:54&#43;10:00" />
-<meta itemprop="wordCount" content="690">
+<meta itemprop="wordCount" content="818">
 
 
 
@@ -171,6 +171,8 @@
 <li><a href="#exponent">Exponent</a></li>
 <li><a href="#example">Example</a></li>
 </ul></li>
+<li><a href="#tl-dr-float-to-ieee-float">TL;DR Float to IEEE Float</a></li>
+<li><a href="#tl-dr-ieee-float-to-float">TL;DR IEEE Float to Float</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -316,6 +318,24 @@ What this means to us is that the exponent is stored as exponent + B</p>
 </code></pre>
 
 <p>So we get the result <code>01000011000101101100000000000000</code></p>
+
+<h2 id="tl-dr-float-to-ieee-float">TL;DR Float to IEEE Float</h2>
+
+<p>1) Convert the float to its binary form, keep the decimal point
+2) Turn the binary into its proper scientific form (only one bit on the left of the decimal point)
+3) Convert the exponent (number of times you&rsquo;ve moved left), and add it on to the bias (2^n - 1)
+4) Write out the IEEE Float. First bit is the sign bit, then the exponent+bias, then the fraction binary</p>
+
+<p><img src="../../img/float_1.png" alt="Float to IEEE Float" /></p>
+
+<h2 id="tl-dr-ieee-float-to-float">TL;DR IEEE Float to Float</h2>
+
+<p>1) Note down the sign (if the first bit is a 1, the value is a negative)
+2) Subtract the bias from the exponent, this gives us the number of times we need to shift right
+3) Assemble the float, (sign) 1.fraction
+4) Shift the decimal place right</p>
+
+<p><img src="../../img/float_2.png" alt="IEEE Float to Float" /></p>
 
     </div>
 

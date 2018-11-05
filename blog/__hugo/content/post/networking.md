@@ -58,6 +58,9 @@ A DNS server (aka name server) is a database that maps hostnames to IP addresses
 * Iterated Query - Client contacts each DNS Server it knows to resolve an address
 * Recursive Query - DNS Servers contacts another server, propagating the query
 
+![DNS Servers (Summary)](/img/dns_1.png)
+![DNS Servers (Subdomains can point to different IPs)](/img/dns_2.png)
+
 ## DNS Levels
 * Top-level domain (TLD)
 * Authoritative 
@@ -71,12 +74,18 @@ TCP can be considered as a _'call and response'_ protocol. For every packet the 
 
 TCP also contain checksum mechanisms to ensure the integrity of the data inside the packet.
 
+![Laughs in TCP](/img/tcp_ack_ack_ack.png)
+
+
 ## User Datagram Protocol
 UDP can be considered as _'fire and forget'_, as it makes no care if the destination has successfully received the packet or not.
 
 UDP is considerably faster than TCP as there is less overhead from the information in the packet header.
 
 It is preferred over TCP when large amounts of mission-criticial data is sent (ie when playing games, you don't necessarily need every single packet to be received)
+
+## Summary
+![TCP vs UDP](/img/tcp_vs_udp.png)
 
 # Ethernet
 CSMA - On collision, wait for a random time and retransmit  

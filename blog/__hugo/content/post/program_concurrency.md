@@ -85,10 +85,12 @@ Semaphores can be considered as an overpowered locking flag that processes can u
 
 It basically performs the below operation, except without requiring execution cycles to wait.
 ```
-while (!flag);
+while (!flag) thenWait();
 doThis();
 ```
 Instead of repeatedly checking the value of `flag`, semaphores communicate with the operating system to instruct the program when to continue.
+
+![Semaphores](/img/semaphores.png)
 
 #### semaphore.h definitions
 ```

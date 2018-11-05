@@ -60,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2018-09-16T19:50:57&#43;10:00" />
 <meta itemprop="dateModified" content="2018-09-16T19:50:57&#43;10:00" />
-<meta itemprop="wordCount" content="465">
+<meta itemprop="wordCount" content="466">
 
 
 
@@ -287,11 +287,13 @@ Returns <strong>0 if NOT THE SAME</strong></p>
 
 <p>It basically performs the below operation, except without requiring execution cycles to wait.</p>
 
-<pre><code>while (!flag);
+<pre><code>while (!flag) thenWait();
 doThis();
 </code></pre>
 
 <p>Instead of repeatedly checking the value of <code>flag</code>, semaphores communicate with the operating system to instruct the program when to continue.</p>
+
+<p><img src="../../img/semaphores.png" alt="Semaphores" /></p>
 
 <h4 id="semaphore-h-definitions">semaphore.h definitions</h4>
 

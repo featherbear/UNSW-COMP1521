@@ -60,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2018-09-27T09:38:34&#43;10:00" />
 <meta itemprop="dateModified" content="2018-09-27T09:38:34&#43;10:00" />
-<meta itemprop="wordCount" content="478">
+<meta itemprop="wordCount" content="479">
 
 
 
@@ -161,6 +161,7 @@
 <ul>
 <li><a href="#transmission-control-protocol">Transmission Control Protocol</a></li>
 <li><a href="#user-datagram-protocol">User Datagram Protocol</a></li>
+<li><a href="#summary">Summary</a></li>
 </ul></li>
 <li><a href="#ethernet">Ethernet</a></li>
 </ul>
@@ -232,6 +233,9 @@ A DNS server (aka name server) is a database that maps hostnames to IP addresses
 <li>Recursive Query - DNS Servers contacts another server, propagating the query</li>
 </ul>
 
+<p><img src="../../img/dns_1.png" alt="DNS Servers (Summary)" />
+<img src="../../img/dns_2.png" alt="DNS Servers (Subdomains can point to different IPs)" /></p>
+
 <h2 id="dns-levels">DNS Levels</h2>
 
 <ul>
@@ -250,6 +254,8 @@ A DNS server (aka name server) is a database that maps hostnames to IP addresses
 
 <p>TCP also contain checksum mechanisms to ensure the integrity of the data inside the packet.</p>
 
+<p><img src="../../img/tcp_ack_ack_ack.png" alt="Laughs in TCP" /></p>
+
 <h2 id="user-datagram-protocol">User Datagram Protocol</h2>
 
 <p>UDP can be considered as <em>&lsquo;fire and forget&rsquo;</em>, as it makes no care if the destination has successfully received the packet or not.</p>
@@ -257,6 +263,10 @@ A DNS server (aka name server) is a database that maps hostnames to IP addresses
 <p>UDP is considerably faster than TCP as there is less overhead from the information in the packet header.</p>
 
 <p>It is preferred over TCP when large amounts of mission-criticial data is sent (ie when playing games, you don&rsquo;t necessarily need every single packet to be received)</p>
+
+<h2 id="summary">Summary</h2>
+
+<p><img src="../../img/tcp_vs_udp.png" alt="TCP vs UDP" /></p>
 
 <h1 id="ethernet">Ethernet</h1>
 
