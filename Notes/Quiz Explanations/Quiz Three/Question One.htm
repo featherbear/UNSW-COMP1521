@@ -1,0 +1,147 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File href="Question%20One.htm">
+<link rel=File-List href="Question%20One_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:9.009in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:.0215in;width:2.0944in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt'>Question One</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:.0215in;width:2.3555in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>Tuesday,
+14 August 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>2:07
+PM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4097in;margin-left:0in;width:9.009in'>
+
+<p style='margin:0in'><img src="Question%20One_files/image001.png" width=861
+height=524
+alt="Machine generated alternative text:&#10;What is the value in $tl when the sw instruction is executed? (i.e. what value is stored in result) &#10;loop : &#10;bgt &#10;mul &#10;addi &#10;$t2, &#10;$0, &#10;$t2, &#10;$t2, &#10;loop &#10;1 &#10;$0, &#10;end_loop &#10;1 &#10;end_loop : &#10;sw $t1, result &#10;o &#10;O &#10;o &#10;o &#10;10 &#10;None of the other options is correct "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>$t1 = 0</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>$t2 = 1</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>$t3 = 10</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>loop:</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>if ($t2 &gt; $t3) goto end_loop<span
+style='mso-spacerun:yes'>   </span># bgt $t2, $t3, end_loop</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t1 *= t2<span
+style='mso-spacerun:yes'>                       </span># mul $t1, $t1, $t2</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t2++<span
+style='mso-spacerun:yes'>                           </span># addi $t2, $t2, 1</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>goto loop<span
+style='mso-spacerun:yes'>                      </span># j loop</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>end_loop:</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>result = $t1<span
+style='mso-spacerun:yes'>                   </span># sw $t1, result</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>---</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>1 &gt; 10 ?
+no</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t1 = 0*1 = 0</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t2 = 2</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>2 &gt; 10 ?
+no</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t1 = 0*2 = 0</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t2 = 3</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>...</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>9 &gt; 10 ?
+no</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t2 = 10</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>10 &gt; 10 ?
+no</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>t2 = 11</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>11 &gt; 10 ?
+yes</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>result = $t1 = 0</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span></code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+</body>
+
+</html>

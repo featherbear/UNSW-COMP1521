@@ -1,0 +1,113 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File href="Ternary%20Operators%20(Javascript).htm">
+<link rel=File-List href="Ternary%20Operators%20(Javascript)_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:9.8868in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:.0215in;width:3.9222in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt'>Ternary
+Operators (Javascript)</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:.0215in;width:2.443in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>Wednesday,
+25 July 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>11:37
+PM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4305in;margin-left:0in;width:9.8868in'>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>condition ?
+valueIfTrue : valueIfFalse</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt;text-align:
+right'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt;text-align:
+right'>&nbsp;</code></p>
+
+<p style='margin:0in'><img
+src="Ternary%20Operators%20(Javascript)_files/image001.png" width=659
+height=274
+alt="Machine generated alternative text:&#10;To explain ternary, abit hard to explain in C as well because angry, but so we'll &#10;write it in javascript, because EvErYoNe LoVeS jAvaScRiPt &#10;Something you might often need to do is print out text, that has text &#10;dependent on the variable &#10;23:26:21.159 var name - &#10;&quot;Andrew &#10;18 &#10;var age = &#10;&quot;Hello, &#10;23:26:21.164 &quot;Hello, &#10;my name IS &#10;+ name + &#10;. I am &quot; &#10;+ age + &#10;years old. &quot; &#10;my name is Andrew. &#10;I am 18 years old.&quot; "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt;text-align:right'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="Ternary%20Operators%20(Javascript)_files/image002.png" width=638
+height=295
+alt="Machine generated alternative text:&#10;&quot;Christina&quot; &#10;var name - &#10;1 &#10;var age = &#10;&quot;Hello, &#10;my name IS &#10;+ name + &#10;. I am &quot; &#10;+ age + &#10;years old. &quot; &#10;&quot;Hello, &#10;my name is Christina. I am 1 years old. &#10;Let's say we want to be grammatically correct &#10;1 &quot;years&quot; old should be one &quot;year&quot; old &#10;(without the s for plural) &#10;how would we go about fixing that? "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt;text-align:right'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="Ternary%20Operators%20(Javascript)_files/image003.png" width=753
+height=285
+alt="Machine generated alternative text:&#10;23:27:54.342 var name - &#10;var age = &#10;if (age &#10;&quot;Christina&quot; &#10;1 &#10;1) &quot;Hello, &#10;my &#10;name IS &quot; &#10;+ name &#10;name + &#10;. I am &#10;year old.&quot; &#10;I am &#10;else &quot;Hello, my name &#10;+ age + &quot; year old.&quot; &#10;year old . &quot; &#10;&quot;Hello, &#10;my name is Christina. &#10;I am 1 &#10;It's getting somewhat longer now &#10;What if we wanted to add another thing that changes &#10;let's say gender "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt;text-align:right'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="Ternary%20Operators%20(Javascript)_files/image004.png" width=943
+height=275
+alt="Machine generated alternative text:&#10;name = &quot;Christina&quot; &#10;var isFema1e = true; &#10;var age &#10;if (age &#10;1 isFema1e &#10;else if (age &#10;1) &quot;Hello, &#10;true) &#10;my name &#10;&quot;Hello, my name is &quot; + name &#10;&quot;. I am &quot; + age + &quot; year Old, and I am a girl.&quot; &#10;else if (isFemaIe true) &quot;Hello, &#10;else &quot;Hello, my name is &quot; &#10;+ name &#10;is • &#10;name + &quot; &#10;ny name IS &#10;* age + &quot; year Old, and I am a boy.&quot; &#10;+ age &quot; years old, and I am a girl.&quot; &#10;&quot; . I am &quot; * age &quot; years old, and I am a boy.&quot; &#10;&quot;Hello, &#10;my name is Christina. &#10;I am &#10;I year old, &#10;and I am a girl.&quot; &#10;okay this is getting messy now "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt;text-align:right'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="Ternary%20Operators%20(Javascript)_files/image005.png" width=605
+height=258
+alt="Machine generated alternative text:&#10;Let's say we wanted to support France because they won the world cup (did &#10;they??) and speak in french &#10;We gotta replace ALL FOUR lines to french &#10;if (age &#10;true) &quot;80unjour, je m' appelle &quot; &#10;1 &amp;&amp; isFema1e = &#10;+ nami &#10;else if (age &#10;1) &quot;Bounjour, je m' appelle &#10;+ name + ' &#10;else if (isFema1e = &#10;true) &quot;Bounjour, je m' appelle &#10;+ name + &quot; &#10;else &quot;80unjour, je m' appelle &quot; &#10;+ name + &#10;J' ai &#10;years &#10;you get the point, gotta edit it four times &#10;INTRODUCING TERNARIES "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt;text-align:right'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="Ternary%20Operators%20(Javascript)_files/image006.png" width=945
+height=206
+alt="Machine generated alternative text:&#10;var &#10;var &#10;name = &quot;Christina&quot; &#10;isFemaIe - true; &#10;age — I &#10;&quot;Hello, &#10;&quot;Hello, &#10;my name 15 &#10;name &#10;am &quot; &#10;* (age &#10;year &#10;old, &#10;and am a &quot; &#10;&quot;Eirl&quot; &#10;• &quot;boy&quot;) &quot; &quot; &#10;my name is Christina. &#10;I am I year old, &#10;and &#10;am a girl.&quot; &#10;and see here, I wrote it ONE time "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt;text-align:right'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="Ternary%20Operators%20(Javascript)_files/image007.png" width=638
+height=110
+alt="Machine generated alternative text:&#10;And so it's much more efficient when you need to produce some sort of &#10;variable dependent text &#10;Less is more "></p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+</body>
+
+</html>

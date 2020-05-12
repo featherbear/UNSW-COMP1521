@@ -1,0 +1,113 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File
+href="(Lower%20Level)%20File%20Operations%20in%20C.htm">
+<link rel=File-List
+href="(Lower%20Level)%20File%20Operations%20in%20C_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:10.959in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:.0215in;width:4.2763in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt'>(Lower
+Level) File Operations in C</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:.0215in;width:2.5534in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>Wednesday,
+22 August 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>4:51
+PM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4305in;margin-left:0in;width:10.959in'>
+
+<p style='margin:0in;font-size:11.0pt'><span style='font-family:Calibri'
+lang=en-AU>Up to now we've been using<span style='mso-spacerun:yes'>     
+</span></span><!--[if gte msEquation 12]><m:oMath xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"><m:r><m:t>#</m:t></m:r><m:r><m:t>&#119894;&#119899;&#119888;&#119897;&#119906;&#119889;&#119890;</m:t></m:r><m:r><m:t>&lt;</m:t></m:r><m:r><m:t>&#119904;&#119905;&#119889;&#119894;&#119900;</m:t></m:r><m:r><m:t>.</m:t></m:r><m:r><m:t>h</m:t></m:r><m:r><m:t>&gt;</m:t></m:r></m:oMath><![endif]--><![if !msEquation]><img
+src="(Lower%20Level)%20File%20Operations%20in%20C_files/image001.png"
+width=392 height=20><![endif]></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>We've been using the
+functions inside this file, however it is only just a wrapper for the actual
+operations</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>What's really
+happening?</p>
+
+<p style='margin:0in;font-family:"Cambria Math";font-size:11.0pt'
+lang="x-IV_mathan"><!--[if gte msEquation 12]><m:oMathPara xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"><m:oMath xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"><m:r><m:t>#</m:t></m:r><m:r><m:t>&#119894;&#119899;&#119888;&#119897;&#119906;&#119889;&#119890;</m:t></m:r><m:r><m:t>&lt;</m:t></m:r><m:r><m:t>&#119906;&#119899;&#119894;&#119904;&#119905;&#119889;</m:t></m:r><m:r><m:t>.</m:t></m:r><m:r><m:t>h</m:t></m:r><m:r><m:t>&gt;</m:t></m:r></m:oMath></m:oMathPara><![endif]--><![if !msEquation]><img
+src="(Lower%20Level)%20File%20Operations%20in%20C_files/image002.png"
+width=212 height=18><![endif]></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>open</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>close</p>
+
+<p style='margin:0in'><img
+src="(Lower%20Level)%20File%20Operations%20in%20C_files/image003.png"
+width=654 height=495
+alt="int open(char *Path, int Flags) &#10;attempt to open an object at Path, according to Flags &#10;• &#10;flags (defined in &lt;fcntl. h&gt;) &#10;• &#10;O_RDONLY open object for reading &#10;0 &#10;O_WRONLY open object for writing &#10;o O_APPEND append on each write &#10;O_RDWR open object for reading and writing &#10;0 &#10;O_CREAT create object if doesn't exist &#10;o TRUNC truncate to size 0 &#10;• flags can be combined e.g. &#10;if successful, return file descriptor (small +ve int) &#10;• &#10;if unsuccessful, return -1 and set errno &#10;• "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="(Lower%20Level)%20File%20Operations%20in%20C_files/image004.png"
+width=759 height=527
+alt="Machine generated alternative text:&#10;int close(int FileDesc) &#10;• attempt to release an open file descriptor &#10;• if this is the last reference to object, release its resources &#10;• if successful, return 0 &#10;• if unsuccessful, return -1 and set errno &#10;Could be unsuccessful if FileDesc is not an open file descriptor &#10;An aside: removing an object e.g. via rm &#10;• removes the object's entry from a directory &#10;• but the inode and data persist until &#10;all processes accessing the object close() their handle &#10;0 &#10;all references to the inode from other directories are removed &#10;0 &#10;• after this, the inode and the blocks on storage device are recycled "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="(Lower%20Level)%20File%20Operations%20in%20C_files/image005.png"
+width=789 height=542
+alt="Machine generated alternative text:&#10;ssize_t read(int FileDesc, &#10;void *Buffer, size t Count) &#10;• &#10;• &#10;• &#10;• &#10;• &#10;• &#10;• &#10;attempt to read Count bytes from FileDesc into Buffer &#10;if &quot;successful&quot;, return number of bytes actually read (NRead) &#10;if currently positioned at end of file, return 0 &#10;if unsuccessful, return -1 and set errno &#10;does not check whether Buffer contains enough space &#10;advances the file offset by NRead &#10;does not treat '\n' as special, nor is there EOF &#10;Once a file is open()'d &#10;• the &quot;current position&quot; in the file is maintained as part of the fd entry &#10;• the &quot;current position&quot; is modified by read(), write() and Iseek() "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in'><img
+src="(Lower%20Level)%20File%20Operations%20in%20C_files/image006.png"
+width=1048 height=543
+alt="Machine generated alternative text:&#10;ssize_t write(int FileDesc, void *Buffer, size t Count) &#10;• &#10;• &#10;• &#10;• &#10;• &#10;attempt to write Count bytes from Buffer onto FileDesc &#10;if &quot;successful&quot;, return number of bytes actually written (NWritten) &#10;if unsuccessful, return -1 and set errno &#10;does not check whether Buffer has Count bytes of data &#10;advances the file offset by NWritten bytes &#10;offset=ø &#10;cu r rent=1023 &#10;file data &#10;file size &#10;write(fd, buf, &#10;file data &#10;offset=Ø &#10;512) &#10;file size &#10;new data &#10;-1535 &#10;cu r rent— &#10;= 1024 &#10;= 1536 "></p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+</body>
+
+</html>

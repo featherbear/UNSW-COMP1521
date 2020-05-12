@@ -1,0 +1,153 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File
+href="Example_%20Determining%20String%20Length.htm">
+<link rel=File-List
+href="Example_%20Determining%20String%20Length_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:5.7604in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:4.5631in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt'>Example:
+Determining String Length</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:0in;width:2.3638in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>Tuesday,
+14 August 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>9:50
+AM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4305in;margin-left:0in;width:5.7604in'>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>char *string
+= &quot;...&quot;;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>Char *s =
+&amp;string[0];</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>int length =
+0;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>while (*s !=
+'\0') {</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>length++;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>s++;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>}</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>.data</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>myString;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>.asciiz &quot;...&quot;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>.globl main</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>.text</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>main:</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>move $t0, $0<span
+style='mso-spacerun:yes'>     </span># $t0 will be the length</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>la $t1, myString # $t1 points to the
+beginning of the string</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>lb $t3, ($t1)</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>loop:<span
+style='mso-spacerun:yes'>  </span></code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>beq $t3, $0, endloop # Go to endloop when $t3
+== 0</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>addi $t0, $t0, 1<span
+style='mso-spacerun:yes'>     </span># Add 1 to $t0</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>addi $t1, $t1, 1<span
+style='mso-spacerun:yes'>     </span># Add 1 to $t1</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>lb $t3, ($t1)<span
+style='mso-spacerun:yes'>        </span># Load the new value of $t1 into $t3</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>j loop<span
+style='mso-spacerun:yes'>               </span># Repeat the loop</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>&nbsp;</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'>endloop:</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span># we done, print it out</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>move $a0, $t0</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>li $v0, 1 # SYSCALL uses $v0 to know what to
+do! </code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>syscall</code></p>
+
+<p><code style='margin:0in;font-family:Consolas;font-size:11.0pt'><span
+style='mso-spacerun:yes'>  </span>j $ra</code></p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File href=Unions.htm>
+<link rel=File-List href="Unions_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:10.7875in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:.0215in;width:1.3312in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt'>Unions</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:.0215in;width:2.4833in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>Wednesday,
+1 August 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>3:49
+PM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4305in;margin-left:0in;width:10.7875in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Unions allow for a
+space of memory to be reused as different data types</p>
+
+<p style='margin:0in'><img src="Unions_files/image001.png" width=866
+height=505
+alt="Machine generated alternative text:&#10;Unions (cont) &#10;General syntax for defining union types and variables: &#10;union Tag { &#10;Typel Memberl•, &#10;Type2 Members, &#10;Type3 Members, &#10;} uvar; &#10;Type can be any C type; Member names must be distinct &#10;sizeof(Union) is the size of the largest member &#10;&amp;uvar. Memberl &#10;&amp;uvar .Member2 &#10;&amp;uvar.Member3 "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in'><img src="Unions_files/image002.png" width=1032
+height=501
+alt="Machine generated alternative text:&#10;Difference between a struct and a union &#10;struct _s { &#10;int &#10;x; &#10;float y; &#10;} svar; &#10;svar &#10;Unions (cont) &#10;union u &#10;int &#10;float &#10;} uvar; &#10;uvar &#10;x &#10;x; &#10;int &#10;float &#10;occupies 8 bytes &#10;int or float &#10;occupies 4 bytes "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in'><img src="Unions_files/image003.png" width=1028
+height=641
+alt="Machine generated alternative text:&#10;Unions (cont) &#10;Common use of union types: &quot;generic&quot; variables &#10;#define &#10;#define &#10;#define &#10;struct &#10;int &#10;IS INT &#10;1 &#10;IS FLOAT 2 &#10;IS STR &#10;3 &#10;generic { &#10;vartype; &#10;union { int ival; char &#10;*sval; &#10;} myVar; &#10;// treat myVar as an integer &#10;myVar.vartype - &#10;IS INT; &#10;myVar . ival &#10;= 42; &#10;printf( &quot; , &#10;myVar. ival); &#10;// now treat myVar as a float &#10;myVar.vartype - &#10;IS FLOAT; &#10;myVar . fval &#10;= 3.14159; &#10;printf( &quot;%0.5f\n&quot; , &#10;myVar . fval); &#10;float fval; "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Ie. Think of a
+'results' struct, there will only ever be one result at a time, but the result
+(of perhaps a mathematical operation) might be a different type</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+</body>
+
+</html>
