@@ -1,0 +1,147 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File href="Bit%20Manipulation.htm">
+<link rel=File-List href="Bit%20Manipulation_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:7.3972in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:2.4097in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt' lang=en-US>Bit
+Manipulation</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:0in;width:2.0895in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#666666'
+lang=en-US>Friday, July 27, 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#666666'
+lang=en-US>8:23 PM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4305in;margin-left:0in;width:7.3972in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Let's redefine how
+we can use numbers!</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='font-weight:bold'>Logical Operators</span></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>AND | a &amp;&amp;
+b<br>
+OR | a || b</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='font-weight:bold'>Bitwise Operators</span></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>AND | a &amp;
+b<br>
+OR | a &amp; b<br>
+XOR | a ^ b<br>
+NEG | ~a<br>
+LSHIFT | a &lt;&lt; 2<br>
+RSHIFT | a &gt;&gt; 2 </p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>If signed, sign bit
+replaced left-end bit</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Uses</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='font-weight:bold'>Bit Mask</span></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>To turn 100 011 000
+into 100 111 110</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'>    </span>100 011 000 | 000 100 110<br>
+&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'>    </span>100 011 000</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'> </span>| 000 100 110<span style='mso-spacerun:yes'> 
+</span>&lt;-- Our bitmask, 1s represent the change</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'>    </span>----------------</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'>    </span>100 111 110</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>To turn 100 111 110
+back into 100 011 000<br>
+<span style='mso-spacerun:yes'>   </span>100 011 000 &amp;<span
+style='mso-spacerun:yes'>  </span>~000 100 110</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'>   </span>100 011 000 &amp;<span
+style='mso-spacerun:yes'>  </span>111 011 001</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'>    </span>100 011 000</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&amp; 111 011
+000<br>
+<span style='mso-spacerun:yes'>    </span>----------------</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='mso-spacerun:yes'>    </span>100 011 000</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><span
+style='font-weight:bold'>Permissions</span></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>The Unix file system
+has three groups which permissions can be assigned to. For each group, there
+are three permission flags (<span style='font-weight:bold'>r</span>ead, <span
+style='font-weight:bold'>w</span>rite and e<span style='font-weight:bold'>x</span>ecute)</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107434487-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-107434487-2');</script></body>
+
+</html>

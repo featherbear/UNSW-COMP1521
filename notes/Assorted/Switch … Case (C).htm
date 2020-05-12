@@ -1,0 +1,86 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File href="Switch%20…%20Case%20(C).htm">
+<link rel=File-List href="Switch%20…%20Case%20(C)_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:6.5208in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:2.5027in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt' lang=en-US>Switch
+… Case (C)</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:0in;width:2.2618in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#666666'
+lang=en-US>Thursday, July 26, 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#666666'
+lang=en-US>8:29 PM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4097in;margin-left:1.4784in;width:5.0423in'>
+
+<p style='margin:0in'><img src="Switch%20…%20Case%20(C)_files/image001.png"
+width=480 height=373
+alt="Okay so scenario: &#10;An esoteric scoring system is as follows: &#10;For the following letters in a string, a score is added to a result. &#10;A - 7 point &#10;B - 3 points &#10;C - 2 points &#10;D - 4 points &#10;E - 2 points &#10;F - 5 points &#10;Other letters award negative 1 point &#10;Example &#10;CAFE12+ 7+5+2 = 70 points &#10;CAR 12+ 7 + -7 = 2 points &#10;UNSWI -7 + -1 + -7 + -7 = -4points &#10;ACCEDED | 7+2+2+2 +4+2 77 points &#10;Let's say we just use the standard &quot;if&quot;, &quot;else if&quot; &#10;scenario "></p>
+
+<p style='margin:0in'><img src="Switch%20…%20Case%20(C)_files/image002.png"
+width=329 height=480
+alt="#include &lt;stdio.h&gt; &#10;int betterStringLength(char* word) { &#10;int length &#10;o; &#10;while (word[length] !- &#10;'\n' &amp;&amp; word[length++] &#10;return length; &#10;int main(void) { &#10;char word[BUFSIZ] &#10;'\0'); &#10;stdin); &#10;printf(&quot;Enter a word: &#10;printf(&quot;\nWord: , &#10;int score = 0; &#10;fgets(word, BUFSIZ, &#10;word) ; &#10;for (int index = 0; index &lt; betterStringLength(word); &#10;if (word [index] &#10;index++) { &#10;score &#10;else if &#10;score &#10;else if &#10;score &#10;else if &#10;score &#10;else if &#10;score &#10;else if &#10;score &#10;score &#10;(word[index] &#10;(word[index] &#10;(word[index] &#10;(word[index] &#10;(word[index] &#10;1; &#10;printf( &quot;Score: &#10;return 0; &#10;score) ; "></p>
+
+<p style='margin:0in'><img src="Switch%20…%20Case%20(C)_files/image003.png"
+width=480 height=94
+alt="Sure it works, but for starters it's not the nicest thing to look at. &#10;We see the text if (word[index] ' ... ') A LOT of times - it feels somewhat redundant.. &#10;What could we do? &#10;Let's have a look at what an approach involving &#10;... looks like &#10;switch . &#10;. case "></p>
+
+<p style='margin:0in'><img src="Switch%20…%20Case%20(C)_files/image004.png"
+width=347 height=480
+alt="#include &lt;stdio.h&gt; &#10;int betterStringLength(char* word) { &#10;int length &#10;o; &#10;while (word[length] !- &#10;'\n' &amp;&amp; word[length++] &#10;return length; &#10;int main(void) { &#10;char word[BUFSIZ] &#10;'\0'); &#10;stdin); &#10;printf(&quot;Enter a word: &#10;printf(&quot;\nWord: , &#10;int score = 0; &#10;fgets(word, BUFSIZ, &#10;word) ; &#10;for (int index = 0; index &lt; betterStringLength(word); &#10;switch (word[index]) { &#10;index++) { &#10;case 'A': &#10;score &#10;break; &#10;case 'B': &#10;score &#10;break; &#10;case 'C': &#10;case 'E': &#10;score &#10;break; &#10;case 'D': &#10;score &#10;break; &#10;score &#10;break; &#10;default : &#10;score &#10;printf( &quot;Score: &#10;return 0; &#10;1; &#10;3; &#10;2; &#10;4; &#10;5; &#10;1; &#10;%d\n&quot; , &#10;score) ; "></p>
+
+<p style='margin:0in'><img src="Switch%20…%20Case%20(C)_files/image005.png"
+width=480 height=326
+alt="Tadaa!! Less eyesore, we can easily see what's going on! &#10;So what just happened? &#10;. case allows us to compare a value to a bunch of other values, and perform different &#10;switch . &#10;operations accordingly &#10;If we look at the question, we can see that both the letters C and E award the same amount of &#10;points. &#10;else version, we could account for this by going &#10;In our if &#10;if (word[index] 'C' Il &#10;word[index] ' ' &#10;But that's abit ugly to look at &#10;How do we do this in our switch . &#10;case 'C': &#10;case 'E': &#10;. case version? &#10;And like that, the same thing is performed &#10;We could even put our letter to score calculation &#10;into a function to prettify our code "></p>
+
+<p style='margin:0in'><img src="Switch%20…%20Case%20(C)_files/image006.png"
+width=353 height=480
+alt="#include &lt;stdio.h&gt; &#10;int betterStringLength(char* word) { &#10;int length &#10;o; &#10;while (word [length] !- &#10;'\n' &amp;&amp; word[length++] &#10;return length; &#10;int getScore(char letter) { &#10;switch (letter) { &#10;case 'A': &#10;return &#10;case 'B': &#10;return &#10;case 'C': &#10;case 'E': &#10;return &#10;case 'D': &#10;return &#10;return &#10;default : &#10;return &#10;int main(void) &#10;1; &#10;3; &#10;2; &#10;4; &#10;5; &#10;-1; &#10;char word[BUFSIZ] &#10;printf(&quot;Enter a word: &#10;printf(&quot;\nWord: , &#10;int score = 0; &#10;fgets(word, BUFSIZ, &#10;word) ; &#10;'\0'); &#10;stdin); &#10;for (int index = 0; index &lt; betterStringLength(word); &#10;score += getScore(word[index]); &#10;index++) { &#10;printf(&quot;Score: , &#10;return 0; &#10;score) ; "></p>
+
+<p style='margin:0in'><img src="Switch%20…%20Case%20(C)_files/image007.png"
+width=480 height=270
+alt="Now, I'm not sure which method is per-se 'faster' (performs quicker) --&gt; probably using the if ... &#10;else statement. But it definitely looks easier to read for someone who is trying to develop or even &#10;maintain their code &#10;So with that said, switch statements are useful to shorten the amount of code you need to write - &#10;try them out! &#10;Caveat though, is that you are comparing values, and &#10;therefore cannot do something like &#10;int i = 4; &#10;switch (i) { &#10;case (i &gt; 5): &#10;Wouldn't make that much sense either, because it would be doing &#10;if (i (i &gt; 5)) { } &#10;Which isn't exactly useful "></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt;text-align:right'
+lang=en-US>&nbsp;</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107434487-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-107434487-2');</script></body>
+
+</html>
