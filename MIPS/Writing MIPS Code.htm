@@ -1,0 +1,131 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=OneNote.File>
+<meta name=Generator content="Microsoft OneNote 15">
+<link id=Main-File rel=Main-File href="Writing%20MIPS%20Code.htm">
+<link rel=File-List href="Writing%20MIPS%20Code_files/filelist.xml">
+</head>
+
+<body lang=en-AU style='font-family:Calibri;font-size:11.0pt'>
+
+<div style='direction:ltr;border-width:100%'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:7.5in'>
+
+<div style='direction:ltr;margin-top:0in;margin-left:0in;width:2.6513in'>
+
+<p style='margin:0in;font-family:"Calibri Light";font-size:20.0pt'>Writing MIPS
+Code</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.0388in;margin-left:0in;width:2.3638in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>Tuesday,
+14 August 2018</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:10.0pt;color:#767676'>9:19
+AM</p>
+
+</div>
+
+<div style='direction:ltr;margin-top:.4305in;margin-left:0in;width:7.5in'>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Labels<br>
+Directives</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Directives<br>
+<span style='font-style:italic'>Anything that starts with .</span></p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>.data - tells the
+program to put things in the data section<br>
+.text- tells the program to put things in the code section</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>.word -&gt; 4 bytes
+(int!?)</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>.space bytesCount -
+padding</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>.asciiz
+&quot;string&quot;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>-&gt; puts in s t r
+i n g 0</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>(null terminator)</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>.align n</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>2^n</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>CPU reads 4 bytes
+every time</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Can't read
+non-aligned memory address<br>
+(ie can read 0-3, can't read 1-4)</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'><br>
+ie .align 2; 2^2 - 4</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>.byte -&gt; 1 byte</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>&nbsp;</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>Can supply
+multiple<br>
+.byte 1,2,3,4 --&gt; 1 2 3 4</p>
+
+<p style='margin:0in;font-family:Calibri;font-size:11.0pt'>.word 1,2,3,4 --&gt;
+1 0 0 0 2 0 0 0 3 0 0 0 4 0 0 0<br>
+&nbsp;</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<p style='margin:0in'>&nbsp;</p>
+
+<p style='text-align:left;margin:0in;font-family:Arial;font-size:9pt;
+color:#969696;direction:ltr'>Created with Microsoft OneNote 2016.</p>
+
+</div>
+
+</body>
+
+</html>
